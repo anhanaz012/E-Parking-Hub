@@ -1,4 +1,4 @@
-import {Dimensions, StyleSheet} from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 
 export const {width: WIDTH, height: HEIGHT} = Dimensions.get('screen');
 export const HORIZON_MARGIN = 15;
@@ -54,7 +54,9 @@ export const FONTS = {
 
 export const Fonts = {
   mavenRegular: 'MavenPro-Regular',
-  merriWeatherBold: 'MerriweatherSans-Medium',
+  merriWeatherSansRegular:'MerriweatherSans-Regular',
+  merriWeatherBold:'Merriweather-Bold',
+  latoRegular:'Lato-Regular'
 };
 // Typography
 export const TYPOGRAPHY = StyleSheet.create({

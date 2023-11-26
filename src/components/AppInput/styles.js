@@ -1,9 +1,12 @@
 import {StyleSheet} from 'react-native';
-import {COLORS, COMMON_COLORS} from '../../assets/theme';
+import {COLORS, COMMON_COLORS, Fonts} from '../../assets/theme';
 export const styles = theme =>
   StyleSheet.create({
     textInputContainer: multiline => ({
       width: '85%',
+      flexDirection:'row',
+      backgroundColor: COLORS[theme].input,
+      paddingHorizontal:15
     }),
     textInput: (multiline, isFocused) => ({
       height: 55,
@@ -14,6 +17,6 @@ export const styles = theme =>
       borderWidth: 1,
       borderColor: isFocused ? COLORS[theme].inputBorder : 'transparent',
       borderRadius: 10,
-      backgroundColor: COLORS[theme].input,
+      fontFamily:Fonts.latoRegular
     }),
   });

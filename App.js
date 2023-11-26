@@ -1,10 +1,8 @@
 import React from 'react';
-import {View} from 'react-native';
-import {SVG} from './src/assets/svg';
-import {COLORS} from './src/assets/theme';
+import { View } from 'react-native';
+import { SVG } from './src/assets/svg';
+import { COLORS } from './src/assets/theme';
 import AppInput from './src/components/AppInput/AppInput';
-import AppText from './src/components/AppText/AppText';
-import Icon from './src/components/Icon/Icon';
 const App = () => {
   const [isFocused, setIsFocused] = React.useState(false);
 
@@ -25,34 +23,13 @@ const App = () => {
           alignItems: 'center',
           backgroundColor: COLORS.light.background,
         }}>
-        <AppText
-          title={'hello world'}
-          color={COLORS.dark.secondary}
-          variant="h1"
-          onPress={() => {
-            console.log('hello there');
-          }}
-        />
         <AppInput
           onFocus={handleFocus}
+          placeholder={'Enter your name'}
           onBlur={handleBlur}
           isFocused={isFocused}
           theme={'light'}
-        />
-        <Icon
-          SVGIcon={<SVG.location fill={'white'} height={16} width={16} />}
-          alignSelf={'center'}
-          activeOpacity={0.8}
-          extraStyle={{
-            text: {color: COLORS.dark.secondary},
-            icon: {
-              height: 45,
-              width: '12%',
-              backgroundColor: COLORS.dark.secondary,
-              flexDirection: 'row',
-              borderRadius: 10,
-            },
-          }}
+          iconLeft={<SVG.lock height={20} width={20} fill={'grey'} />}
         />
       </View>
     </>
