@@ -1,0 +1,89 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/MavenPro-Black.ttf",
+      "sha1": "102e2bbfc6ab461cb87ba3dbfb1e41f13b84187c"
+    },
+    {
+      "path": "src/assets/fonts/MavenPro-Bold.ttf",
+      "sha1": "25098aa696344aa3e8eede7d56229ecc47528d9f"
+    },
+    {
+      "path": "src/assets/fonts/MavenPro-ExtraBold.ttf",
+      "sha1": "6b5efd4408267525130f590115129dcd004272a4"
+    },
+    {
+      "path": "src/assets/fonts/MavenPro-Medium.ttf",
+      "sha1": "2dc537456a1edacb498ebcd7ec9e06b1584e1484"
+    },
+    {
+      "path": "src/assets/fonts/MavenPro-Regular.ttf",
+      "sha1": "20c70d0261aee6b6969580707d1763a429890727"
+    },
+    {
+      "path": "src/assets/fonts/MavenPro-SemiBold.ttf",
+      "sha1": "00043ee7febeddecb43994d4328737ec5017718a"
+    },
+    {
+      "path": "src/assets/fonts/MavenPro-VariableFont_wght.ttf",
+      "sha1": "63f9896c51745a79d7ade27906f0a7d28705650f"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-Bold.ttf",
+      "sha1": "84576111fa20a6027a3f1b7bea4d7f1b73030628"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-BoldItalic.ttf",
+      "sha1": "c6e452c1f9d7220815f76dce77dcc159be9f2b89"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-ExtraBold.ttf",
+      "sha1": "4367c959c38d4ed3f9bf12ff44c2a26236d688b5"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-ExtraBoldItalic.ttf",
+      "sha1": "8412a5e260e1564ba70145714c5d47040db7b7db"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-Italic-VariableFont_wght.ttf",
+      "sha1": "d39f16e27552cb0ce52029a4251421401b13b675"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-Italic.ttf",
+      "sha1": "af72ef3f04d4106db9b506b4e051fdf2e192b5d7"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-Light.ttf",
+      "sha1": "79146c8b0554994a327686530cd710fa8c5892e6"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-LightItalic.ttf",
+      "sha1": "fef72f12c01a9e7b8639e5c530fd566bc3b2574b"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-Medium.ttf",
+      "sha1": "2c6097ee1457ebd161b5ab13d4e9b8ae87eee247"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-MediumItalic.ttf",
+      "sha1": "d330a6f5f6e05ef8d3a36e976cc0fb869a8e7e15"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-Regular.ttf",
+      "sha1": "224cf0af5cbbef5730dac9518f0348b9b4a81c91"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-SemiBold.ttf",
+      "sha1": "bab9ec85c6bdc532619c253cdf3a3c8a26081aba"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-SemiBoldItalic.ttf",
+      "sha1": "f1305b3b10d1753d1d97640a4219447884b4e6c9"
+    },
+    {
+      "path": "src/assets/fonts/MerriweatherSans-VariableFont_wght.ttf",
+      "sha1": "58cbfe3885bf047562ecc8650957fdb44b53525d"
+    }
+  ]
+}
