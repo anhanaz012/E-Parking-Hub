@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 
 export const {width: WIDTH, height: HEIGHT} = Dimensions.get('screen');
 export const HORIZON_MARGIN = 15;
@@ -10,7 +10,7 @@ export const Theme = LIGHT | DARK;
 export const COMMON_COLORS = {
   black: '#212121',
   white: '#fff',
-  primary: '#CEC9F2',
+  primary: '#A0A2F0',
   secondary: '#4448AE',
   glassBlack: 'rgba(0,0,0,0.5)',
   gray: '#E5E5E5',
@@ -19,6 +19,7 @@ export const COMMON_COLORS = {
   steelGrey: '#EBEAFA',
   transparent: 'transparent',
   textInputGrey: '#F8F7FD',
+  splashBg: '#9C9FF0',
 };
 
 export const COLORS = {
@@ -27,21 +28,29 @@ export const COLORS = {
     input: '#F8F7FD',
     red: '#AE0000',
     background: '#fff',
-    text: '#000',
+    text: '#212121',
     shade: '#D9D1D1',
     statusbar: '#fff',
     grey: '#777777',
     OTPInput: '#E5E9F98F',
     inputBorder: '#4448AE',
+    placeholderTextColor: 'grey',
+    shadow: 'black',
+    focusedIcon: '#4448AE',
+    unfocusedIcon: 'grey',
   },
 
   dark: {
     ...COMMON_COLORS,
     input: '#25241E',
     background: '#14130E',
-    text: '#fff',
+    shadow: 'white',
+    text: 'white',
     statusbar: '#000',
+    focusedIcon: 'white',
+    unfocusedIcon: 'grey',
     inputBorder: 'grey',
+    placeholderTextColor: 'grey',
   },
 };
 
@@ -54,9 +63,9 @@ export const FONTS = {
 
 export const Fonts = {
   mavenRegular: 'MavenPro-Regular',
-  merriWeatherSansRegular:'MerriweatherSans-Regular',
-  merriWeatherBold:'Merriweather-Bold',
-  latoRegular:'Lato-Regular'
+  merriWeatherSansRegular: 'MerriweatherSans-Regular',
+  merriWeatherBold: 'Merriweather-Bold',
+  latoRegular: 'Lato-Regular',
 };
 // Typography
 export const TYPOGRAPHY = StyleSheet.create({

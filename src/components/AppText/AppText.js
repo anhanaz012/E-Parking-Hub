@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text} from 'react-native';
-import {FONTS, Fonts, STYLES, TYPOGRAPHY} from '../../assets/theme';
+import {COLORS, FONTS, Fonts, STYLES, TYPOGRAPHY} from '../../assets/theme';
 
 const AppText = props => {
   const {
@@ -12,6 +12,7 @@ const AppText = props => {
     title = '',
     fontFamily = Fonts.merriWeatherBold,
     onPress = () => {},
+    theme = 'dark',
   } = props;
 
   return (
@@ -25,7 +26,7 @@ const AppText = props => {
           ),
           STYLES.fontFamily(fontFamily),
           STYLES.textAlign(textAlign),
-          STYLES.color(color ? color : 'black'),
+          STYLES.color(color ? color : COLORS[theme].text),
           extraStyle,
         ]}>
         {title}

@@ -1,11 +1,23 @@
 export const LABELS = {
-    firstName:'First Name',
-    lastName:'Last Name',
-    email:'Email',
-    password:'Password',
-    confirmPassword:'Confirm Password',
-    login:'Login',
-    register:'Register',
-    forgotPassword:'Forgot Password?',
-    
-}
+  firstName: 'First Name',
+  lastName: 'Last Name',
+  email: 'Email',
+  password: 'Password',
+  confirmPassword: 'Confirm Password',
+  login: 'Login',
+  register: 'Register',
+  forgotPassword: 'Forgot Password?',
+  title: 'E-PARKING HUB',
+  welcomeTo: 'Welcome to',
+  user: 'User',
+  vendor: 'Vendor',
+  CreateAccount: 'Create your',
+  account: 'Account',
+  confirmPass: 'Confirm Password',
+  signup: 'Sign Up',
+  haveAccount: 'Already have an account?',
+  signin: 'Sign in',
+  phonePlaceholder: '3456999 9',
+  appIntro:
+    'Effortless parking solutions, streamline your experience with our user-friendly E-parking management system today!',
+};

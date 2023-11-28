@@ -1,10 +1,56 @@
-import React from 'react'
-import { Text } from 'react-native'
+import React from 'react';
+import {View} from 'react-native';
+import {COLORS} from '../../assets/theme';
+import AppText from '../AppText/AppText';
+import Icon from '../Icon/Icon';
+import Space from '../Space/Space';
+import {styles} from './styles';
 
-const AppHeader = () => {
+const AppHeader = props => {
+  const {
+    iconLeft = null,
+    iconRight = null,
+    onLeftIconPress = () => {},
+    onRightIconPress = () => {},
+    mL = 0,
+    title,
+    theme,
+    textVariant,
+  } = props;
+  const style = styles(theme);
   return (
-    <Text>AppHeader</Text>
-  )
-}
+    <View style={style.headerContainer}>
+      <View style={style.leftContainer}>
+        {iconLeft && (
+          <>
+            <Icon
+              SVGIcon={iconLeft}
+              iconLeft={true}
+              onPress={onLeftIconPress}
+            />
+            <Space mL={mL} />
+          </>
+        )}
+        {title && (
+          <AppText
+            variant={textVariant ? textVariant : 'h3'}
+            title={title}
+            color={COLORS[theme].text}
+          />
+        )}
+      </View>
+      <View style={style.rightContainer}>
+        {iconRight && (
+          <Icon
+            alignSelf={'flex-end'}
+            SVGIcon={iconRight}
+            iconLeft={false}
+            onPress={onRightIconPress}
+          />
+        )}
+      </View>
+    </View>
+  );
+};
 
-export default AppHeader
+export default AppHeader;

@@ -15,6 +15,7 @@ const Icon = props => {
     textVariant = 'body2',
     onPress = () => {},
     activeOpacity,
+    theme,
     extraStyle = {text: {}, icon: {}},
   } = props;
   const style = styles;
@@ -33,6 +34,7 @@ const Icon = props => {
           title={title}
           variant={textVariant}
           extraStyle={extraStyle.text}
+          theme = {theme}
         />
       )}
     </>

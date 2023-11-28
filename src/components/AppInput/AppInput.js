@@ -3,6 +3,7 @@ import {TextInput, View} from 'react-native';
 import {styles} from './styles';
 import Icon from '../Icon/Icon';
 import Space from '../Space/Space';
+import {COLORS} from '../../assets/theme';
 
 const AppInput = props => {
   const {
@@ -15,11 +16,11 @@ const AppInput = props => {
     extraStyle = {},
     multiline = false,
     numberOfLines = 1,
-    autoCorrect = false,
     autoFocus = false,
     iconLeft = null,
     iconRight = null,
     onLeftIconPress = () => {},
+    onRightIconPress = () => {},
     onFocus = () => {},
     isFocused,
     onBlur = () => {},
@@ -31,21 +32,24 @@ const AppInput = props => {
     <>
       <View
         style={[
-          style.textInputContainer(multiline),
+          style.textInputContainer(multiline, isFocused),
           extraStyle.textInputContainer,
         ]}>
         {iconLeft && (
           <>
+            <Icon SVGIcon={iconLeft} iconLeft={true} onPress = {onLeftIconPress}/>
             <Space mL={mL} />
-            {/* <Icon iconLeft={true} SVGIcon={iconLeft} onPress = {onLeftIconPress}/> */}
-            <Icon SVGIcon = {iconLeft}/>
           </>
         )}
         <TextInput
           {...props}
           value={value}
           placeholder={placeholder}
-          placeholderTextColor={placeholderTextColor}
+          placeholderTextColor={
+            placeholderTextColor
+              ? placeholderTextColor
+              : COLORS[theme].placeholderTextColor
+          }
           keyboardType={keyboardType}
           secureTextEntry={secureTextEntry}
           onChangeText={onChangeText}
@@ -54,6 +58,11 @@ const AppInput = props => {
           onFocus={onFocus}
           onBlur={onBlur}
         />
+        {iconRight && (
+          <>
+            <Icon SVGIcon={iconRight} iconLeft={false} onPress = {onRightIconPress}/>
+          </>
+        )}
       </View>
     </>
   );
