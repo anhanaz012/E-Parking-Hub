@@ -44,7 +44,7 @@ const IntroScreen = ({navigation}) => {
           textColor={'white'}
           textVariant={'h5'}
           onPress={() => {
-            navigation.navigate('SignUpScreen');
+            navigation.navigate('OnBoardingScreen');
           }}
         />
         <Space mB={15} />

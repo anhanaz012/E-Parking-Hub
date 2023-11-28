@@ -3,7 +3,7 @@ import {COLORS, HORIZON_MARGIN} from '../../assets/theme';
 export const styles = theme =>
   StyleSheet.create({
     headerContainer: {
-      height: 50,
+      height: 65,
       width: '100%',
       flexDirection: 'row',
       alignItems: 'center',

@@ -5,6 +5,8 @@ import SignInScreen from '../screens/Auth/Signin/SignInScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import SplashScreen from '../screens/Auth/SplashScreen/SplashScreen';
 import IntroScreen from '../screens/Auth/IntroScreen/IntroScreen';
+import ForgotPassScreen from '../screens/Auth/ForgotPassword/ForgotPassScreen';
+import OnboardingScreen from '../screens/Auth/OnboardingScreen/OnboardingScreen';
 const Stack = createStackNavigator();
 const AppNavigator = () => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
@@ -24,6 +26,9 @@ const AppNavigator = () => {
         <Stack.Screen name="IntroScreen" component={IntroScreen} />
         <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
         <Stack.Screen name="SignInScreen" component={SignInScreen} />
+        <Stack.Screen name="ForgotPassScreen" component={ForgotPassScreen} />
+        <Stack.Screen name = 'OnBoardingScreen' component = {OnboardingScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

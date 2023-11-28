@@ -38,6 +38,8 @@ export const COLORS = {
     shadow: 'black',
     focusedIcon: '#4448AE',
     unfocusedIcon: 'grey',
+    termsText:'grey'
+
   },
 
   dark: {
@@ -51,6 +53,7 @@ export const COLORS = {
     unfocusedIcon: 'grey',
     inputBorder: 'grey',
     placeholderTextColor: 'grey',
+    termsText:'white'
   },
 };
 
