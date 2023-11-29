@@ -82,6 +82,7 @@ const SignInScreen = ({navigation}) => {
               />
             }
           />
+          
           <Space mT={20} />
           <AppInput
             onFocus={handlePassFocus}

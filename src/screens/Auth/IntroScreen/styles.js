@@ -1,9 +1,10 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../../../assets/theme';
+import {COLORS, HEIGHT} from '../../../assets/theme';
 export const styles = theme =>
   StyleSheet.create({
     container: {
       flex: 1,
+      height: HEIGHT * 0.9,
       backgroundColor: COLORS[theme].background,
     },
     imgContainer: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {COLORS} from '../../assets/theme';
+import {COLORS, Fonts} from '../../assets/theme';
 import AppText from '../AppText/AppText';
 import Icon from '../Icon/Icon';
 import Space from '../Space/Space';
@@ -16,10 +16,12 @@ const AppHeader = props => {
     title,
     theme,
     textVariant,
+    fontFamily = Fonts.merriWeatherSansRegular,
+    extraStyle = {container:{}}
   } = props;
   const style = styles(theme);
   return (
-    <View style={style.headerContainer}>
+    <View style={[style.headerContainer,extraStyle.container]}>
       <View style={style.leftContainer}>
         {iconLeft && (
           <>
@@ -36,6 +38,7 @@ const AppHeader = props => {
             variant={textVariant ? textVariant : 'h3'}
             title={title}
             color={COLORS[theme].text}
+            fontFamily={fontFamily}
           />
         )}
       </View>

@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
-import {ScrollView, View} from 'react-native';
-import {IMAGES} from '../../../assets/images';
-import {SVG} from '../../../assets/svg';
+import React, { useState } from 'react';
+import { ScrollView, View } from 'react-native';
+import { IMAGES } from '../../../assets/images';
+import { SVG } from '../../../assets/svg';
 import {
-  COLORS,
-  COMMON_COLORS,
-  Fonts,
-  HORIZON_MARGIN,
-  STYLES,
+    COLORS,
+    COMMON_COLORS,
+    Fonts,
+    HORIZON_MARGIN,
+    STYLES,
 } from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppInput from '../../../components/AppInput/AppInput';
@@ -15,9 +15,9 @@ import AppLogo from '../../../components/AppLogo/AppLogo';
 import AppText from '../../../components/AppText/AppText';
 import GradientButton from '../../../components/GradientButton/GradientButton';
 import Space from '../../../components/Space/Space';
-import {LABELS} from '../../../labels';
-import {styles} from './styles';
-const ForgotPassScreen = ({navigation}) => {
+import { LABELS } from '../../../labels';
+import { styles } from './styles';
+const OTPScreen = ({navigation}) => {
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const theme = 'light';
   const handleEmailBlur = () => {
@@ -26,9 +26,6 @@ const ForgotPassScreen = ({navigation}) => {
   const handleEmailFocus = () => {
     setIsEmailFocused(true);
   };
-  const OTPNavigationHandler = () =>{
-    navigation.navigate('OTPScreen')
-  }
   const style = styles;
   return (
     <>
@@ -42,7 +39,7 @@ const ForgotPassScreen = ({navigation}) => {
             navigation.goBack();
           }}
           mL={15}
-          title={LABELS.forgotPassword}
+          title={LABELS.verifyEmail}
           extraStyle={{container: {backgroundColor: 'white'}}}
         />
         <Space mT={20} />
@@ -81,7 +78,6 @@ const ForgotPassScreen = ({navigation}) => {
               title={LABELS.continue}
               textColor={COMMON_COLORS.white}
               textVariant={'h4'}
-              onPress={OTPNavigationHandler}
             />
           </View>
         
@@ -90,4 +86,4 @@ const ForgotPassScreen = ({navigation}) => {
   );
 };
 
-export default ForgotPassScreen;
+export default OTPScreen;

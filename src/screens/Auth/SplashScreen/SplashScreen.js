@@ -22,7 +22,6 @@ const SplashScreen = () => {
       <View
         style={[
           STYLES.AICenter,
-          // STYLES.JCCenter,
           STYLES.width('70%'),
         ]}>
         <View>
@@ -34,7 +33,7 @@ const SplashScreen = () => {
           />
           <View
             style={{
-              height: 10,
+              height: 15,
               width: 100,
               backgroundColor: 'white',
               borderRadius: 15,
