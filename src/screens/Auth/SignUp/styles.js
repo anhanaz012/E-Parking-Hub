@@ -11,8 +11,7 @@ export const styles = theme =>
     textContainerStyle: {
       width: '100%',
       height: 55,
-      borderTopRightRadius: 10,
-      borderBottomRightRadius: 10,
+      borderRadius:10,
       backgroundColor: COLORS[theme].input,
     },
     codeTextStyle: {
@@ -21,7 +20,6 @@ export const styles = theme =>
     },
     textInputStyle: {
       height: 55,
-      backgroundColor: COLORS[theme].input,
       color: COLORS[theme].text,
       fontFamily: Fonts.latoRegular,
     },

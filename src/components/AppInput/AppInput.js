@@ -22,7 +22,7 @@ const AppInput = props => {
     onLeftIconPress = () => {},
     onRightIconPress = () => {},
     onFocus = () => {},
-    isFocused,
+    isFocused = false,
     onBlur = () => {},
     mL = 0,
     theme,

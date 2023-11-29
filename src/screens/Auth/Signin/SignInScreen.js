@@ -15,16 +15,25 @@ import AppButton from '../../../components/Button/Button';
 import Checkbox from '../../../components/Checkbox/Checkbox';
 import Space from '../../../components/Space/Space';
 import { LABELS } from '../../../labels';
+import GradientButton from '../../../components/GradientButton/GradientButton';
 const SignInScreen = ({navigation}) => {
-  const [isFocused, setIsFocused] = useState(false);
+  const [isEmailFocused, setIsEmailFocused] = React.useState(false);
+  const [isPassFocused, setIsPassFocused] = React.useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const theme = 'dark';
-  const handleFocus = () => {
-    setIsFocused(true);
+  const theme = 'light';
+  const handleEmailFocus = () => {
+    setIsEmailFocused(true);
   };
 
-  const handleBlur = () => {
-    setIsFocused(false);
+  const handleEmailBlur = () => {
+    setIsEmailFocused(false);
+  };
+  const handlePassFocus = () => {
+    setIsPassFocused(true);
+  };
+
+  const handlePassBlur = () => {
+    setIsPassFocused(false);
   };
   const handleSigIn = () => {
     navigation.goBack();
@@ -59,40 +68,40 @@ const SignInScreen = ({navigation}) => {
           <Space mT={50} />
 
           <AppInput
-            onFocus={handleFocus}
+            onFocus={handleEmailFocus}
             placeholder={LABELS.email}
-            onBlur={handleBlur}
-            isFocused={isFocused}
+            onBlur={handleEmailBlur}
+            isFocused={isEmailFocused}
             theme={theme}
             mL={10}
             iconLeft={
               <SVG.envelope
                 height={20}
                 width={20}
-                fill={isFocused ? COLORS[theme].inputBorder : 'gray'}
+                fill={isEmailFocused ? COLORS[theme].inputBorder : 'gray'}
               />
             }
           />
           <Space mT={20} />
           <AppInput
-            onFocus={handleFocus}
+            onFocus={handlePassFocus}
             placeholder={LABELS.password}
-            onBlur={handleBlur}
-            isFocused={isFocused}
+            onBlur={handlePassBlur}
+            isFocused={isPassFocused}
             theme={theme}
             mL={10}
             iconLeft={
               <SVG.lock
                 height={20}
                 width={20}
-                fill={isFocused ? COLORS[theme].inputBorder : 'gray'}
+                fill={isPassFocused ? COLORS[theme].inputBorder : 'gray'}
               />
             }
             iconRight={
               <SVG.eyeClose
                 height={15}
                 width={15}
-                fill={isFocused ? COLORS[theme].inputBorder : 'gray'}
+                fill={isPassFocused ? COLORS[theme].inputBorder : 'gray'}
               />
             }
             onRightIconPress={() => {
@@ -131,7 +140,7 @@ const SignInScreen = ({navigation}) => {
             </View>
           </View>
           <Space mT={40} />
-          <AppButton
+          <GradientButton
             title={LABELS.signin}
             onPress={handleSigIn}
             textColor={'white'}

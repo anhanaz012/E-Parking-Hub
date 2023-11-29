@@ -1,7 +1,8 @@
 export const IMAGES = {
-  LOGO: require('./Logo.png'),
+  LOGO: require('./PLetterLogo.png'),
   placeholder: require('./placeholder.png'),
-  Intro: require('./Hello.png'),
+  // Intro: require('./Hello.png'),
+  Intro: require('./Parking5.jpg'),
   creditCard: require('./Creditcard.png'),
   currentLocation: require('./Currentlocation.png'),
   forgotPass: require('./Forgotpassword.png'),

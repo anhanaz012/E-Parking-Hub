@@ -11,4 +11,7 @@ export const SVG = {
   google: require('./Google.svg').default,
   user: require('./UserIcon.svg').default,
   downArrow:require('./downArrow.svg').default,
+  logo:require('./logo.svg').default,
+  carIcon:require('./mdi_cab.svg').default,
+
 };

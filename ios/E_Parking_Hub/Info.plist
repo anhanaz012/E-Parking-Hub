@@ -53,45 +53,11 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>MavenPro-Black.ttf</string>
-		<string>MavenPro-Bold.ttf</string>
-		<string>MavenPro-ExtraBold.ttf</string>
-		<string>MavenPro-Medium.ttf</string>
 		<string>MavenPro-Regular.ttf</string>
-		<string>MavenPro-SemiBold.ttf</string>
-		<string>MavenPro-VariableFont_wght.ttf</string>
-		<string>MerriweatherSans-Bold.ttf</string>
-		<string>MerriweatherSans-BoldItalic.ttf</string>
-		<string>MerriweatherSans-ExtraBold.ttf</string>
-		<string>MerriweatherSans-ExtraBoldItalic.ttf</string>
-		<string>MerriweatherSans-Italic-VariableFont_wght.ttf</string>
-		<string>MerriweatherSans-Italic.ttf</string>
-		<string>MerriweatherSans-Light.ttf</string>
-		<string>MerriweatherSans-LightItalic.ttf</string>
-		<string>MerriweatherSans-Medium.ttf</string>
-		<string>MerriweatherSans-MediumItalic.ttf</string>
 		<string>MerriweatherSans-Regular.ttf</string>
-		<string>MerriweatherSans-SemiBold.ttf</string>
-		<string>MerriweatherSans-SemiBoldItalic.ttf</string>
-		<string>MerriweatherSans-VariableFont_wght.ttf</string>
-		<string>Lato-Black.ttf</string>
-		<string>Lato-BlackItalic.ttf</string>
-		<string>Lato-Bold.ttf</string>
-		<string>Lato-BoldItalic.ttf</string>
-		<string>Lato-Italic.ttf</string>
-		<string>Lato-Light.ttf</string>
-		<string>Lato-LightItalic.ttf</string>
 		<string>Lato-Regular.ttf</string>
-		<string>Lato-Thin.ttf</string>
-		<string>Lato-ThinItalic.ttf</string>
-		<string>Merriweather-Black.ttf</string>
-		<string>Merriweather-BlackItalic.ttf</string>
 		<string>Merriweather-Bold.ttf</string>
-		<string>Merriweather-BoldItalic.ttf</string>
-		<string>Merriweather-Italic.ttf</string>
-		<string>Merriweather-Light.ttf</string>
-		<string>Merriweather-LightItalic.ttf</string>
-		<string>Merriweather-Regular.ttf</string>
+		<string>Pacifico-Regular.ttf</string>
 	</array>
 </dict>
 </plist>

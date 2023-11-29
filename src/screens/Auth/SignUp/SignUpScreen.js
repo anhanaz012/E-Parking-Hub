@@ -14,20 +14,55 @@ import {LABELS} from '../../../labels';
 import {styles} from './styles';
 import Checkbox from '../../../components/Checkbox/Checkbox';
 import CheckboxText from '../../../components/CheckboxText/Checkbox';
+import GradientButton from '../../../components/GradientButton/GradientButton';
 const SignUpScreen = ({navigation}) => {
-  const [isFocused, setIsFocused] = React.useState(false);
+  const [isFirstNameFocused, setIsFirstNameFocused] = React.useState(false);
+  const [isLastNameFocused, setIsLastNameFocused] = React.useState(false);
+  const [isEmailFocused, setIsEmailFocused] = React.useState(false);
+  const [isPassFocused, setIsPassFocused] = React.useState(false);
+  const [isConfirmPassFocused, setIsConfirmPassFocused] = React.useState(false);
+
   const [phoneNumber, setPhoneNumber] = React.useState('');
   const [isChecked, setIsChecked] = React.useState(false);
   const theme = 'light';
   const style = styles(theme);
 
-  const handleFocus = () => {
-    setIsFocused(true);
+  const handleFirstNameFocus = () => {
+    setIsFirstNameFocused(true);
   };
 
-  const handleBlur = () => {
-    setIsFocused(false);
+  const handleFirstNameBlur = () => {
+    setIsFirstNameFocused(false);
   };
+  const handleLastNameFocus = () => {
+    setIsLastNameFocused(true);
+  };
+
+  const handleLastNameBlur = () => {
+    setIsLastNameFocused(false);
+  };
+  const handleEmailFocus = () => {
+    setIsEmailFocused(true);
+  };
+
+  const handleEmailBlur = () => {
+    setIsEmailFocused(false);
+  };
+  const handlePassFocus = () => {
+    setIsPassFocused(true);
+  };
+
+  const handlePassBlur = () => {
+    setIsPassFocused(false);
+  };
+  const handleConfirmPassFocus = () => {
+    setIsConfirmPassFocused(true);
+  };
+
+  const handleConfirmPassBlur = () => {
+    setIsConfirmPassFocused(false);
+  };
+
   const handlePhoneValidation = () => {
     const isValid = phoneInput.current?.isValidNumber(phoneNumber);
     console.log(isValid);
@@ -69,72 +104,72 @@ const SignUpScreen = ({navigation}) => {
           <Space mT={20} />
 
           <AppInput
-            onFocus={handleFocus}
+            onFocus={handleFirstNameFocus}
             placeholder={LABELS.firstName}
-            onBlur={handleBlur}
-            isFocused={isFocused}
+            onBlur={handleFirstNameBlur}
+            isFocused={isFirstNameFocused}
             theme={theme}
             mL={10}
             iconLeft={
               <SVG.user
                 height={20}
                 width={20}
-                fill={isFocused ? COLORS[theme].inputBorder : 'gray'}
+                fill={isFirstNameFocused ? COLORS[theme].inputBorder : 'gray'}
               />
             }
           />
           <Space mT={20} />
           <AppInput
-            onFocus={handleFocus}
+            onFocus={handleLastNameFocus}
             placeholder={LABELS.lastName}
-            onBlur={handleBlur}
-            isFocused={isFocused}
+            onBlur={handleLastNameBlur}
+            isFocused={isLastNameFocused}
             theme={theme}
             mL={10}
             iconLeft={
               <SVG.user
                 height={20}
                 width={20}
-                fill={isFocused ? COLORS[theme].inputBorder : 'gray'}
+                fill={isLastNameFocused ? COLORS[theme].inputBorder : 'gray'}
               />
             }
           />
           <Space mT={20} />
           <AppInput
-            onFocus={handleFocus}
+            onFocus={handleEmailFocus}
             placeholder={LABELS.email}
-            onBlur={handleBlur}
-            isFocused={isFocused}
+            onBlur={handleEmailBlur}
+            isFocused={isEmailFocused}
             theme={theme}
             mL={10}
             iconLeft={
               <SVG.envelope
                 height={20}
                 width={20}
-                fill={isFocused ? COLORS[theme].inputBorder : 'gray'}
+                fill={isEmailFocused ? COLORS[theme].inputBorder : 'gray'}
               />
             }
           />
           <Space mT={20} />
           <AppInput
-            onFocus={handleFocus}
+            onFocus={handlePassFocus}
             placeholder={LABELS.password}
-            onBlur={handleBlur}
-            isFocused={isFocused}
+            onBlur={handlePassBlur}
+            isFocused={isPassFocused}
             theme={theme}
             mL={10}
             iconLeft={
               <SVG.lock
                 height={20}
                 width={20}
-                fill={isFocused ? COLORS[theme].inputBorder : 'gray'}
+                fill={isPassFocused ? COLORS[theme].inputBorder : 'gray'}
               />
             }
             iconRight={
               <SVG.eyeClose
                 height={15}
                 width={15}
-                fill={isFocused ? COLORS[theme].inputBorder : 'gray'}
+                fill={isPassFocused ? COLORS[theme].inputBorder : 'gray'}
               />
             }
             onRightIconPress={() => {
@@ -143,24 +178,24 @@ const SignUpScreen = ({navigation}) => {
           />
           <Space mT={20} />
           <AppInput
-            onFocus={handleFocus}
+            onFocus={handleConfirmPassFocus}
             placeholder={LABELS.confirmPass}
-            onBlur={handleBlur}
-            isFocused={isFocused}
+            onBlur={handleConfirmPassBlur}
+            isFocused={isConfirmPassFocused}
             theme={theme}
             mL={10}
             iconLeft={
               <SVG.lock
                 height={20}
                 width={20}
-                fill={isFocused ? COLORS[theme].inputBorder : 'gray'}
+                fill={isConfirmPassFocused ? COLORS[theme].inputBorder : 'gray'}
               />
             }
             iconRight={
               <SVG.eyeClose
                 height={15}
                 width={15}
-                fill={isFocused ? COLORS[theme].inputBorder : 'gray'}
+                fill={isConfirmPassFocused ? COLORS[theme].inputBorder : 'gray'}
               />
             }
             onRightIconPress={() => {
@@ -177,6 +212,8 @@ const SignUpScreen = ({navigation}) => {
             containerStyle={style.containerStyle}
             codeTextStyle={style.codeTextStyle}
             textInputStyle={style.textInputStyle}
+            flagButtonStyle = {{display:'none'}}
+            defaultCode='PK'
             textInputProps={{
               placeholderTextColor: COLORS[theme].placeholderTextColor,
             }}
@@ -215,7 +252,7 @@ const SignUpScreen = ({navigation}) => {
             />
           </View>
           <Space mT={25} />
-          <AppButton
+          <GradientButton
             title={LABELS.signup}
             onPress={handlePhoneValidation}
             textColor={'white'}
@@ -242,7 +279,6 @@ const SignUpScreen = ({navigation}) => {
           </View>
         </View>
         <Space mT={25} />
-
       </ScrollView>
     </>
   );

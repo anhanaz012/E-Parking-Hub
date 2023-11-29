@@ -10,8 +10,14 @@ export const Theme = LIGHT | DARK;
 export const COMMON_COLORS = {
   black: '#212121',
   white: '#fff',
-  primary: '#A0A2F0',
-  secondary: '#4448AE',
+  // primary: '#A0A2F0',
+  // secondary: '#4448AE',
+  // primary:'#3D0354',
+  // secondary:'#3D0354',
+  gradientPurple:'#3D0354',
+  gradientBlue:'#565DD4',
+  primary: '#7200BC',
+  secondary: '#5D4DC3',
   glassBlack: 'rgba(0,0,0,0.5)',
   gray: '#E5E5E5',
   lightgray: '#616161',
@@ -38,8 +44,7 @@ export const COLORS = {
     shadow: 'black',
     focusedIcon: '#4448AE',
     unfocusedIcon: 'grey',
-    termsText:'grey'
-
+    termsText: 'grey',
   },
 
   dark: {
@@ -53,7 +58,7 @@ export const COLORS = {
     unfocusedIcon: 'grey',
     inputBorder: 'grey',
     placeholderTextColor: 'grey',
-    termsText:'white'
+    termsText: 'white',
   },
 };
 
@@ -69,6 +74,7 @@ export const Fonts = {
   merriWeatherSansRegular: 'MerriweatherSans-Regular',
   merriWeatherBold: 'Merriweather-Bold',
   latoRegular: 'Lato-Regular',
+  pacificoRegular: 'Pacifico-Regular',
 };
 // Typography
 export const TYPOGRAPHY = StyleSheet.create({

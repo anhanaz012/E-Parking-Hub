@@ -1,12 +1,13 @@
 import React from 'react';
 import {View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {IMAGES} from '../../../assets/images';
-import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../assets/theme';
-import AppLogo from '../../../components/AppLogo/AppLogo';
+import {SVG} from '../../../assets/svg';
+import {COMMON_COLORS, Fonts, STYLES} from '../../../assets/theme';
 import AppText from '../../../components/AppText/AppText';
+import Icon from '../../../components/Icon/Icon';
+import Space from '../../../components/Space/Space';
+import {LABELS} from '../../../labels';
 import {styles} from './styles';
-import { LABELS } from '../../../labels';
 
 const SplashScreen = () => {
   const style = styles;
@@ -14,22 +15,38 @@ const SplashScreen = () => {
     <LinearGradient
       style={[STYLES.flex(1), STYLES.AICenter, STYLES.JCCenter]}
       colors={[
-        COMMON_COLORS.splashBg,
-        COMMON_COLORS.white,
-        COMMON_COLORS.splashBg,
+        'purple',
+        COMMON_COLORS.gradientBlue,
+        COMMON_COLORS.gradientPurple,
       ]}>
-      <View style={[STYLES.AICenter, STYLES.JCCenter]}>
-        <AppLogo
-          source={IMAGES.LOGO}
-          resizeMode={'contain'}
-          height={100}
-          width={180}
-        />
+      <View
+        style={[
+          STYLES.AICenter,
+          // STYLES.JCCenter,
+          STYLES.width('70%'),
+        ]}>
+        <View>
+          <Icon
+            SVGIcon={<SVG.location fill={'white'} height={45} width={45} />}
+          />
+          <Icon
+            SVGIcon={<SVG.carIcon fill={'white'} height={70} width={70} />}
+          />
+          <View
+            style={{
+              height: 10,
+              width: 100,
+              backgroundColor: 'white',
+              borderRadius: 15,
+            }}></View>
+        </View>
+        <Space mT={30} />
         <AppText
           title={LABELS.title}
-          color={COLORS.dark.secondary}
-          variant={'h2'}
-          fontFamily={Fonts.merriWeatherBold}
+          color={'white'}
+          variant={'h1'}
+          fontFamily={Fonts.mavenRegular}
+          textAlign={'center'}
         />
       </View>
     </LinearGradient>

@@ -7,7 +7,7 @@ export const LABELS = {
   login: 'Login',
   register: 'Register',
   forgotPassword: 'Forgot Password?',
-  title: 'E-PARKING HUB',
+  title: 'E-PARKING MANAGEMENT',
   welcomeTo: 'Welcome to',
   contiueWith: 'or continue with',
   user: 'User',
