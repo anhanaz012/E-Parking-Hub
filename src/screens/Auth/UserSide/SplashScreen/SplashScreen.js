@@ -1,12 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { IMAGES } from '../../../assets/images';
-import { COMMON_COLORS, Fonts, STYLES } from '../../../assets/theme';
-import AppLogo from '../../../components/AppLogo/AppLogo';
-import AppText from '../../../components/AppText/AppText';
-import Space from '../../../components/Space/Space';
-import { LABELS } from '../../../labels';
+import {IMAGES} from '../../../../assets/images';
+import { COMMON_COLORS,Fonts,STYLES } from '../../../../assets/theme';
+import AppLogo from '../../../../components/AppLogo/AppLogo';
+import AppText from '../../../../components/AppText/AppText';
+import Space from '../../../../components/Space/Space';
+import { LABELS } from '../../../../labels';
 import { styles } from './styles';
 
 const SplashScreen = () => {

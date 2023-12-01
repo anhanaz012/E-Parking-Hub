@@ -1,21 +1,21 @@
 import React, {useState} from 'react';
 import {ScrollView, View} from 'react-native';
-import {IMAGES} from '../../../assets/images';
-import {SVG} from '../../../assets/svg';
+import {IMAGES} from '../../../../assets/images';
+import {SVG} from '../../../../assets/svg';
 import {
   COLORS,
   COMMON_COLORS,
   Fonts,
   HORIZON_MARGIN,
   STYLES,
-} from '../../../assets/theme';
-import AppHeader from '../../../components/AppHeader/AppHeader';
-import AppInput from '../../../components/AppInput/AppInput';
-import AppLogo from '../../../components/AppLogo/AppLogo';
-import AppText from '../../../components/AppText/AppText';
-import GradientButton from '../../../components/GradientButton/GradientButton';
-import Space from '../../../components/Space/Space';
-import {LABELS} from '../../../labels';
+} from '../../../../assets/theme';
+import AppHeader from '../../../../components/AppHeader/AppHeader';
+import AppInput from '../../../../components/AppInput/AppInput';
+import AppLogo from '../../../../components/AppLogo/AppLogo';
+import AppText from '../../../../components/AppText/AppText';
+import GradientButton from '../../../../components/GradientButton/GradientButton';
+import Space from '../../../../components/Space/Space';
+import {LABELS} from '../../../../labels';
 import {styles} from './styles';
 const ForgotPassScreen = ({navigation}) => {
   const [isEmailFocused, setIsEmailFocused] = useState(false);

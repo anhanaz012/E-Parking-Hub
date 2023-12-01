@@ -1,22 +1,22 @@
 import React, {useState} from 'react';
 import {ScrollView, View} from 'react-native';
-import {IMAGES} from '../../../assets/images';
-import {SVG} from '../../../assets/svg';
+import {IMAGES} from '../../../../assets/images';
+import {SVG} from '../../../../assets/svg';
 import {
   COLORS,
   COMMON_COLORS,
   Fonts,
   HORIZON_MARGIN,
   STYLES,
-} from '../../../assets/theme';
-import AppHeader from '../../../components/AppHeader/AppHeader';
-import AppLogo from '../../../components/AppLogo/AppLogo';
-import GradientButton from '../../../components/GradientButton/GradientButton';
-import OTPInput from '../../../components/OTPInput/OTPInput';
-import Space from '../../../components/Space/Space';
-import {LABELS} from '../../../labels';
+} from '../../../../assets/theme';
+import AppHeader from '../../../../components/AppHeader/AppHeader';
+import AppLogo from '../../../../components/AppLogo/AppLogo';
+import GradientButton from '../../../../components/GradientButton/GradientButton';
+import OTPInput from '../../../../components/OTPInput/OTPInput';
+import Space from '../../../../components/Space/Space';
+import {LABELS} from '../../../../labels';
 import {styles} from './styles';
-import AppText from '../../../components/AppText/AppText';
+import AppText from '../../../../components/AppText/AppText';
 const OTPScreen = ({navigation}) => {
   const [otp, setOtp] = useState(['', '', '', '']);
   const theme = 'light';

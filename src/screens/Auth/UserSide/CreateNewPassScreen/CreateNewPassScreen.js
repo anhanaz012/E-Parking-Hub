@@ -1,21 +1,21 @@
 import React from 'react';
 import {ScrollView, View} from 'react-native';
-import {IMAGES} from '../../../assets/images';
-import {SVG} from '../../../assets/svg';
+import {IMAGES} from '../../../../assets/images';
+import {SVG} from '../../../../assets/svg';
 import {
   COLORS,
   COMMON_COLORS,
   Fonts,
   HORIZON_MARGIN,
   STYLES,
-} from '../../../assets/theme';
-import AppHeader from '../../../components/AppHeader/AppHeader';
-import AppInput from '../../../components/AppInput/AppInput';
-import AppLogo from '../../../components/AppLogo/AppLogo';
-import Space from '../../../components/Space/Space';
-import {LABELS} from '../../../labels';
-import AppText from '../../../components/AppText/AppText';
-import GradientButton from '../../../components/GradientButton/GradientButton';
+} from '../../../../assets/theme';
+import AppHeader from '../../../../components/AppHeader/AppHeader';
+import AppInput from '../../../../components/AppInput/AppInput';
+import AppLogo from '../../../../components/AppLogo/AppLogo';
+import Space from '../../../../components/Space/Space';
+import {LABELS} from '../../../../labels';
+import AppText from '../../../../components/AppText/AppText';
+import GradientButton from '../../../../components/GradientButton/GradientButton';
 
 const CreateNewPassScreen = ({navigation}) => {
   const [isPassFocused, setIsPassFocused] = React.useState(false);
