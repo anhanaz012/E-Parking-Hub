@@ -26,7 +26,7 @@ const GradientButton = props => {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={activeOpacity}>
       <LinearGradient
-        colors={[COMMON_COLORS.gradientBlue, COMMON_COLORS.gradientPurple]}
+        colors={[COMMON_COLORS.gradientBlue,'purple', COMMON_COLORS.gradientPurple]}
         style={[style.btnContainer, extraStyle.btnContainer]}
         {...props}>
         {iconLeft && (

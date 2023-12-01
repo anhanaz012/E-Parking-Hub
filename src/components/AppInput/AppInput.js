@@ -26,6 +26,8 @@ const AppInput = props => {
     onBlur = () => {},
     mL = 0,
     theme,
+    maxLength,
+    cursorColor
   } = props;
   const style = styles(theme);
   return (
@@ -42,6 +44,8 @@ const AppInput = props => {
           </>
         )}
         <TextInput
+        maxLength={maxLength}
+        cursorColor={cursorColor}
           {...props}
           value={value}
           placeholder={placeholder}

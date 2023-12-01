@@ -26,9 +26,9 @@ const ForgotPassScreen = ({navigation}) => {
   const handleEmailFocus = () => {
     setIsEmailFocused(true);
   };
-  const OTPNavigationHandler = () =>{
-    navigation.navigate('OTPScreen')
-  }
+  const OTPNavigationHandler = () => {
+    navigation.navigate('OTPScreen');
+  };
   const style = styles;
   return (
     <>
@@ -47,12 +47,14 @@ const ForgotPassScreen = ({navigation}) => {
         />
         <Space mT={20} />
         <View style={[STYLES.pH(HORIZON_MARGIN)]}>
+          <Space mT={50} />
           <AppLogo
-            source={IMAGES.Car}
+            source={IMAGES.Car2}
             resizeMode={'contain'}
-            height={200}
+            height={250}
             width={'80%'}
           />
+          <Space mT={30} />
           <AppText
             title={LABELS.forgotPassDetails}
             fontFamily={Fonts.latoRegular}
@@ -60,31 +62,30 @@ const ForgotPassScreen = ({navigation}) => {
             variant={'h4'}
             textAlign={'center'}
           />
-          <Space mT = {60}/>
-            <AppInput
-              onFocus={handleEmailFocus}
-              placeholder={LABELS.enterEmail}
-              onBlur={handleEmailBlur}
-              isFocused={isEmailFocused}
-              theme={theme}
-              mL={10}
-              iconLeft={
-                <SVG.envelope
-                  height={20}
-                  width={20}
-                  fill={isEmailFocused ? COLORS[theme].inputBorder : 'gray'}
-                />
-              }
-            />
-            <Space mT={20} />
-            <GradientButton
-              title={LABELS.continue}
-              textColor={COMMON_COLORS.white}
-              textVariant={'h4'}
-              onPress={OTPNavigationHandler}
-            />
-          </View>
-        
+          <Space mT={80} />
+          <AppInput
+            onFocus={handleEmailFocus}
+            placeholder={LABELS.enterEmail}
+            onBlur={handleEmailBlur}
+            isFocused={isEmailFocused}
+            theme={theme}
+            mL={10}
+            iconLeft={
+              <SVG.envelope
+                height={20}
+                width={20}
+                fill={isEmailFocused ? COLORS[theme].inputBorder : 'gray'}
+              />
+            }
+          />
+          <Space mT={20} />
+          <GradientButton
+            title={LABELS.continue}
+            textColor={COMMON_COLORS.white}
+            textVariant={'h4'}
+            onPress={OTPNavigationHandler}
+          />
+        </View>
       </ScrollView>
     </>
   );

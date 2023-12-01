@@ -18,7 +18,7 @@ const IntroScreen = ({navigation}) => {
       <View style={style.container}>
         <View style={style.imgContainer}>
           <AppLogo
-            source={IMAGES.intro}
+            source={IMAGES.logo}
             resizeMode={'contain'}
             height={200}
             width={'100%'}
