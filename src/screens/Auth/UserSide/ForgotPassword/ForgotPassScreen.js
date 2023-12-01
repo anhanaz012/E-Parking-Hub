@@ -85,6 +85,7 @@ const ForgotPassScreen = ({navigation}) => {
             textVariant={'h4'}
             onPress={OTPNavigationHandler}
           />
+          <Space mT={20} />
         </View>
       </ScrollView>
     </>

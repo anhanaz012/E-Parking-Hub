@@ -9,8 +9,33 @@ import ForgotPassScreen from '../screens/Auth/UserSide/ForgotPassword/ForgotPass
 import OTPScreen from '../screens/Auth/UserSide/OTPScreen/OTPScreen';
 import CreateNewPassScreen from '../screens/Auth/UserSide/CreateNewPassScreen/CreateNewPassScreen';
 import HomeScreen from '../screens/Main/UserSide/HomeScreen/HomeScreen';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import BottomNavigation from './BottomNavigation/BottomNavigation';
 const Stack = createStackNavigator();
-const AppNavigator = () => {
+const Tab = createBottomTabNavigator();
+const options = {
+  headerShown: false,
+};
+
+const AuthStack = () => {
+  return (
+    <Stack.Navigator screenOptions={options}>
+      <Stack.Screen name="IntroScreen" component={IntroScreen} />
+      <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+      <Stack.Screen name="SignInScreen" component={SignInScreen} />
+      <Stack.Screen name="ForgotPassScreen" component={ForgotPassScreen} />
+      <Stack.Screen name="OTPScreen" component={OTPScreen} />
+      <Stack.Screen
+        name="CreateNewPassScreen"
+        component={CreateNewPassScreen}
+      />
+    </Stack.Navigator>
+  );
+};
+const HomeStack = () => {
+  return <Stack.Screen name="HomeScreen" component={HomeScreen} />;
+};
+const RootNavigator = () => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -18,24 +43,26 @@ const AppNavigator = () => {
     }, 1500);
   }, []);
   return (
+    <Stack.Navigator screenOptions={options}>
+      {showSplashScreen ? (
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+      ) : (
+        <></>
+      )}
+      <Stack.Screen name="AuthStack" component={AuthStack} />
+      <Stack.Screen name="HomeStack" component={HomeStack} />
+      <Stack.Screen
+        name="BottomNavigation"
+        component={BottomNavigation}
+        options={options}
+      />
+    </Stack.Navigator>
+  );
+};
+const AppNavigator = () => {
+  return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        {showSplashScreen ? (
-          <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        ) : (
-          <></>
-        )}
-        <Stack.Screen name="IntroScreen" component={IntroScreen} />
-        <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-        <Stack.Screen name="SignInScreen" component={SignInScreen} />
-        <Stack.Screen name="ForgotPassScreen" component={ForgotPassScreen} />
-        <Stack.Screen name="OTPScreen" component={OTPScreen} />
-        <Stack.Screen
-          name="CreateNewPassScreen"
-          component={CreateNewPassScreen}
-        />
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      </Stack.Navigator>
+      <RootNavigator />
     </NavigationContainer>
   );
 };

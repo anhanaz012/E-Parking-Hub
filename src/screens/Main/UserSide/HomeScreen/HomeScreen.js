@@ -6,6 +6,7 @@ const HomeScreen = () => {
   const style = styles
   return (
   <Text>Home</Text>
+  
   )
 }
 

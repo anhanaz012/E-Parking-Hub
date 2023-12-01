@@ -13,5 +13,7 @@ export const SVG = {
   downArrow:require('./downArrow.svg').default,
   logo:require('./logo.svg').default,
   carIcon:require('./mdi_cab.svg').default,
-
+  bell:require('./Bell.svg').default,
+carModel:require('./Label.svg').default,
+carNumber:require('./DriverLicense.svg').default,
 };

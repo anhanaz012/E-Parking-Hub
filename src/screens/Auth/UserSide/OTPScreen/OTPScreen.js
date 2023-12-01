@@ -112,6 +112,7 @@ const OTPScreen = ({navigation}) => {
             onPress={resendCodeHandler}
             extraStyle={[STYLES.textDecorationLine('underline')]}
           />
+          <Space mT = {20}/>
         </View>
       </ScrollView>
     </>

@@ -1,21 +1,13 @@
 import {StyleSheet} from 'react-native';
-import {COLORS, HEIGHT} from '../../../../assets/theme';
+import {COLORS, HEIGHT, HORIZON_MARGIN} from '../../../../assets/theme';
 export const styles = theme =>
   StyleSheet.create({
     container: {
-      flex: 1,
-      height: HEIGHT * 0.9,
-      backgroundColor: COLORS[theme].background,
+      paddingHorizontal: HORIZON_MARGIN,
     },
-    imgContainer: {
-      height: '45%',
-      width: '100%',
-      justifyContent: 'flex-end',
-    },
+
     contentContainer: {
-      height: '50%',
       width: '100%',
-      justifyContent: 'flex-start',
-      paddingHorizontal: 25,
+      paddingHorizontal: HORIZON_MARGIN,
     },
   });

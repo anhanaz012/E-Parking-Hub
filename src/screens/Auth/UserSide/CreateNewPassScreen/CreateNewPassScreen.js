@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ScrollView, View} from 'react-native';
 import {IMAGES} from '../../../../assets/images';
 import {SVG} from '../../../../assets/svg';
@@ -18,21 +18,16 @@ import AppText from '../../../../components/AppText/AppText';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 
 const CreateNewPassScreen = ({navigation}) => {
-  const [isPassFocused, setIsPassFocused] = React.useState(false);
-  const [isConfirmPassFocused, setIsConfirmPassFocused] = React.useState(false);
-  const handlePassFocus = () => {
-    setIsPassFocused(true);
+  const initialInputStates = {
+    newPassword: false,
+    confirmPassword: false,
   };
-
-  const handlePassBlur = () => {
-    setIsPassFocused(false);
+  const [isFocused, setIsFocused] = useState(initialInputStates);
+  const handleFocus = initialValue => {
+    setIsFocused({...isFocused, [initialValue]: true});
   };
-  const handleConfirmPassFocus = () => {
-    setIsConfirmPassFocused(true);
-  };
-
-  const handleConfirmPassBlur = () => {
-    setIsConfirmPassFocused(false);
+  const handleBlur = initialValue => {
+    setIsFocused({...isFocused, [initialValue]: false});
   };
   const theme = 'light';
   return (
@@ -69,24 +64,28 @@ const CreateNewPassScreen = ({navigation}) => {
         />
         <Space mT={50} />
         <AppInput
-          onFocus={handlePassFocus}
+          onFocus={() => {
+            handleFocus('newPassword');
+          }}
           placeholder={LABELS.newPass}
-          onBlur={handlePassBlur}
-          isFocused={isPassFocused}
+          onBlur={() => {
+            handleBlur('newPassword');
+          }}
+          isFocused={isFocused.newPassword}
           theme={theme}
           mL={10}
           iconLeft={
             <SVG.lock
               height={20}
               width={20}
-              fill={isPassFocused ? COLORS[theme].inputBorder : 'gray'}
+              fill={isFocused.newPassword ? COLORS[theme].inputBorder : 'gray'}
             />
           }
           iconRight={
             <SVG.eyeClose
               height={15}
               width={15}
-              fill={isPassFocused ? COLORS[theme].inputBorder : 'gray'}
+              fill={isFocused.newPassword ? COLORS[theme].inputBorder : 'gray'}
             />
           }
           onRightIconPress={() => {
@@ -95,24 +94,32 @@ const CreateNewPassScreen = ({navigation}) => {
         />
         <Space mT={20} />
         <AppInput
-          onFocus={handleConfirmPassFocus}
+          onFocus={() => {
+            handleFocus('confirmPassword');
+          }}
           placeholder={LABELS.confirmPass}
-          onBlur={handleConfirmPassBlur}
-          isFocused={isConfirmPassFocused}
+          onBlur={() => {
+            handleBlur('confirmPassword');
+          }}
+          isFocused={isFocused.confirmPassword}
           theme={theme}
           mL={10}
           iconLeft={
             <SVG.lock
               height={20}
               width={20}
-              fill={isConfirmPassFocused ? COLORS[theme].inputBorder : 'gray'}
+              fill={
+                isFocused.confirmPassword ? COLORS[theme].inputBorder : 'gray'
+              }
             />
           }
           iconRight={
             <SVG.eyeClose
               height={15}
               width={15}
-              fill={isConfirmPassFocused ? COLORS[theme].inputBorder : 'gray'}
+              fill={
+                isFocused.confirmPassword ? COLORS[theme].inputBorder : 'gray'
+              }
             />
           }
           onRightIconPress={() => {
@@ -125,9 +132,10 @@ const CreateNewPassScreen = ({navigation}) => {
           textColor={COMMON_COLORS.white}
           textVariant={'h4'}
           onPress={() => {
-            navigation.navigate('HomeScreen');
+            navigation.navigate('BottomNavigation');
           }}
         />
+        <Space mT={20} />
       </View>
     </ScrollView>
   );

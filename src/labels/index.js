@@ -1,8 +1,11 @@
 export const LABELS = {
-  firstName: 'First Name',
+  FullName: 'Full Name',
+  VehicleName: 'Vehicle Name',
+  licenseNo: 'License No',
+  carModel: 'Car Model',
   didntRecieveCode: "Didn't recieve code?",
   lastName: 'Last Name',
-  sendCode:'Send OTP',
+  sendCode: 'Send OTP',
   verify: 'Verify',
   save: 'Save',
   newPass: 'New Password',
