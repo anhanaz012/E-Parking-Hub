@@ -14,7 +14,7 @@ const IntroScreen = ({navigation}) => {
   const theme = 'light';
   const style = styles(theme);
   return (
-    <ScrollView style={[STYLES.flex1, STYLES.bgColor('white')]}>
+    <ScrollView style={[STYLES.flex1, STYLES.bgColor('white')]} showsVerticalScrollIndicator = {false}>
       <Space mT={80} />
       <AppLogo
         source={IMAGES.logo}

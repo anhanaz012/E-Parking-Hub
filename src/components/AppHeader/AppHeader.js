@@ -52,6 +52,7 @@ const AppHeader = props => {
           />
         )}
       </View>
+      
     </View>
   );
 };

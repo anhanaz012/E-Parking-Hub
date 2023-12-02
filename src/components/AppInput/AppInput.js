@@ -13,7 +13,7 @@ const AppInput = props => {
     secureTextEntry = false,
     onChangeText = () => {},
     value,
-    extraStyle = {},
+    extraStyle = {textInputContainer:{},textInput:{}},
     multiline = false,
     numberOfLines = 1,
     autoFocus = false,
@@ -27,6 +27,7 @@ const AppInput = props => {
     mL = 0,
     theme,
     maxLength,
+    
     cursorColor
   } = props;
   const style = styles(theme);
@@ -45,7 +46,9 @@ const AppInput = props => {
         )}
         <TextInput
         maxLength={maxLength}
+        numberOfLines={numberOfLines}
         cursorColor={cursorColor}
+        textAlignVertical={multiline ? 'top' : 'center'}
           {...props}
           value={value}
           placeholder={placeholder}
@@ -58,7 +61,7 @@ const AppInput = props => {
           secureTextEntry={secureTextEntry}
           onChangeText={onChangeText}
           multiline={multiline}
-          style={[style.textInput(multiline, isFocused), extraStyle]}
+          style={[style.textInput(multiline, isFocused), extraStyle.textInput]}
           onFocus={onFocus}
           onBlur={onBlur}
         />

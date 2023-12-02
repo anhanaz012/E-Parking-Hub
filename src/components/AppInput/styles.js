@@ -12,8 +12,8 @@ export const styles = theme =>
       borderWidth: 1,
     }),
     textInput: (multiline, isFocused) => ({
-      height: 55,
-      width: '85%',
+      height: multiline ? 100 : 50,
+      width: multiline ? '100%' : '85%',
       color: COLORS[theme].text,
       fontSize: 15,
       padding: 10,

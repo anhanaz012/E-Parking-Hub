@@ -35,3 +35,25 @@ export const vendorBoardingScreensData = [
     text: LABELS.onBoardVendorText3,
   },
 ];
+export const feedbackStars = [
+  {
+    id:1,
+    isSelected:false
+  },
+  {
+    id:2,
+    isSelected:false
+  },
+  {
+    id:3,
+    isSelected:false
+  },
+  {
+    id:4,
+    isSelected:false
+  },
+  {
+    id:5,
+    isSelected:false
+  }
+]

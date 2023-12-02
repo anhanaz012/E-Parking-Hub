@@ -10,10 +10,6 @@ export const Theme = LIGHT | DARK;
 export const COMMON_COLORS = {
   black: '#212121',
   white: '#fff',
-  // primary: '#A0A2F0',
-  // secondary: '#4448AE',
-  // primary:'#3D0354',
-  // secondary:'#3D0354',
   gradientPurple:'#3D0354',
   gradientBlue:'#565DD4',
   primary: '#7200BC',
