@@ -51,10 +51,10 @@ const ForgotPassScreen = ({navigation}) => {
           <AppLogo
             source={IMAGES.Car2}
             resizeMode={'contain'}
-            height={250}
-            width={'80%'}
+            height={200}
+            width={'70%'}
           />
-          <Space mT={30} />
+          <Space mT={50} />
           <AppText
             title={LABELS.forgotPassDetails}
             fontFamily={Fonts.latoRegular}
@@ -62,7 +62,7 @@ const ForgotPassScreen = ({navigation}) => {
             variant={'h4'}
             textAlign={'center'}
           />
-          <Space mT={80} />
+          <Space mT={50} />
           <AppInput
             onFocus={handleEmailFocus}
             placeholder={LABELS.enterEmail}

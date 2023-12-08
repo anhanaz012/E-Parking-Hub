@@ -1,20 +1,22 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
-import { IMAGES } from '../../../../assets/images';
-import { COLORS, COMMON_COLORS, Fonts, STYLES } from '../../../../assets/theme';
+import {ScrollView, View} from 'react-native';
+import {IMAGES} from '../../../../assets/images';
+import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
 import AppLogo from '../../../../components/AppLogo/AppLogo';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import Space from '../../../../components/Space/Space';
-import { LABELS } from '../../../../labels';
-import { styles } from './styles';
+import {LABELS} from '../../../../labels';
+import {styles} from './styles';
 
 const IntroScreen = ({navigation}) => {
   const theme = 'light';
   const style = styles(theme);
   return (
-    <ScrollView style={[STYLES.flex1, STYLES.bgColor('white')]} showsVerticalScrollIndicator = {false}>
+    <ScrollView
+      style={[STYLES.flex1, STYLES.bgColor('white')]}
+      showsVerticalScrollIndicator={false}>
       <Space mT={80} />
       <AppLogo
         source={IMAGES.logo}

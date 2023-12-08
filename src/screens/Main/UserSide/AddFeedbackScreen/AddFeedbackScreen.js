@@ -31,7 +31,7 @@ const AddFeedbackScreen = ({navigation}) => {
         onLeftIconPress={() => {
           navigation.goBack();
         }}
-        mL={10}
+        mL={15}
       />
       <Space mT={30} />
       <View style={[STYLES.pH(HORIZON_MARGIN)]}>
@@ -75,6 +75,7 @@ const AddFeedbackScreen = ({navigation}) => {
           textVariant={'h4'}
         />
       </View>
+      <Space mT={20} />
     </ScrollView>
   );
 };

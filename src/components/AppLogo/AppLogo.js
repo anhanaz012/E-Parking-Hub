@@ -1,8 +1,6 @@
 import React from 'react';
-import {Text, Image} from 'react-native';
-import {IMAGES} from '../../assets/images';
 import FastImage from 'react-native-fast-image';
-import {styles} from './styles';
+import { styles } from './styles';
 
 const AppLogo = props => {
   const {

@@ -10,6 +10,7 @@ export const IMAGES = {
   vallet:require('./vallet.png'),
   cancel:require('./cancel.png'),
   lock:require('./lock.png'),
-  chair:require('./Parking7.png')
+  chair:require('./Parking7.png'),
+  parkingHome:require('./ParkingHome.jpg'),
+  carSlot1:require('./CarSlot1.png'),
 };
-

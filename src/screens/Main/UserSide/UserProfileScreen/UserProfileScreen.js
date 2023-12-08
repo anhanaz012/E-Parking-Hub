@@ -27,7 +27,7 @@ const UserProfileScreen = ({navigation}) => {
         onLeftIconPress={() => {
           navigation.goBack();
         }}
-        mL={10}
+        mL={15}
       />
       <Space mT={20} />
       <View style={[STYLES.pH(HORIZON_MARGIN)]}>

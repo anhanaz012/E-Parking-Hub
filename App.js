@@ -1,8 +1,7 @@
-import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import BottomNavigation from './src/navigation/BottomNavigation/BottomNavigation';
 import AppNavigator from './src/navigation';
-import SignUpScreen from './src/screens/Auth/UserSide/SignUp/SignUpScreen';
+import BottomNavigation from './src/navigation/BottomNavigation/BottomNavigation';
+import {NavigationContainer} from '@react-navigation/native';
 const App = () => {
   return (
     <>

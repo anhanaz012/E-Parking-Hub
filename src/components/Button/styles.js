@@ -5,7 +5,7 @@ export const styles = (variant, theme) =>
     btnContainer: {
       height: 50,
       width: '100%',
-      backgroundColor: COLORS.dark.primary,
+      backgroundColor: COLORS.dark.steelGrey,
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'center',

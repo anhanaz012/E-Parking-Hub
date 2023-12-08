@@ -50,7 +50,7 @@ const CreateNewPassScreen = ({navigation}) => {
         <AppLogo
           source={IMAGES.parking1}
           resizeMode={'contain'}
-          height={250}
+          height={200}
           width={'100%'}
         />
         <Space mT={20} />

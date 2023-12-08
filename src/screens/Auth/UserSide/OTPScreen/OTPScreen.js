@@ -68,7 +68,7 @@ const OTPScreen = ({navigation}) => {
           <AppLogo
             source={IMAGES.Car}
             resizeMode={'contain'}
-            height={250}
+            height={200}
             width={'80%'}
           />
           <Space mT={50} />

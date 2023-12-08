@@ -6,6 +6,8 @@ import UserProfileScreen from '../../screens/Main/UserSide/UserProfileScreen/Use
 import AddFeedbackScreen from '../../screens/Main/UserSide/AddFeedbackScreen/AddFeedbackScreen';
 import ChooseParkingSlot from '../../screens/Main/UserSide/ChooseParkingSlot/ChooseParkingSlot';
 import PaymentScreen from '../../screens/Main/UserSide/PaymentScreen/PaymentScreen';
+import ConfirmParkingScreen from '../../screens/Main/UserSide/ConfirmParkingScreen/ConfirmParkingScreen';
+import MyBookingScreen from '../../screens/Main/UserSide/MyBookingScreen/MyBookingScreen';
 const Tab = createBottomTabNavigator();
 const BottomNavigation = () => {
   const options = {
@@ -19,8 +21,8 @@ const BottomNavigation = () => {
       <Tab.Screen name="AddFeedback" component={AddFeedbackScreen} />
       <Tab.Screen name="ChooseParking" component={ChooseParkingSlot} />
       <Tab.Screen name="Payment" component={PaymentScreen} />
-
-      
+      <Tab.Screen name="ConfirmParking" component={ConfirmParkingScreen} />
+      <Tab.Screen name="MyBooking" component={MyBookingScreen} />
     </Tab.Navigator>
   );
 };

@@ -17,11 +17,12 @@ const AppHeader = props => {
     theme,
     textVariant,
     fontFamily = Fonts.merriWeatherSansRegular,
-    extraStyle = {container:{}}
+    extraStyle = {container: {}},
+    children = null,
   } = props;
   const style = styles(theme);
   return (
-    <View style={[style.headerContainer,extraStyle.container]}>
+    <View style={[style.headerContainer, extraStyle.container]}>
       <View style={style.leftContainer}>
         {iconLeft && (
           <>
@@ -34,12 +35,17 @@ const AppHeader = props => {
           </>
         )}
         {title && (
-          <AppText
-            variant={textVariant ? textVariant : 'h3'}
-            title={title}
-            color={COLORS[theme].text}
-            fontFamily={fontFamily}
-          />
+          <>
+            <View>
+              <AppText
+                variant={textVariant ? textVariant : 'h3'}
+                title={title}
+                color={COLORS[theme].text}
+                fontFamily={fontFamily}
+              />
+              {children && children}
+            </View>
+          </>
         )}
       </View>
       <View style={style.rightContainer}>
@@ -52,7 +58,6 @@ const AppHeader = props => {
           />
         )}
       </View>
-      
     </View>
   );
 };
