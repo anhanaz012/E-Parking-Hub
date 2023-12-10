@@ -10,6 +10,7 @@ const AppHeader = props => {
   const {
     iconLeft = null,
     iconRight = null,
+    textColor,
     onLeftIconPress = () => {},
     onRightIconPress = () => {},
     mL = 0,
@@ -40,7 +41,7 @@ const AppHeader = props => {
               <AppText
                 variant={textVariant ? textVariant : 'h3'}
                 title={title}
-                color={COLORS[theme].text}
+                color={textColor ? textColor : COLORS[theme].text}
                 fontFamily={fontFamily}
               />
               {children && children}

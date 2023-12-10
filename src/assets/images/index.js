@@ -13,4 +13,5 @@ export const IMAGES = {
   chair:require('./Parking7.png'),
   parkingHome:require('./ParkingHome.jpg'),
   carSlot1:require('./CarSlot1.png'),
+  header:require('./Header.png')
 };

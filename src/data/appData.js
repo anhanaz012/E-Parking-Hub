@@ -27,14 +27,14 @@ export const feedbackStars = [
 export const PaymentData = [
   {
     id: 1,
-    title: LABELS.payPal,
-    icon: SVG.paypal,
+    title: LABELS.jazzCash,
+    icon: SVG.jazCash,
     isSelected: false,
   },
   {
     id: 2,
-    title: LABELS.GooglePay,
-    icon: SVG.google,
+    title: LABELS.easyPaisa,
+    icon: SVG.easyPaisa,
     isSelected: false,
   },
   {

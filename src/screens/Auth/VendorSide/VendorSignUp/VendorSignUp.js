@@ -13,11 +13,10 @@ import Icon from '../../../../components/Icon/Icon';
 import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
 import {styles} from './styles';
-const SignUpScreen = ({navigation}) => {
+const VendorSignUp = ({navigation}) => {
   const initialInputStates = {
     fullName: false,
     email: false,
-    carModel: false,
     phone: false,
     password: false,
   };
@@ -38,7 +37,7 @@ const SignUpScreen = ({navigation}) => {
   const handlePhoneValidation = () => {
     const isValid = phoneInput.current?.isValidNumber(phoneNumber);
     console.log(isValid);
-    navigation.navigate('SignInScreen');
+    navigation.navigate('SpaceDetailsScreen');
   };
   const handlePhoneInput = value => {
     setPhoneNumber(value);
@@ -73,7 +72,7 @@ const SignUpScreen = ({navigation}) => {
               color={COMMON_COLORS.secondary}
             />
           </View>
-          <Space mT={20} />
+          <Space mT={40} />
 
           <AppInput
             onFocus={() => {
@@ -146,29 +145,6 @@ const SignUpScreen = ({navigation}) => {
           />
           <Space mT={20} />
 
-          <AppInput
-            onFocus={() => {
-              handleFocus('carModel');
-            }}
-            placeholder={LABELS.carModel}
-            onBlur={() => {
-              handleBlur('carModel');
-            }}
-            isFocused={isFocused.carModel}
-            theme={theme}
-            mL={10}
-            iconLeft={
-              <SVG.carModel
-                height={20}
-                width={20}
-                fill={isFocused.carModel ? COLORS[theme].inputBorder : 'gray'}
-              />
-            }
-            onRightIconPress={() => {
-              console.log('right icon pressed');
-            }}
-          />
-          <Space mT={20} />
           <PhoneInput
             placeholder={LABELS.phonePlaceholder}
             ref={phoneInput}
@@ -217,7 +193,7 @@ const SignUpScreen = ({navigation}) => {
               }}
             />
           </View>
-          <Space mT={25} />
+          <Space mT={45} />
           <GradientButton
             title={LABELS.signup}
             onPress={handlePhoneValidation}
@@ -239,7 +215,7 @@ const SignUpScreen = ({navigation}) => {
               color={COMMON_COLORS.secondary}
               fontFamily={Fonts.latoRegular}
               onPress={() => {
-                navigation.navigate('SignInScreen');
+                navigation.navigate('VendorSignIn');
               }}
             />
           </View>
@@ -250,4 +226,4 @@ const SignUpScreen = ({navigation}) => {
   );
 };
 
-export default SignUpScreen;
+export default VendorSignUp;

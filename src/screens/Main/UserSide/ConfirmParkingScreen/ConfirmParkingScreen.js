@@ -3,12 +3,12 @@ import {View} from 'react-native';
 import {SVG} from '../../../../assets/svg';
 import {Fonts, HORIZON_MARGIN, STYLES} from '../../../../assets/theme';
 import AppText from '../../../../components/AppText/AppText';
+import AppButton from '../../../../components/Button/Button';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import Icon from '../../../../components/Icon/Icon';
 import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
 import {styles} from './styles';
-import AppButton from '../../../../components/Button/Button';
 
 const ConfirmParkingScreen = () => {
   const [selected, setSelected] = useState('');
@@ -57,98 +57,98 @@ const ConfirmParkingScreen = () => {
       </View>
       <Space mT={20} />
       <View style={[STYLES.pH(HORIZON_MARGIN)]}>
-        <View style={[STYLES.rowCenterBt, STYLES.height(40), STYLES.AICenter]}>
-          <AppText
-            title={'Parking area'}
-            theme={theme}
-            variant={'body1'}
-            color={'grey'}
-            fontFamily={Fonts.latoRegular}
-          />
-          <AppText
-            title={'Louis Menentron'}
-            theme={theme}
-            variant={'body1'}
-            fontFamily={Fonts.merriWeatherSansRegular}
-            color={'black'}
-          />
-        </View>
-        <Space mT={10} />
-
-        <View style={[STYLES.rowCenterBt, STYLES.height(40), STYLES.AICenter]}>
-          <AppText
-            title={'Slot No'}
-            theme={theme}
-            variant={'body1'}
-            fontFamily={Fonts.latoRegular}
-            color={'grey'}
-          />
-          <AppText
-            title={'A2'}
-            theme={theme}
-            variant={'body1'}
-            fontFamily={Fonts.merriWeatherSansRegular}
-            color={'black'}
-          />
-        </View>
-        <Space mT={10} />
-
-        <View style={[STYLES.rowCenterBt, STYLES.height(40), STYLES.AICenter]}>
-          <AppText
-            title={'Price'}
-            theme={theme}
-            variant={'body1'}
-            fontFamily={Fonts.latoRegular}
-            color={'grey'}
-          />
-          <AppText
-            title={'$ 2.00/hr'}
-            theme={theme}
-            variant={'body1'}
-            fontFamily={Fonts.merriWeatherSansRegular}
-            color={'black'}
-          />
-        </View>
-        <Space mT={10} />
-
-        <View style={[STYLES.rowCenterBt, STYLES.height(40), STYLES.AICenter]}>
-          <AppText
-            title={'Date'}
-            theme={theme}
-            variant={'body1'}
-            fontFamily={Fonts.latoRegular}
-          />
-          <View style={[STYLES.row]}>
+        <Space mT={20} />
+        <View style={[STYLES.row]}>
+          <View style={[STYLES.width('50%')]}>
             <AppText
-              title={'Select Date'}
+              title={LABELS.parkingArea}
               theme={theme}
               variant={'body1'}
-              fontFamily={Fonts.merriWeatherSansRegular}
-              color={'black'}
+              color={'grey'}
+              fontFamily={Fonts.latoRegular}
             />
-            <Space mL={5} />
-            <Icon SVGIcon={<SVG.leftArrow fill={'black'} />} />
-          </View>
-        </View>
-        <Space mT={10} />
-
-        <View style={[STYLES.rowCenterBt, STYLES.height(40), STYLES.AICenter]}>
-          <AppText
-            title={'Time'}
-            theme={theme}
-            variant={'body1'}
-            fontFamily={Fonts.latoRegular}
-          />
-          <View style={[STYLES.row]}>
+            <Space mT={15} />
             <AppText
-              title={'Select Time'}
+              title={LABELS.slotID}
               theme={theme}
               variant={'body1'}
-              fontFamily={Fonts.merriWeatherSansRegular}
-              color={'black'}
+              color={'grey'}
+              fontFamily={Fonts.latoRegular}
             />
-            <Icon SVGIcon={<SVG.leftArrow fill={'black'} />} />
+            <Space mT={15} />
+            <AppText
+              title={LABELS.price}
+              theme={theme}
+              variant={'body1'}
+              color={'grey'}
+              fontFamily={Fonts.latoRegular}
+            />
+
+            <Space mT={15} />
+            <AppText
+              title={LABELS.date}
+              theme={theme}
+              variant={'body1'}
+              color={'grey'}
+              fontFamily={Fonts.latoRegular}
+            />
+            <Space mT={15} />
+            <AppText
+              title={LABELS.time}
+              theme={theme}
+              variant={'body1'}
+              color={'grey'}
+              fontFamily={Fonts.latoRegular}
+            />
           </View>
+          
+          <View style={[STYLES.width('50%')]}>
+            <AppText
+              title={'Louis Marventen'}
+              theme={theme}
+              variant={'body1'}
+              fontFamily={Fonts.latoRegular}
+            />
+            <Space mT={15} />
+            <AppText
+              title={'A2'}
+              theme={theme}
+              variant={'body1'}
+              fontFamily={Fonts.latoRegular}
+            />
+            <Space mT={15} />
+            <AppText
+              title={'$10/hr'}
+              theme={theme}
+              variant={'body1'}
+              fontFamily={Fonts.latoRegular}
+            />
+            <Space mT={15} />
+            <View style={[STYLES.row]}>
+              <AppText
+                title={'Select Date'}
+                theme={theme}
+                variant={'body1'}
+                fontFamily={Fonts.latoRegular}
+              />
+              <Space mL={5} />
+              <Icon
+                SVGIcon={<SVG.calender fill={'black'} height={15} width={15} />}
+              />
+            </View>
+            <Space mT={15} />
+            <View style={[STYLES.row]}>
+              <AppText
+                title={'Select Time'}
+                theme={theme}
+                variant={'body1'}
+                fontFamily={Fonts.latoRegular}
+              />
+              <Space mL={5} />
+              <Icon SVGIcon={<SVG.clock fill={'black'} height={15} width={15} />} />
+            </View>
+          </View>
+
         </View>
         <Space mT={30} />
         <View

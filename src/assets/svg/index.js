@@ -28,5 +28,10 @@ export const SVG = {
   unfilledCircle: require('./unfilledCircle.svg').default,
   search: require('./search.svg').default,
   rightarrow: require('./rightarrow.svg').default,
+  clock:require('./clock.svg').default,
+  calender:require('./calender.svg').default,
   boxrightarrow: require('./boxarrowrighticon.svg').default,
+  jazCash: require('./Jazzcash.svg').default,
+  easyPaisa: require('./Easypaisa.svg').default,
+  home: require('./Home.svg').default,
 };

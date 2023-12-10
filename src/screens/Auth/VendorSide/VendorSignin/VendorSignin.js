@@ -10,7 +10,7 @@ import Checkbox from '../../../../components/Checkbox/Checkbox';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
-const SignInScreen = ({navigation}) => {
+const VendorSignIn = ({navigation}) => {
   const initialInputStates = {
     email: false,
     password: false,
@@ -25,7 +25,7 @@ const SignInScreen = ({navigation}) => {
     setIsFocused({...isFocused, [initialValue]: false});
   };
   const handleSigIn = () => {
-    navigation.navigate('BottomNavigation');
+    navigation.navigate('VendorBottomNavigation');
   };
   return (
     <>
@@ -131,7 +131,7 @@ const SignInScreen = ({navigation}) => {
                 fontFamily={Fonts.mavenRegular}
                 color={COMMON_COLORS.secondary}
                 onPress={() => {
-                  navigation.navigate('ForgotPassScreen');
+                  navigation.navigate('VendorForgotPass');
                 }}
               />
             </View>
@@ -220,7 +220,7 @@ const SignInScreen = ({navigation}) => {
               color={COMMON_COLORS.secondary}
               fontFamily={Fonts.latoRegular}
               onPress={() => {
-                navigation.navigate('SignUpScreen');
+                navigation.navigate('VendorSignUp');
               }}
             />
           </View>
@@ -231,4 +231,4 @@ const SignInScreen = ({navigation}) => {
   );
 };
 
-export default SignInScreen;
+export default VendorSignIn;

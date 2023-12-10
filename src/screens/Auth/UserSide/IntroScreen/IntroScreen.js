@@ -62,6 +62,7 @@ const IntroScreen = ({navigation}) => {
           extraStyle={{btnContainer: STYLES.bgColor(COMMON_COLORS.steelGrey)}}
           textVariant={'h5'}
           textColor={COMMON_COLORS.secondary}
+          onPress = {()=>{navigation.navigate('VendorAuthStack')}}
         />
         <Space mT={20} />
       </View>
