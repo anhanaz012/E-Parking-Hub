@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View} from 'react-native';
+import {Alert, View} from 'react-native';
 import {SVG} from '../../../../assets/svg';
 import {Fonts, HORIZON_MARGIN, STYLES} from '../../../../assets/theme';
 import AppText from '../../../../components/AppText/AppText';
@@ -9,8 +9,9 @@ import Icon from '../../../../components/Icon/Icon';
 import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
 import {styles} from './styles';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-const ConfirmParkingScreen = () => {
+const ConfirmParkingScreen = ({navigation}) => {
   const [selected, setSelected] = useState('');
   const [showCalender, setShowCalender] = useState(true);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -54,6 +55,12 @@ const ConfirmParkingScreen = () => {
             SVGIcon={<SVG.cancel fill={'black'} height={20} width={20} />}
           />
         </View>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
       </View>
       <Space mT={20} />
       <View style={[STYLES.pH(HORIZON_MARGIN)]}>
@@ -101,7 +108,7 @@ const ConfirmParkingScreen = () => {
               fontFamily={Fonts.latoRegular}
             />
           </View>
-          
+
           <View style={[STYLES.width('50%')]}>
             <AppText
               title={'Louis Marventen'}
@@ -130,10 +137,12 @@ const ConfirmParkingScreen = () => {
                 theme={theme}
                 variant={'body1'}
                 fontFamily={Fonts.latoRegular}
+                onPress={showDatePicker}
               />
               <Space mL={5} />
               <Icon
                 SVGIcon={<SVG.calender fill={'black'} height={15} width={15} />}
+                onPress={showDatePicker}
               />
             </View>
             <Space mT={15} />
@@ -145,10 +154,11 @@ const ConfirmParkingScreen = () => {
                 fontFamily={Fonts.latoRegular}
               />
               <Space mL={5} />
-              <Icon SVGIcon={<SVG.clock fill={'black'} height={15} width={15} />} />
+              <Icon
+                SVGIcon={<SVG.clock fill={'black'} height={15} width={15} />}
+              />
             </View>
           </View>
-
         </View>
         <Space mT={30} />
         <View
@@ -162,6 +172,9 @@ const ConfirmParkingScreen = () => {
             textVariant={'h5'}
             theme={'light'}
             extraStyle={{btnContainer: {width: '50%'}}}
+            onPress={() => {
+              navigation.navigate('HomeStack', {screen: 'ChooseParkingSlot'});
+            }}
           />
           <Space mL={10} />
           <GradientButton
@@ -169,6 +182,10 @@ const ConfirmParkingScreen = () => {
             textColor={'white'}
             textVariant={'h5'}
             theme={'light'}
+            onPress={() => {
+              Alert.alert('Booking request is sent ');
+              navigation.navigate('HomeStack', {screen: 'FeeCalculationScreen'});
+            }}
           />
         </View>
       </View>

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ScrollView, View} from 'react-native';
+import {Alert, ScrollView, View} from 'react-native';
 import {SVG} from '../../../../assets/svg';
 import {COLORS, Fonts, HORIZON_MARGIN, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
@@ -9,10 +9,12 @@ import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
 import {styles} from './styles';
 import {PaymentData} from '../../../../data/appData';
+import AppModal from '../../../../components/AppModal/AppModal';
 
 const PaymentScreen = ({navigation}) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [isSelected, setIsSelected] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const theme = 'light';
   const style = styles;
   const handleSelectPaymentMethod = item => {
@@ -20,9 +22,21 @@ const PaymentScreen = ({navigation}) => {
     setSelectedPaymentMethod(item);
     PaymentData[index].isSelected = !PaymentData[index].isSelected;
     console.log(PaymentData);
+    setIsModalVisible(true);
   };
   return (
     <ScrollView style={[STYLES.flex1, STYLES.bgColor('white')]}>
+      <AppModal
+        isVisible={isModalVisible}
+        onBtnPress={() => {
+          Alert.alert('Payment Successful');
+          setIsModalVisible(false);
+          navigation.navigate('BottomNavigation', {screen: 'Home'});
+        }}
+        onClose={() => {
+          setIsModalVisible(false);
+        }}
+      />
       <AppHeader
         theme={theme}
         iconLeft={<SVG.leftArrow fill={'black'} height={20} width={20} />}

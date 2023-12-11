@@ -1,24 +1,24 @@
 import {StyleSheet} from 'react-native';
 import {COLORS, HORIZON_MARGIN} from '../../assets/theme';
-import {Fonts} from '../../assets/fonts';
+import { Fonts } from '../../assets/theme';
 export const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     width: '100%',
     alignSelf: 'center',
     marginVertical: 20,
-    height: 380,
+    height: 400,
     borderRadius: 10,
     backgroundColor: 'white',
     paddingHorizontal: HORIZON_MARGIN,
   },
   textInpuCont: {
     borderWidth: 1,
-    borderColor: COLORS.dark.lightGrey,
+    borderColor: 'grey',
     borderRadius: 5,
-    backgroundColor: COLORS.dark.lightwhite,
+    backgroundColor: COLORS.dark.white,
     paddingHorizontal: HORIZON_MARGIN,
-    fontFamily: Fonts.PoppinsRegular,
+    fontFamily: Fonts.latoRegular,
   },
   dropdownCont: {
     flexDirection: 'row',
@@ -28,16 +28,16 @@ export const styles = StyleSheet.create({
   dropDown: {
     width: '30%',
     borderWidth: 1,
-    borderColor: COLORS.dark.lightGrey,
+    borderColor: 'grey',
     borderRadius: 5,
-    backgroundColor: COLORS.dark.lightwhite,
+    backgroundColor: COLORS.dark.white,
     paddingHorizontal: HORIZON_MARGIN,
-    fontFamily: Fonts.PoppinsRegular,
+    fontFamily: Fonts.latoRegular,
   },
   backBtn: {
-    borderColor: COLORS.dark.lightGrey,
+    borderColor: 'grey',
   },
   backBtnText: {
-    color: COLORS.dark.lightGrey,
+    color: 'grey',
   },
 });

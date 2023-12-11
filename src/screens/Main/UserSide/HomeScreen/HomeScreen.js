@@ -1,8 +1,8 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
-import { IMAGES } from '../../../../assets/images';
-import { SVG } from '../../../../assets/svg';
-import { COLORS, Fonts, HORIZON_MARGIN, STYLES } from '../../../../assets/theme';
+import {ScrollView, View} from 'react-native';
+import {IMAGES} from '../../../../assets/images';
+import {SVG} from '../../../../assets/svg';
+import {COLORS, Fonts, HORIZON_MARGIN, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppLogo from '../../../../components/AppLogo/AppLogo';
@@ -10,8 +10,8 @@ import AppText from '../../../../components/AppText/AppText';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import Icon from '../../../../components/Icon/Icon';
 import Space from '../../../../components/Space/Space';
-import { LABELS } from '../../../../labels';
-import { styles } from './styles';
+import {LABELS} from '../../../../labels';
+import {styles} from './styles';
 
 const HomeScreen = ({navigation}) => {
   const theme = 'light';
@@ -125,7 +125,9 @@ const HomeScreen = ({navigation}) => {
                     <SVG.boxrightarrow fill={'white'} height={17} width={17} />
                   }
                   onPress={() => {
-                    navigation.navigate('HomeStack', {screen: 'AreasListScreen'});
+                    navigation.navigate('HomeStack', {
+                      screen: 'ChooseParkingSlot',
+                    });
                   }}
                 />
               </View>

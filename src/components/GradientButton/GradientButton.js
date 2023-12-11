@@ -31,7 +31,7 @@ const GradientButton = props => {
         {...props}>
         {iconLeft && (
           <>
-            <Icon SVGIcon={iconLeft} iconLeft={true} />
+            <Icon SVGIcon={iconLeft} iconLeft={true} onPress = {onPress}/>
             <Space mL={mL} />
           </>
         )}

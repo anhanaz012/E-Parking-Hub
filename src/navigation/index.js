@@ -24,6 +24,7 @@ import AreasListScreens from '../screens/Main/UserSide/AreasListScreen/AreasList
 import ChooseParkingSlot from '../screens/Main/UserSide/ChooseParkingSlot/ChooseParkingSlot';
 import PaymentScreen from '../screens/Main/UserSide/PaymentScreen/PaymentScreen';
 import ConfirmParkingScreen from '../screens/Main/UserSide/ConfirmParkingScreen/ConfirmParkingScreen';
+import FeeCalculationScreen from '../screens/Main/UserSide/FeeCalculationScreen/FeeCalculationScreen';
 const Stack = createStackNavigator();
 const options = {
   headerShown: false,
@@ -51,6 +52,7 @@ const HomeStack = () => {
       <Stack.Screen name="ChooseParkingSlot" component={ChooseParkingSlot} />
       <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
       <Stack.Screen name="ConfirmParkingScreen" component={ConfirmParkingScreen} />
+      <Stack.Screen name="FeeCalculationScreen" component={FeeCalculationScreen} />
     </Stack.Navigator>
   );
 };

@@ -17,8 +17,13 @@ const ChooseParkingSlot = ({navigation}) => {
     {id: 3, name: 'A3', status: 'available'},
     {id: 4, name: 'A4', status: 'occupied'},
     {id: 5, name: 'A5', status: 'available'},
-    {id: 6, name: 'B1', status: 'entry'},
-    {id: 7, name: 'B2', status: 'exit'},
+    {id: 6, name: 'A6', status: 'entry'},
+    {id: 7, name: 'B1', status: 'exit'},
+    {id: 8, name: 'B2', status: 'available'},
+    {id: 9, name: 'B3', status: 'occupied'},
+    {id: 10, name: 'B4', status: 'available'},
+    {id: 11, name: 'B5', status: 'occupied'},
+    {id: 12, name: 'B6', status: 'available'},
   ]);
   const [selectedSpot, setSelectedSpot] = useState(null);
 
@@ -27,97 +32,24 @@ const ChooseParkingSlot = ({navigation}) => {
   };
 
   const renderSpotItem = ({item}) => (
-    // <TouchableOpacity
-    //   style={[
-    //     styles.spotItem,
-    //     selectedSpot === item.id && styles.selectedSpotItem,
-    //   ]}
-    //   onPress={() => handleSpotSelection(item.id)}>
-    //   {selectedSpot === item.id && (
-    //     <AppLogo
-    //       source={IMAGES.carSlot1}
-    //       height={60}
-    //       width={60}
-    //       resizeMode={'contain'}
-    //     />
-    //   )}
-    //   <Text style={styles.spotText}>{item.name}</Text>
-    //   <Icon SVGIcon={<SVG.bell fill={'black'} />} />
-    // </TouchableOpacity>
-
-    <TouchableOpacity
-      style={{
-        height: 100,
-        width: 75,
-        backgroundColor: 'transparent',
-        borderLeftWidth: 1,
-        borderRightWidth: 1,
-        borderColor: 'lightgrey',
-        margin: 5,
-      }}>
-      {item.status === 'occupied' ? (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'red',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <AppLogo source={IMAGES.carSlot1} height={'70%'} width={'70%'} />
-          <AppText
-            title={item.name}
-            variant={'body1'}
-            color={'black'}
-            fontFamily={Fonts.latoRegular}
+    <>
+      <TouchableOpacity
+        style={[
+          styles.spotItem,
+          selectedSpot === item.id && styles.selectedSpotItem,
+        ]}
+        onPress={() => handleSpotSelection(item.id)}>
+        {selectedSpot === item.id && (
+          <AppLogo
+            source={IMAGES.carSlot1}
+            height={60}
+            width={60}
+            resizeMode={'contain'}
           />
-        </View>
-      ) : item.status === 'entry' ? (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'green',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <AppText
-            title={item.name}
-            variant={'body1'}
-            color={'black'}
-            fontFamily={Fonts.latoRegular}
-          />
-        </View>
-      ) : item.status === 'exit' ? (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'yellow',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <AppText
-            title={item.name}
-            variant={'body1'}
-            color={'black'}
-            fontFamily={Fonts.latoRegular}
-          />
-        </View>
-      ) : (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'white',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <AppText
-            title={item.name}
-            variant={'body1'}
-            color={'black'}
-            fontFamily={Fonts.latoRegular}
-          />
-        </View>
-      )}
-    </TouchableOpacity>
+        )}
+        <Text style={styles.spotText}>{item.name}</Text>
+      </TouchableOpacity>
+    </>
   );
 
   const displayDirections = () => {
@@ -139,7 +71,7 @@ const ChooseParkingSlot = ({navigation}) => {
         data={parkingSpots}
         keyExtractor={item => item.id.toString()}
         renderItem={renderSpotItem}
-        numColumns={4} // Adjust the number of columns as needed
+        numColumns={4}
         contentContainerStyle={styles.spotList}
       />
       <View style={styles.legendContainer}>
@@ -178,10 +110,16 @@ const ChooseParkingSlot = ({navigation}) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          navigation.navigate('ConfirmParking', {selectedSpot});
+          navigation.navigate('HomeStack', {screen: 'ConfirmParkingScreen'});
         }}
         disabled={!selectedSpot}>
-        <Text style={styles.buttonText}>Continue</Text>
+        <Text
+          style={styles.buttonText}
+          onPress={() => {
+            navigation.navigate('HomeStack', {screen: 'ConfirmParkingScreen'});
+          }}>
+          Continue
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -211,8 +149,8 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderColor: 'lightgrey',
-    height: 150,
-    width: 80,
+    height: 170,
+    width: 65,
     margin: 8,
     justifyContent: 'center',
     alignItems: 'center',

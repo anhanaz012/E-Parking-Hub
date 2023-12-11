@@ -10,7 +10,7 @@ import {styles} from './styles';
 import AppButton from '../../../../components/Button/Button';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 
-const FeeCalculationScreen = () => {
+const FeeCalculationScreen = ({navigation}) => {
   const theme = 'light';
   const style = styles;
 
@@ -21,6 +21,9 @@ const FeeCalculationScreen = () => {
         title={LABELS.parkingTimer}
         iconLeft={<SVG.leftArrow fill={'black'} height={20} width={20} />}
         mL={15}
+        onLeftIconPress={() => {
+          navigation.goBack();
+        }}
       />
       <Space mT={80} />
       <View style={[STYLES.row, STYLES.JCEvenly, STYLES.pH(HORIZON_MARGIN)]}>
@@ -164,6 +167,9 @@ const FeeCalculationScreen = () => {
           title={'Proceed to Pay'}
           textColor={'white'}
           textVariant={'h5'}
+          onPress={() => {
+            navigation.navigate('HomeStack', {screen: 'PaymentScreen'});
+          }}
         />
       </View>
     </>
