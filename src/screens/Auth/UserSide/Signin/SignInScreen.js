@@ -1,15 +1,20 @@
-import React, {useState} from 'react';
-import {ScrollView, View} from 'react-native';
-import {SVG} from '../../../../assets/svg';
-import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
+import React, { useState } from 'react';
+import { ScrollView, View } from 'react-native';
+import { SVG } from '../../../../assets/svg';
+import { COLORS, COMMON_COLORS, Fonts, STYLES } from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import {LABELS} from '../../../../labels';
+import { LABELS } from '../../../../labels';
+import { ERRORS } from '../../../../labels/error';
+import { LoginHandler } from '../../../../services/firebase';
+import { Toast } from '../../../../utils/native';
+import { isValidatedLogin } from '../../../../utils/validation';
 const SignInScreen = ({navigation}) => {
   const initialInputStates = {
     email: false,
@@ -17,6 +22,9 @@ const SignInScreen = ({navigation}) => {
   };
   const [isChecked, setIsChecked] = useState(false);
   const [isFocused, setIsFocused] = useState(initialInputStates);
+  const [formValues, setFormValues] = useState({email: '', password: ''});
+  const [isLoading, setIsLoading] = useState(false);
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const theme = 'light';
   const handleFocus = initialValue => {
     setIsFocused({...isFocused, [initialValue]: true});
@@ -24,13 +32,29 @@ const SignInScreen = ({navigation}) => {
   const handleBlur = initialValue => {
     setIsFocused({...isFocused, [initialValue]: false});
   };
-  const handleSigIn = () => {
-    navigation.navigate('BottomNavigation');
+  const handleSigIn = async () => { 
+    const {email, password} = formValues;
+    // navigation.navigate('BottomNavigation');
+    if (!email && !password) {
+      Toast(ERRORS.emptyForm);
+    } else if (isValidatedLogin({email, password})) {
+      setIsLoading(true);
+      const message = await LoginHandler({email, password});
+      if (message) {
+        setIsLoading(false);
+        Toast(message);
+      } else {
+        setIsLoading(false);
+        Toast(LABELS.loginSuccess);
+        navigation.navigate('BottomNavigation');
+      }
+    }
   };
   return (
     <>
       <ScrollView
         style={[STYLES.bgColor(COLORS[theme].background), STYLES.flex1]}>
+        {isLoading && <ModalBox isVisible={isLoading} />}
         <AppHeader
           theme={theme}
           iconLeft={
@@ -65,6 +89,9 @@ const SignInScreen = ({navigation}) => {
             }}
             isFocused={isFocused.email}
             theme={theme}
+            onChangeText={text => {
+              setFormValues({...formValues, email: text});
+            }}
             mL={10}
             iconLeft={
               <SVG.envelope
@@ -85,6 +112,9 @@ const SignInScreen = ({navigation}) => {
               handleBlur('password');
             }}
             isFocused={isFocused.password}
+            onChangeText={text => {
+              setFormValues({...formValues, password: text});
+            }}
             theme={theme}
             mL={10}
             iconLeft={
@@ -95,14 +125,23 @@ const SignInScreen = ({navigation}) => {
               />
             }
             iconRight={
-              <SVG.eyeClose
-                height={15}
-                width={15}
-                fill={isFocused.password ? COLORS[theme].inputBorder : 'gray'}
-              />
+              secureTextEntry ? (
+                <SVG.eyeClose
+                  height={18}
+                  width={18}
+                  fill={isFocused.password ? COLORS[theme].inputBorder : 'gray'}
+                />
+              ) : (
+                <SVG.eyeOpen
+                  height={18}
+                  width={18}
+                  fill={isFocused.password ? COLORS[theme].inputBorder : 'gray'}
+                />
+              )
             }
+            secureTextEntry={secureTextEntry}
             onRightIconPress={() => {
-              console.log('right icon pressed');
+              setSecureTextEntry(!secureTextEntry);
             }}
           />
           <Space mT={15} />

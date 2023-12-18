@@ -11,5 +11,4 @@ const config = {
     sourceExts: [...sourceExts, 'svg'],
   },
 };
-
 module.exports = mergeConfig(defaultConfig, config);

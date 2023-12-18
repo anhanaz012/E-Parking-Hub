@@ -25,6 +25,7 @@ import ChooseParkingSlot from '../screens/Main/UserSide/ChooseParkingSlot/Choose
 import PaymentScreen from '../screens/Main/UserSide/PaymentScreen/PaymentScreen';
 import ConfirmParkingScreen from '../screens/Main/UserSide/ConfirmParkingScreen/ConfirmParkingScreen';
 import FeeCalculationScreen from '../screens/Main/UserSide/FeeCalculationScreen/FeeCalculationScreen';
+import AddFeedbackScreen from '../screens/Main/UserSide/AddFeedbackScreen/AddFeedbackScreen';
 const Stack = createStackNavigator();
 const options = {
   headerShown: false,
@@ -53,6 +54,7 @@ const HomeStack = () => {
       <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
       <Stack.Screen name="ConfirmParkingScreen" component={ConfirmParkingScreen} />
       <Stack.Screen name="FeeCalculationScreen" component={FeeCalculationScreen} />
+      <Stack.Screen name="AddFeedbackScreen" component={AddFeedbackScreen} />
     </Stack.Navigator>
   );
 };
@@ -109,3 +111,84 @@ const AppNavigator = () => {
   );
 };
 export default AppNavigator;
+
+
+
+
+// import React, {useState, useEffect} from 'react';
+// import {View, Text, Button} from 'react-native';
+// import auth from '@react-native-firebase/auth';
+// import {
+//   GoogleSignin,
+//   statusCodes,
+// } from '@react-native-google-signin/google-signin';
+
+// const AppNavigator = () => {
+//   const [user, setUser] = useState(null);
+//   useEffect(() => {
+//     configureGoogleSignIn();
+//     checkIfUserIsSignedIn();
+//   }, []);
+
+//   const configureGoogleSignIn = async () => {
+//     await GoogleSignin.configure({
+//       webClientId:
+//         '151941535306-dcmm0fpercndqq07rdddbln4f4fsj8jk.apps.googleusercontent.com',
+//     });
+//   };
+
+//   const checkIfUserIsSignedIn = async () => {
+//     const currentUser = await GoogleSignin.getCurrentUser();
+
+//     if (currentUser) {
+//       setUser(currentUser);
+//     }
+//   };
+
+//   const handleSignIn = async () => {
+//     try {
+//       await GoogleSignin.hasPlayServices();
+//       const userInfo = await GoogleSignin.signIn();
+//       setUser(userInfo);
+//       // You can also use the credential to sign in with Firebase
+//       // const googleCredential = auth.GoogleAuthProvider.credential(userInfo.idToken, userInfo.accessToken);
+//       // await auth().signInWithCredential(googleCredential);
+//     } catch (error) {
+//       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+//         // User canceled the sign-in process
+//       } else if (error.code === statusCodes.IN_PROGRESS) {
+//         // Operation (e.g., sign-in) is in progress already
+//       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+//         // Play services not available or outdated on the device
+//       } else {
+//         // Some other error occurred
+//         console.error('Google Sign-In Error:', error);
+//       }
+//     }
+//   };
+
+//   const handleSignOut = async () => {
+//     try {
+//       await GoogleSignin.revokeAccess();
+//       await GoogleSignin.signOut();
+//       setUser(null);
+//     } catch (error) {
+//       console.error('Google Sign-Out Error:', error);
+//     }
+//   };
+
+//   return (
+//     <View>
+//       {user ? (
+//         <View>
+//           <Text>Welcome, {user.user.name}!</Text>
+//           <Button title="Sign Out" onPress={handleSignOut} />
+//         </View>
+//       ) : (
+//         <Button title="Sign In with Google" onPress={handleSignIn} />
+//       )}
+//     </View>
+//   );
+// };
+
+// export default AppNavigator;

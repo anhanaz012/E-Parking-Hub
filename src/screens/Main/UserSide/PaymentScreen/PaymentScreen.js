@@ -31,7 +31,7 @@ const PaymentScreen = ({navigation}) => {
         onBtnPress={() => {
           Alert.alert('Payment Successful');
           setIsModalVisible(false);
-          navigation.navigate('BottomNavigation', {screen: 'Home'});
+          navigation.navigate('HomeStack', {screen: 'AddFeedbackScreen'});
         }}
         onClose={() => {
           setIsModalVisible(false);

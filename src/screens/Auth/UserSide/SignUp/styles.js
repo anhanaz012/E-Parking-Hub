@@ -11,7 +11,7 @@ export const styles = theme =>
     textContainerStyle: {
       width: '100%',
       height: 55,
-      borderRadius:10,
+      borderRadius: 10,
       backgroundColor: COLORS[theme].input,
     },
     codeTextStyle: {
@@ -22,5 +22,14 @@ export const styles = theme =>
       height: 55,
       color: COLORS[theme].text,
       fontFamily: Fonts.latoRegular,
+    },
+    lottie: {
+      width: 100,
+      height: 100,
+    },
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   });

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, View} from 'react-native';
+import {Alert, ScrollView, View} from 'react-native';
 import {SVG} from '../../../../assets/svg';
 import {
   COLORS,
@@ -73,6 +73,10 @@ const AddFeedbackScreen = ({navigation}) => {
           theme={'light'}
           textColor={'white'}
           textVariant={'h4'}
+          onPress={() => {
+            Alert.alert('Feedback Submitted');
+            navigation.navigate('BottomNavigation', {screen: 'Home'});
+          }}
         />
       </View>
       <Space mT={20} />

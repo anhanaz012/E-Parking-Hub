@@ -1,7 +1,9 @@
 export const LABELS = {
   FullName: 'Full Name',
   cardNumber:'Card Number',
+  loginSuccess: 'Login Successful',
   back:'Back',
+  successfullyRegistered: 'User registered successfully',
   AllList:'All List',
   latitudeOfArea:'Latitude of the area',
   longitudeOfArea:'Longitude of the area',
