@@ -5,7 +5,6 @@ import { COLORS, COMMON_COLORS, Fonts, STYLES } from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppText from '../../../../components/AppText/AppText';
-import AppButton from '../../../../components/Button/Button';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
@@ -32,9 +31,8 @@ const SignInScreen = ({navigation}) => {
   const handleBlur = initialValue => {
     setIsFocused({...isFocused, [initialValue]: false});
   };
-  const handleSigIn = async () => { 
+  const handleSigIn = async () => {
     const {email, password} = formValues;
-    // navigation.navigate('BottomNavigation');
     if (!email && !password) {
       Toast(ERRORS.emptyForm);
     } else if (isValidatedLogin({email, password})) {
@@ -77,7 +75,7 @@ const SignInScreen = ({navigation}) => {
             color={COMMON_COLORS.secondary}
           />
 
-          <Space mT={50} />
+          <Space mT={70} />
 
           <AppInput
             onFocus={() => {
@@ -102,7 +100,7 @@ const SignInScreen = ({navigation}) => {
             }
           />
 
-          <Space mT={20} />
+          <Space mT={30} />
           <AppInput
             onFocus={() => {
               handleFocus('password');
@@ -144,7 +142,7 @@ const SignInScreen = ({navigation}) => {
               setSecureTextEntry(!secureTextEntry);
             }}
           />
-          <Space mT={15} />
+          <Space mT={25} />
 
           <View style={[STYLES.rowCenterBt]}>
             <View style={[STYLES.rowCenter]}>
@@ -175,7 +173,7 @@ const SignInScreen = ({navigation}) => {
               />
             </View>
           </View>
-          <Space mT={40} />
+          <Space mT={70} />
           <GradientButton
             title={LABELS.signin}
             onPress={handleSigIn}
@@ -183,69 +181,8 @@ const SignInScreen = ({navigation}) => {
             textVariant={'h5'}
             fontFamily={Fonts.mavenRegular}
           />
+          <Space mT={60} />
           <Space mT={30} />
-          <View
-            style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                height: 0.5,
-                width: '30%',
-                backgroundColor: 'lightgrey',
-              }}></View>
-            <AppText
-              title={LABELS.contiueWith}
-              variant={'body1'}
-              fontFamily={Fonts.latoRegular}
-              color={COLORS[theme].text}
-            />
-            <View
-              style={{
-                height: 0.5,
-                width: '30%',
-                backgroundColor: 'lightgrey',
-              }}></View>
-          </View>
-          <Space mT={30} />
-          <View style={[STYLES.rowCenterBt]}>
-            <AppButton
-              title={'Google'}
-              textColor={COLORS[theme].text}
-              textVariant="body1"
-              iconLeft={<SVG.google height={20} width={20} />}
-              mL={10}
-              extraStyle={{
-                btnContainer: {
-                  borderWidth: 1,
-                  borderColor: 'lightgrey',
-                  backgroundColor: 'transparent',
-                  width: '48%',
-                  elevation: 0,
-                },
-              }}
-            />
-            <AppButton
-              title={'Facebook'}
-              textColor={COLORS[theme].text}
-              textVariant="body1"
-              iconLeft={<SVG.facebook height={20} width={20} />}
-              mL={10}
-              extraStyle={{
-                btnContainer: {
-                  borderWidth: 1,
-                  borderColor: 'lightgrey',
-                  backgroundColor: 'transparent',
-                  width: '48%',
-                  elevation: 0,
-                },
-              }}
-            />
-          </View>
-
-          <Space mT={75} />
           <View style={[STYLES.rowCenter, STYLES.alignSelf('center')]}>
             <AppText
               title={LABELS.haveAccount}
@@ -253,7 +190,6 @@ const SignInScreen = ({navigation}) => {
               fontFamily={Fonts.latoRegular}
             />
             <Space mL={10} />
-
             <AppText
               title={LABELS.signup}
               color={COMMON_COLORS.secondary}

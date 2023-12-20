@@ -20,26 +20,6 @@ import {isValidatedSignUp} from '../../../../utils/validation';
 import {styles} from './styles';
 
 const SignUpScreen = ({navigation}) => {
-  const [visible, setVisible] = useState(false);
-  // const [initializing, setInitializing] = useState(true);
-  // const [user, setUser] = useState();
-  // function onAuthStateChanged(user) {
-  //   setUser(user);
-  //   if (initializing) setInitializing(false);
-  // }
-  // useEffect(() => {
-  //   const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-  //   return subscriber;
-  // }, []);
-
-  // if (initializing) return null;
-  // if (!user) {
-  //   return (
-  //     <View>
-  //       <Text>Login</Text>
-  //     </View>
-  //   );
-  // }
   const initialInputStates = {
     fullName: false,
     email: false,

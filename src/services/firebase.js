@@ -1,4 +1,7 @@
 import auth from '@react-native-firebase/auth';
+import {Toast} from '../utils/native';
+import firestore from '@react-native-firebase/firestore';
+import {LABELS} from '../labels';
 export const RegistrationHandler = async ({email, password}) => {
   try {
     await auth().createUserWithEmailAndPassword(email, password);
@@ -30,4 +33,25 @@ export const LoginHandler = async ({email, password}) => {
       return 'Failed to login. Please try again later.';
     }
   }
+};
+
+export const forgetPassHandler = async email => {
+  const message = await auth()
+    .fetchSignInMethodsForEmail(email)
+    .then( async res => {
+      console.log('res', res);
+      if (res.length > 0) {
+        await auth().sendPasswordResetEmail(email);
+        Toast(LABELS.emailSent);
+        return null;
+      } else {
+        return 'Entered email address is not registered';
+      }
+    })
+    .catch(err => {
+      if (err.code === 'auth/invalid-email') {
+        return 'Email address is not valid';
+      }
+    });
+  return message;
 };

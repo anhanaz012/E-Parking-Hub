@@ -1,5 +1,6 @@
 export const ERRORS = {
   noInternet: 'No Internet Connection',
+  emailNotRegistered: 'Entered email address is not registered',
   tooShort: 'Car Model should not be less than 4 characters',
   somethingWent: 'Something went wrong, please try again later!',
   enterEmail: 'Please enter a valid email',
@@ -19,4 +20,7 @@ export const ERRORS = {
   email: 'Please enter email address',
   enterFullName: 'Please enter full name',
   selectDegree: 'Please select degree',
+  userNotFound: 'User not found',
+  unknownError: 'Unknown error',
+  requiredEmail:'Email is required'
 };

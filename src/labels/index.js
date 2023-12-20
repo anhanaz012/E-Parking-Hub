@@ -2,6 +2,7 @@ export const LABELS = {
   FullName: 'Full Name',
   cardNumber:'Card Number',
   loginSuccess: 'Login Successful',
+  emailSent: 'Email is sent to your email address',
   back:'Back',
   successfullyRegistered: 'User registered successfully',
   AllList:'All List',

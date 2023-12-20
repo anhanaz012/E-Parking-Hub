@@ -20,12 +20,6 @@ import AppText from '../../../../components/AppText/AppText';
 const OTPScreen = ({navigation}) => {
   const [otp, setOtp] = useState(['', '', '', '']);
   const theme = 'light';
-  const handleEmailBlur = () => {
-    setIsEmailFocused(false);
-  };
-  const handleEmailFocus = () => {
-    setIsEmailFocused(true);
-  };
   const OTPNavigationHandler = () => {
     navigation.navigate('CreateNewPassScreen');
   };
@@ -112,7 +106,7 @@ const OTPScreen = ({navigation}) => {
             onPress={resendCodeHandler}
             extraStyle={[STYLES.textDecorationLine('underline')]}
           />
-          <Space mT = {20}/>
+          <Space mT={20} />
         </View>
       </ScrollView>
     </>
