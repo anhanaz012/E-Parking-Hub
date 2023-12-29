@@ -21,6 +21,7 @@ import {ERRORS} from '../../../../labels/error';
 import {forgetPassHandler} from '../../../../services/firebase';
 import {Toast} from '../../../../utils/native';
 import {styles} from './styles';
+import { emailValidator } from '../../../../utils/validation';
 const ForgotPassScreen = ({navigation}) => {
   const [isInputFocused, setisInputFocused] = useState(false);
   const [email, setEmail] = useState('');
@@ -36,14 +37,16 @@ const ForgotPassScreen = ({navigation}) => {
     if (!email) {
       Toast(ERRORS.requiredEmail);
     } else {
-      setIsLoading(true);
-      const message = await forgetPassHandler(email);
-      if (message) {
-        setIsLoading(false);
-        Toast(message);
-      } else {
-        setIsLoading(false);
-        Toast(LABELS.emailSent);
+      if (emailValidator(email)) {
+        setIsLoading(true);
+        const message = await forgetPassHandler(email);
+        if (message) {
+          setIsLoading(false);
+          Toast(message);
+        } else {
+          setIsLoading(false);
+          Toast(LABELS.emailSent);
+        }
       }
     }
   };

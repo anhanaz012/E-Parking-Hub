@@ -1,5 +1,7 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import AppNavigator from './src/navigation';
+import { store } from './src/store';
 const App = () => {
   const vendorData = {
     numRows: '5',
@@ -9,7 +11,6 @@ const App = () => {
     longitude: '-74.0060',
     entryPoint: 'top',
     exitPoint: 'center',
-    // routesPosition: 'horizontal',
     entryPoint: 'bottom',
     exitPoint: 'center',
     rowsPosition: 'staggered',
@@ -20,10 +21,12 @@ const App = () => {
     hourlyRate: '5.00',
     currency: 'USD',
   };
-
   return (
     <>
-      <AppNavigator />
+      <Provider store={store}>
+        <AppNavigator />
+      </Provider>
+      {/* <ChooseParkingAreaScreen/> */}
     </>
   );
 };

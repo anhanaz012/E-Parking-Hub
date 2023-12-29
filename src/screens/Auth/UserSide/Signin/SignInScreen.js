@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { ScrollView, View } from 'react-native';
-import { SVG } from '../../../../assets/svg';
-import { COLORS, COMMON_COLORS, Fonts, STYLES } from '../../../../assets/theme';
+import React, {useState} from 'react';
+import {ScrollView, View} from 'react-native';
+import {SVG} from '../../../../assets/svg';
+import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppText from '../../../../components/AppText/AppText';
@@ -9,11 +9,12 @@ import Checkbox from '../../../../components/Checkbox/Checkbox';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import { LABELS } from '../../../../labels';
-import { ERRORS } from '../../../../labels/error';
-import { LoginHandler } from '../../../../services/firebase';
-import { Toast } from '../../../../utils/native';
-import { isValidatedLogin } from '../../../../utils/validation';
+import {LABELS} from '../../../../labels';
+import {ERRORS} from '../../../../labels/error';
+import {LoginHandler} from '../../../../services/firebase';
+import {Toast} from '../../../../utils/native';
+import {isValidatedLogin} from '../../../../utils/validation';
+import {firebase} from '@react-native-firebase/auth';
 const SignInScreen = ({navigation}) => {
   const initialInputStates = {
     email: false,
@@ -42,6 +43,7 @@ const SignInScreen = ({navigation}) => {
         setIsLoading(false);
         Toast(message);
       } else {
+        setFormValues({email: '', password: ''});
         setIsLoading(false);
         Toast(LABELS.loginSuccess);
         navigation.navigate('BottomNavigation');

@@ -1,31 +1,28 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import React, {useEffect, useState} from 'react';
-import CreateNewPassScreen from '../screens/Auth/UserSide/CreateNewPassScreen/CreateNewPassScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
 import ForgotPassScreen from '../screens/Auth/UserSide/ForgotPassword/ForgotPassScreen';
 import IntroScreen from '../screens/Auth/UserSide/IntroScreen/IntroScreen';
-import OTPScreen from '../screens/Auth/UserSide/OTPScreen/OTPScreen';
 import SignUpScreen from '../screens/Auth/UserSide/SignUp/SignUpScreen';
 import SignInScreen from '../screens/Auth/UserSide/Signin/SignInScreen';
 import SplashScreen from '../screens/Auth/UserSide/SplashScreen/SplashScreen';
 import SpaceDetailsScreen from '../screens/Auth/VendorSide/SpaceDetailsScreen/SpaceDetailsScreen';
-import VendorChangePass from '../screens/Auth/VendorSide/VendorChangePass/VendorChangePass';
 import VendorForgotPass from '../screens/Auth/VendorSide/VendorForgotPass/VendorForgotPass';
-import VendorOTP from '../screens/Auth/VendorSide/VendorOTP/VendorOTP';
 import VendorSignUp from '../screens/Auth/VendorSide/VendorSignUp/VendorSignUp';
 import VendorSignIn from '../screens/Auth/VendorSide/VendorSignin/VendorSignin';
+import AddFeedbackScreen from '../screens/Main/UserSide/AddFeedbackScreen/AddFeedbackScreen';
+import AreasListScreens from '../screens/Main/UserSide/AreasListScreen/AreasListScreens';
+import ChooseParkingSlot from '../screens/Main/UserSide/ChooseParkingSlot/ChooseParkingSlot';
+import ConfirmParkingScreen from '../screens/Main/UserSide/ConfirmParkingScreen/ConfirmParkingScreen';
+import FeeCalculationScreen from '../screens/Main/UserSide/FeeCalculationScreen/FeeCalculationScreen';
 import HomeScreen from '../screens/Main/UserSide/HomeScreen/HomeScreen';
 import MyBookingScreen from '../screens/Main/UserSide/MyBookingScreen/MyBookingScreen';
 import NotificationScreen from '../screens/Main/UserSide/NotificationScreen/NotificationScreen';
+import PaymentScreen from '../screens/Main/UserSide/PaymentScreen/PaymentScreen';
 import UserProfileScreen from '../screens/Main/UserSide/UserProfileScreen/UserProfileScreen';
 import BottomNavigation from './BottomNavigation/UserSide';
 import VendorBottomNavigation from './BottomNavigation/VendorSide';
-import AreasListScreens from '../screens/Main/UserSide/AreasListScreen/AreasListScreens';
-import ChooseParkingSlot from '../screens/Main/UserSide/ChooseParkingSlot/ChooseParkingSlot';
-import PaymentScreen from '../screens/Main/UserSide/PaymentScreen/PaymentScreen';
-import ConfirmParkingScreen from '../screens/Main/UserSide/ConfirmParkingScreen/ConfirmParkingScreen';
-import FeeCalculationScreen from '../screens/Main/UserSide/FeeCalculationScreen/FeeCalculationScreen';
-import AddFeedbackScreen from '../screens/Main/UserSide/AddFeedbackScreen/AddFeedbackScreen';
+import AreaPictureUpload from '../screens/Auth/VendorSide/AreaPictureUploadScreen/AreaPictureUpload';
 const Stack = createStackNavigator();
 const options = {
   headerShown: false,
@@ -36,9 +33,8 @@ const VendorAuthStack = () => {
       <Stack.Screen name="VendorSignUp" component={VendorSignUp} />
       <Stack.Screen name="VendorSignIn" component={VendorSignIn} />
       <Stack.Screen name="VendorForgotPass" component={VendorForgotPass} />
-      <Stack.Screen name="VendorOTP" component={VendorOTP} />
-      <Stack.Screen name="VendorChangePass" component={VendorChangePass} />
       <Stack.Screen name="SpaceDetailsScreen" component={SpaceDetailsScreen} />
+      <Stack.Screen name = 'AreaPictureUpload' component={AreaPictureUpload}/>
     </Stack.Navigator>
   );
 };
@@ -48,7 +44,7 @@ const HomeStack = () => {
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="NotificationsScreen" component={NotificationScreen} />
       <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
-      <Stack.Screen name="MyBookingScreen" component={MyBookingScreen} />
+      <Stack.Screen name="MyBookingScreen" component = {MyBookingScreen} />
       <Stack.Screen name="AreasListScreen" component={AreasListScreens} />
       <Stack.Screen name="ChooseParkingSlot" component={ChooseParkingSlot} />
       <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
@@ -65,11 +61,6 @@ const AuthStack = () => {
       <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
       <Stack.Screen name="SignInScreen" component={SignInScreen} />
       <Stack.Screen name="ForgotPassScreen" component={ForgotPassScreen} />
-      <Stack.Screen name="OTPScreen" component={OTPScreen} />
-      <Stack.Screen
-        name="CreateNewPassScreen"
-        component={CreateNewPassScreen}
-      />
     </Stack.Navigator>
   );
 };

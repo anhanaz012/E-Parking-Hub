@@ -22,14 +22,14 @@ export const LoginHandler = async ({email, password}) => {
     await auth().signInWithEmailAndPassword(email, password);
     return null;
   } catch (error) {
+    console.log('error', error.code);
     if (error.code === 'auth/user-not-found') {
       return 'That email address is not found!';
+    } else if (error.code === 'auth/wrong-password') {
+      return 'That password is incorrect!';
     } else if (error.code === 'auth/invalid-email') {
       return 'That email address is invalid!';
-    } else if (error.code === 'auth/invalid-credential') {
-      return 'Credentials does not match. Please check your credentials!';
     } else {
-      console.log(error.code);
       return 'Failed to login. Please try again later.';
     }
   }
@@ -38,7 +38,7 @@ export const LoginHandler = async ({email, password}) => {
 export const forgetPassHandler = async email => {
   const message = await auth()
     .fetchSignInMethodsForEmail(email)
-    .then( async res => {
+    .then(async res => {
       console.log('res', res);
       if (res.length > 0) {
         await auth().sendPasswordResetEmail(email);

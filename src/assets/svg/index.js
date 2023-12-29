@@ -34,4 +34,8 @@ export const SVG = {
   jazCash: require('./Jazzcash.svg').default,
   easyPaisa: require('./Easypaisa.svg').default,
   home: require('./Home.svg').default,
+  lightRightArrow:require('./lightRightArrow.svg').default,
+  entryLeftArrow:require('./entryleftArrow.svg').default,
+  exitRightArrow:require('./entryRightArrow.svg').default,
+  camera:require('./camera.svg').default
 };

@@ -1,6 +1,9 @@
-import React, {useRef} from 'react';
+import firestore from '@react-native-firebase/firestore';
+import React, {useRef, useState} from 'react';
 import {ScrollView, View} from 'react-native';
 import PhoneInput from 'react-native-phone-number-input';
+import uuid from 'react-native-uuid';
+import {useDispatch} from 'react-redux';
 import {SVG} from '../../../../assets/svg';
 import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
@@ -10,8 +13,14 @@ import Checkbox from '../../../../components/Checkbox/Checkbox';
 import CheckboxText from '../../../../components/CheckboxText/Checkbox';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import Icon from '../../../../components/Icon/Icon';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
+import {ERRORS} from '../../../../labels/error';
+import {RegistrationHandler} from '../../../../services/firebase';
+import {setLoginToken} from '../../../../store/slices/authSlice';
+import {Toast} from '../../../../utils/native';
+import {isVendorValidated} from '../../../../utils/validation';
 import {styles} from './styles';
 const VendorSignUp = ({navigation}) => {
   const initialInputStates = {
@@ -22,28 +31,87 @@ const VendorSignUp = ({navigation}) => {
   };
   const [isFocused, setIsFocused] = React.useState(initialInputStates);
   const [phoneNumber, setPhoneNumber] = React.useState('');
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isChecked, setIsChecked] = React.useState(false);
+  const phoneInput = useRef(null);
+  const [initialFormValues, setInitialFormValues] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+    phone: '',
+    isChecked: isChecked,
+  });
   const theme = 'light';
   const style = styles(theme);
-
+  const dispatch = useDispatch();
+  const handleFormValues = (inputName, value) => {
+    setInitialFormValues(prevState => ({
+      ...prevState,
+      [inputName]: value,
+      isChecked: isChecked,
+    }));
+  };
   const handleFocus = inputName => {
     setIsFocused(prevState => ({...prevState, [inputName]: true}));
-    console.log(isFocused);
   };
 
   const handleBlur = inputName => {
     setIsFocused(prevState => ({...prevState, [inputName]: false}));
   };
-  const handlePhoneValidation = () => {
-    const isValid = phoneInput.current?.isValidNumber(phoneNumber);
-    console.log(isValid);
-    navigation.navigate('SpaceDetailsScreen');
+  const toggleCheckbox = () => {
+    setIsChecked(!isChecked);
+    setInitialFormValues({...initialFormValues, isChecked: !isChecked});
   };
-  const handlePhoneInput = value => {
-    setPhoneNumber(value);
+  const handlePhoneValidation = async () => {
+    const {fullName, email, password, phone, isChecked} = initialFormValues;
+    if (!fullName && !email && !password && !phone && !isChecked) {
+      Toast(ERRORS.emptyForm);
+    } else if (
+      isVendorValidated({fullName, email, password, phone, isChecked})
+    ) {
+      const isValidPhone = phoneInput.current?.isValidNumber(phone, 'PK');
+      if (isValidPhone) {
+        setPhoneNumber('+92' + phone);
+        setIsLoading(true);
+        const message = await RegistrationHandler({email, password});
+        if (message) {
+          setIsLoading(false);
+          Toast(message);
+        } else {
+          const randomId = uuid.v4();
+          const formData = {
+            ...initialFormValues,
+            image: '',
+            role: 'vendor',
+            token: randomId,
+          };
+          await firestore().collection('Vendors').doc(randomId).set(formData);
+          await firestore()
+            .collection('AllUsers')
+            .doc(randomId)
+            .set(formData)
+            .then(() => {
+              dispatch(setLoginToken(randomId));
+              setInitialFormValues({
+                fullName: '',
+                email: '',
+                password: '',
+                phone: '',
+                isChecked: false,
+              });
+              navigation.navigate('VendorAuthStack', {
+                screen: 'SpaceDetailsScreen',
+              });
+              setIsLoading(false);
+              Toast(LABELS.successfullyRegistered);
+            });
+        }
+      } else {
+        Toast(ERRORS.phoneValidation);
+      }
+    }
   };
-  const phoneInput = useRef(null);
-
   return (
     <>
       <ScrollView
@@ -58,6 +126,7 @@ const VendorSignUp = ({navigation}) => {
           }}
         />
         <Space mT={10} />
+        {isLoading && <ModalBox isVisible={isLoading} />}
         <View style={[STYLES.pH(20)]}>
           <View style={[STYLES.height('15%')]}>
             <AppText
@@ -73,7 +142,6 @@ const VendorSignUp = ({navigation}) => {
             />
           </View>
           <Space mT={40} />
-
           <AppInput
             onFocus={() => {
               handleFocus('fullName');
@@ -82,6 +150,10 @@ const VendorSignUp = ({navigation}) => {
             onBlur={() => {
               handleBlur('fullName');
             }}
+            onChangeText={value => {
+              handleFormValues('fullName', value);
+            }}
+            value={initialFormValues.fullName}
             isFocused={isFocused.fullName}
             theme={theme}
             mL={10}
@@ -98,9 +170,13 @@ const VendorSignUp = ({navigation}) => {
             onFocus={() => {
               handleFocus('email');
             }}
+            value={initialFormValues.email}
             placeholder={LABELS.email}
             onBlur={() => {
               handleBlur('email');
+            }}
+            onChangeText={value => {
+              handleFormValues('email', value);
             }}
             isFocused={isFocused.email}
             theme={theme}
@@ -118,10 +194,15 @@ const VendorSignUp = ({navigation}) => {
             onFocus={() => {
               handleFocus('password');
             }}
+            value={initialFormValues.password}
             placeholder={LABELS.password}
             onBlur={() => {
               handleBlur('password');
             }}
+            onChangeText={value => {
+              handleFormValues('password', value);
+            }}
+            secureTextEntry={secureTextEntry}
             isFocused={isFocused.password}
             theme={theme}
             mL={10}
@@ -133,23 +214,29 @@ const VendorSignUp = ({navigation}) => {
               />
             }
             iconRight={
-              <SVG.eyeClose
-                height={15}
-                width={15}
-                fill={isFocused.password ? COLORS[theme].inputBorder : 'gray'}
-              />
+              secureTextEntry ? (
+                <SVG.eyeClose
+                  height={18}
+                  width={18}
+                  fill={isFocused.password ? COLORS[theme].inputBorder : 'gray'}
+                />
+              ) : (
+                <SVG.eyeOpen
+                  height={18}
+                  width={18}
+                  fill={isFocused.password ? COLORS[theme].inputBorder : 'gray'}
+                />
+              )
             }
             onRightIconPress={() => {
-              console.log('right icon pressed');
+              setSecureTextEntry(!secureTextEntry);
             }}
           />
           <Space mT={20} />
-
           <PhoneInput
             placeholder={LABELS.phonePlaceholder}
             ref={phoneInput}
             withShadow={false}
-            onChangeText={handlePhoneInput}
             textContainerStyle={style.textContainerStyle}
             containerStyle={style.containerStyle}
             codeTextStyle={style.codeTextStyle}
@@ -159,6 +246,10 @@ const VendorSignUp = ({navigation}) => {
             textInputProps={{
               placeholderTextColor: COLORS[theme].placeholderTextColor,
             }}
+            onChangeText={value => {
+              handleFormValues('phone', value);
+            }}
+            value={initialFormValues.phone}
             renderDropdownImage={
               <Icon
                 SVGIcon={
@@ -177,20 +268,14 @@ const VendorSignUp = ({navigation}) => {
               size={18}
               color={COMMON_COLORS.secondary}
               isChecked={isChecked}
-              onPress={() => {
-                setIsChecked(!isChecked);
-              }}
+              onPress={toggleCheckbox}
             />
             <Space mL={10} />
 
             <CheckboxText
               theme={theme}
-              onPressPrivacy={() => {
-                console.log('privacy link');
-              }}
-              onPressTerms={() => {
-                console.log('terms link');
-              }}
+              onPressPrivacy={() => {}}
+              onPressTerms={() => {}}
             />
           </View>
           <Space mT={45} />

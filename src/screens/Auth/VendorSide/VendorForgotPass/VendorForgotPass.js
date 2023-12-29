@@ -17,17 +17,38 @@ import GradientButton from '../../../../components/GradientButton/GradientButton
 import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
 import {styles} from './styles';
+import {Toast} from '../../../../utils/native';
+import {ERRORS} from '../../../../labels/error';
+import {forgetPassHandler} from '../../../../services/firebase';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
+import {emailValidator} from '../../../../utils/validation';
 const VendorForgotPass = ({navigation}) => {
-  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isInputFocused, setisInputFocused] = useState(false);
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const theme = 'light';
   const handleEmailBlur = () => {
-    setIsEmailFocused(false);
+    setisInputFocused(false);
   };
   const handleEmailFocus = () => {
-    setIsEmailFocused(true);
+    setisInputFocused(true);
   };
-  const OTPNavigationHandler = () => {
-    navigation.navigate('VendorOTP');
+  const OTPNavigationHandler = async () => {
+    if (!email) {
+      Toast(ERRORS.requiredEmail);
+    } else {
+      if (emailValidator(email)) {
+        setIsLoading(true);
+        const message = await forgetPassHandler(email);
+        if (message) {
+          setIsLoading(false);
+          Toast(message);
+        } else {
+          setIsLoading(false);
+          Toast(LABELS.emailSent);
+        }
+      }
+    }
   };
   const style = styles;
   return (
@@ -45,6 +66,7 @@ const VendorForgotPass = ({navigation}) => {
           title={LABELS.forgotPassword}
           extraStyle={{container: {backgroundColor: 'white'}}}
         />
+        {isLoading && <ModalBox isVisible={isLoading} />}
         <Space mT={20} />
         <View style={[STYLES.pH(HORIZON_MARGIN)]}>
           <Space mT={50} />
@@ -67,16 +89,19 @@ const VendorForgotPass = ({navigation}) => {
             onFocus={handleEmailFocus}
             placeholder={LABELS.enterEmail}
             onBlur={handleEmailBlur}
-            isFocused={isEmailFocused}
+            isFocused={isInputFocused}
             theme={theme}
             mL={10}
             iconLeft={
               <SVG.envelope
                 height={20}
                 width={20}
-                fill={isEmailFocused ? COLORS[theme].inputBorder : 'gray'}
+                fill={isInputFocused ? COLORS[theme].inputBorder : 'gray'}
               />
             }
+            onChangeText={text => {
+              setEmail(text);
+            }}
           />
           <Space mT={20} />
           <GradientButton

@@ -1,5 +1,6 @@
 export const ERRORS = {
   noInternet: 'No Internet Connection',
+  columnsNotDivisible:'Number of spots is not evenly divisible by the number of rows',
   emailNotRegistered: 'Entered email address is not registered',
   tooShort: 'Car Model should not be less than 4 characters',
   somethingWent: 'Something went wrong, please try again later!',
@@ -7,6 +8,7 @@ export const ERRORS = {
   enterPassword: 'Please enter a valid password',
   carModel: 'Please enter your car model',
   validEmail: 'Email address is not valid',
+  cancelledImageUploading:'Image uploading process cancelled',
   enterName: 'Please enter name',
   enterNewPassword: 'Please enter a new password',
   enterConfirmPassword: 'Please enter a confirm password',
@@ -22,5 +24,16 @@ export const ERRORS = {
   selectDegree: 'Please select degree',
   userNotFound: 'User not found',
   unknownError: 'Unknown error',
-  requiredEmail:'Email is required'
+  requiredEmail:'Email is required',
+  enterSpaceName: 'Please enter a space name.',
+  spaceNameLength: 'Space name must be at least more than 6 characters long.',
+  addressLength: 'Address must be at least more than 6 characters long.',
+  enterAddress: 'Please enter an address.',
+  enterNoOfRows: 'Please enter a valid number of rows.',
+  enterNoOfLots: 'Please enter a valid number of lots.',
+  enterLatitude: 'Please enter a valid latitude.',
+  enterLongitude: 'Please enter a valid longitude.',
+  enterValidPrice: 'Please enter a valid price.',
+  selectRowsPosition: 'Please select the rows position.',
+  selectEntryExitDirection: 'Please select the entry exit direction.',
 };

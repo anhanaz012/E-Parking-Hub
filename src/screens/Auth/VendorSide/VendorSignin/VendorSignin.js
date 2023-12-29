@@ -5,11 +5,15 @@ import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppText from '../../../../components/AppText/AppText';
-import AppButton from '../../../../components/Button/Button';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
+import {ERRORS} from '../../../../labels/error';
+import {LoginHandler} from '../../../../services/firebase';
+import {Toast} from '../../../../utils/native';
+import {isValidatedLogin} from '../../../../utils/validation';
 const VendorSignIn = ({navigation}) => {
   const initialInputStates = {
     email: false,
@@ -17,6 +21,9 @@ const VendorSignIn = ({navigation}) => {
   };
   const [isChecked, setIsChecked] = useState(false);
   const [isFocused, setIsFocused] = useState(initialInputStates);
+  const [formValues, setFormValues] = useState({email: '', password: ''});
+  const [isLoading, setIsLoading] = useState(false);
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const theme = 'light';
   const handleFocus = initialValue => {
     setIsFocused({...isFocused, [initialValue]: true});
@@ -24,13 +31,29 @@ const VendorSignIn = ({navigation}) => {
   const handleBlur = initialValue => {
     setIsFocused({...isFocused, [initialValue]: false});
   };
-  const handleSigIn = () => {
-    navigation.navigate('VendorBottomNavigation');
+  const handleSigIn = async () => {
+    const {email, password} = formValues;
+    if (!email && !password) {
+      Toast(ERRORS.emptyForm);
+    } else if (isValidatedLogin({email, password})) {
+      setIsLoading(true);
+      const message = await LoginHandler({email, password});
+      if (message) {
+        setIsLoading(false);
+        Toast(message);
+      } else {
+        setFormValues({email: '', password: ''});
+        setIsLoading(false);
+        Toast(LABELS.loginSuccess);
+        navigation.navigate('VendorAuthStack', {screen: 'AddDetailsScreen'});
+      }
+    }
   };
   return (
     <>
       <ScrollView
         style={[STYLES.bgColor(COLORS[theme].background), STYLES.flex1]}>
+        {isLoading && <ModalBox isVisible={isLoading} />}
         <AppHeader
           theme={theme}
           iconLeft={
@@ -53,7 +76,7 @@ const VendorSignIn = ({navigation}) => {
             color={COMMON_COLORS.secondary}
           />
 
-          <Space mT={50} />
+          <Space mT={70} />
 
           <AppInput
             onFocus={() => {
@@ -65,6 +88,9 @@ const VendorSignIn = ({navigation}) => {
             }}
             isFocused={isFocused.email}
             theme={theme}
+            onChangeText={text => {
+              setFormValues({...formValues, email: text});
+            }}
             mL={10}
             iconLeft={
               <SVG.envelope
@@ -75,7 +101,7 @@ const VendorSignIn = ({navigation}) => {
             }
           />
 
-          <Space mT={20} />
+          <Space mT={30} />
           <AppInput
             onFocus={() => {
               handleFocus('password');
@@ -85,6 +111,9 @@ const VendorSignIn = ({navigation}) => {
               handleBlur('password');
             }}
             isFocused={isFocused.password}
+            onChangeText={text => {
+              setFormValues({...formValues, password: text});
+            }}
             theme={theme}
             mL={10}
             iconLeft={
@@ -95,17 +124,26 @@ const VendorSignIn = ({navigation}) => {
               />
             }
             iconRight={
-              <SVG.eyeClose
-                height={15}
-                width={15}
-                fill={isFocused.password ? COLORS[theme].inputBorder : 'gray'}
-              />
+              secureTextEntry ? (
+                <SVG.eyeClose
+                  height={18}
+                  width={18}
+                  fill={isFocused.password ? COLORS[theme].inputBorder : 'gray'}
+                />
+              ) : (
+                <SVG.eyeOpen
+                  height={18}
+                  width={18}
+                  fill={isFocused.password ? COLORS[theme].inputBorder : 'gray'}
+                />
+              )
             }
+            secureTextEntry={secureTextEntry}
             onRightIconPress={() => {
-              console.log('right icon pressed');
+              setSecureTextEntry(!secureTextEntry);
             }}
           />
-          <Space mT={15} />
+          <Space mT={25} />
 
           <View style={[STYLES.rowCenterBt]}>
             <View style={[STYLES.rowCenter]}>
@@ -131,12 +169,14 @@ const VendorSignIn = ({navigation}) => {
                 fontFamily={Fonts.mavenRegular}
                 color={COMMON_COLORS.secondary}
                 onPress={() => {
-                  navigation.navigate('VendorForgotPass');
+                  navigation.navigate('VendorAuthStack', {
+                    screen: 'VendorForgotPass',
+                  });
                 }}
               />
             </View>
           </View>
-          <Space mT={40} />
+          <Space mT={70} />
           <GradientButton
             title={LABELS.signin}
             onPress={handleSigIn}
@@ -144,69 +184,8 @@ const VendorSignIn = ({navigation}) => {
             textVariant={'h5'}
             fontFamily={Fonts.mavenRegular}
           />
+          <Space mT={60} />
           <Space mT={30} />
-          <View
-            style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                height: 0.5,
-                width: '30%',
-                backgroundColor: 'lightgrey',
-              }}></View>
-            <AppText
-              title={LABELS.contiueWith}
-              variant={'body1'}
-              fontFamily={Fonts.latoRegular}
-              color={COLORS[theme].text}
-            />
-            <View
-              style={{
-                height: 0.5,
-                width: '30%',
-                backgroundColor: 'lightgrey',
-              }}></View>
-          </View>
-          <Space mT={30} />
-          <View style={[STYLES.rowCenterBt]}>
-            <AppButton
-              title={'Google'}
-              textColor={COLORS[theme].text}
-              textVariant="body1"
-              iconLeft={<SVG.google height={20} width={20} />}
-              mL={10}
-              extraStyle={{
-                btnContainer: {
-                  borderWidth: 1,
-                  borderColor: 'lightgrey',
-                  backgroundColor: 'transparent',
-                  width: '48%',
-                  elevation: 0,
-                },
-              }}
-            />
-            <AppButton
-              title={'Facebook'}
-              textColor={COLORS[theme].text}
-              textVariant="body1"
-              iconLeft={<SVG.facebook height={20} width={20} />}
-              mL={10}
-              extraStyle={{
-                btnContainer: {
-                  borderWidth: 1,
-                  borderColor: 'lightgrey',
-                  backgroundColor: 'transparent',
-                  width: '48%',
-                  elevation: 0,
-                },
-              }}
-            />
-          </View>
-
-          <Space mT={75} />
           <View style={[STYLES.rowCenter, STYLES.alignSelf('center')]}>
             <AppText
               title={LABELS.haveAccount}
@@ -214,13 +193,12 @@ const VendorSignIn = ({navigation}) => {
               fontFamily={Fonts.latoRegular}
             />
             <Space mL={10} />
-
             <AppText
               title={LABELS.signup}
               color={COMMON_COLORS.secondary}
               fontFamily={Fonts.latoRegular}
               onPress={() => {
-                navigation.navigate('VendorSignUp');
+                navigation.navigate('SignUpScreen');
               }}
             />
           </View>
