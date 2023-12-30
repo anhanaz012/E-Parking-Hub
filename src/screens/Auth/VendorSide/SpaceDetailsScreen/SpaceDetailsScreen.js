@@ -1,35 +1,33 @@
 import firestore from '@react-native-firebase/firestore';
-import React, {useEffect, useState} from 'react';
-import {ScrollView, View} from 'react-native';
-import {Dropdown} from 'react-native-element-dropdown';
-import {useSelector} from 'react-redux';
-import {SVG} from '../../../../assets/svg';
-import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, View } from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown';
+import { useSelector } from 'react-redux';
+import { SVG } from '../../../../assets/svg';
+import { COLORS, COMMON_COLORS, Fonts, STYLES } from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppText from '../../../../components/AppText/AppText';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
 import {
   rowsPosition,
   verticalEntryExitDirection,
 } from '../../../../data/appData';
-import {LABELS} from '../../../../labels';
-import {ERRORS} from '../../../../labels/error';
-import {Toast} from '../../../../utils/native';
-import {isSpaceDetailsValid} from '../../../../utils/validation';
-import {styles} from './styles';
-import ModalBox from '../../../../components/ModalBox/ModalBox';
+import { LABELS } from '../../../../labels';
+import { ERRORS } from '../../../../labels/error';
+import { Toast } from '../../../../utils/native';
+import { isSpaceDetailsValid } from '../../../../utils/validation';
+import { styles } from './styles';
 const SpaceDetailsScreen = ({navigation}) => {
   const theme = 'light';
   const style = styles(theme);
-  const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [vendorData, setVendorData] = useState();
   const loginToken = useSelector(state => state.auth.loginToken);
   useEffect(() => {
-    console.log('loginToken', loginToken);
     setTimeout(() => {
       const getVendorData = async () => {
         const user = await firestore()
@@ -37,7 +35,6 @@ const SpaceDetailsScreen = ({navigation}) => {
           .doc(loginToken)
           .get();
         setVendorData(user.data());
-        console.log('vendorData', vendorData);
       };
       getVendorData();
     }, 1000);
@@ -84,48 +81,51 @@ const SpaceDetailsScreen = ({navigation}) => {
     ) {
       Toast(ERRORS.emptyForm);
     } else {
-      isSpaceDetailsValid({
-        spaceName,
-        address,
-        noOfRows,
-        noOfLots,
-        latitudeOfArea,
-        longitudeOfArea,
-        price,
-        rowsDirection,
-        entryExitDirection,
-      });
-      const noOfCols = noOfLots / noOfRows;
-      if (noOfCols % 1 !== 0) {
-        Toast(ERRORS.columnsNotDivisible);
-      } else {
-        const formValues = {...initialFormValues, noOfColumns: noOfCols};
-        setIsLoading(true);
-        await firestore()
-          .collection('Vendors')
-          .doc(loginToken)
-          .set({...vendorData, formValues});
-        await firestore()
-          .collection('ParkingAreas')
-          .doc(loginToken)
-          .set({...vendorData, formValues})
-          .then(() => {
-            setInitialFormValues({
-              spaceName: '',
-              address: '',
-              noOfRows: '',
-              noOfLots: '',
-              latitudeOfArea: '',
-              longitudeOfArea: '',
-              price: '',
-              rowsDirection: '',
-              entryExitDirection: '',
+      if (
+        isSpaceDetailsValid({
+          spaceName,
+          address,
+          noOfRows,
+          noOfLots,
+          latitudeOfArea,
+          longitudeOfArea,
+          price,
+          rowsDirection,
+          entryExitDirection,
+        })
+      ) {
+        const noOfCols = noOfLots / noOfRows;
+        if (noOfCols % 1 !== 0) {
+          Toast(ERRORS.columnsNotDivisible);
+        } else {
+          const formValues = {...initialFormValues, noOfColumns: noOfCols};
+          setIsLoading(true);
+          await firestore()
+            .collection('Vendors')
+            .doc(loginToken)
+            .set({...vendorData, formValues});
+          await firestore()
+            .collection('ParkingAreas')
+            .doc(loginToken)
+            .set({...vendorData, formValues})
+            .then(() => {
+              setInitialFormValues({
+                spaceName: '',
+                address: '',
+                noOfRows: '',
+                noOfLots: '',
+                latitudeOfArea: '',
+                longitudeOfArea: '',
+                price: '',
+                rowsDirection: '',
+                entryExitDirection: '',
+              });
+              setIsLoading(false);
+              navigation.navigate('VendorAuthStack', {
+                screen: 'AreaPictureUpload',
+              });
             });
-            setIsLoading(false);
-            navigation.navigate('VendorAuthStack', {
-              screen: 'AreaPictureUpload',
-            });
-          });
+        }
       }
     }
   };

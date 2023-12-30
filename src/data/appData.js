@@ -1,4 +1,3 @@
-import {IMAGES} from '../assets/images';
 import {SVG} from '../assets/svg';
 import {LABELS} from '../labels';
 
@@ -87,6 +86,23 @@ export const rowsPosition = [
   {
     id: 2,
     title: LABELS.vertical,
+    isSelected: false,
+  },
+];
+export const slotsStatus = [
+  {
+    id: 1,
+    value: 'Available',
+    isSelected: true,
+  },
+  {
+    id: 2,
+    value: 'Booked',
+    isSelected: false,
+  },
+  {
+    id: 3,
+    value: 'Occupied',
     isSelected: false,
   },
 ];

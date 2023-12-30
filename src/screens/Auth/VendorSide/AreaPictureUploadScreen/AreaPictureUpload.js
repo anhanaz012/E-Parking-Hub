@@ -1,5 +1,5 @@
 import storage from '@react-native-firebase/storage';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'react-native-modal';
@@ -18,7 +18,7 @@ import {ERRORS} from '../../../../labels/error';
 import firestore from '@react-native-firebase/firestore';
 import {Toast} from '../../../../utils/native';
 import {styles} from './styles';
-const AreaPictureUpload = () => {
+const AreaPictureUpload = ({navigation}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +27,7 @@ const AreaPictureUpload = () => {
   const launchCameraHandler = async () => {
     launchCamera({}, async res => {
       setIsLoading(true);
+
       if (res.didCancel) {
         setIsLoading(false);
         setIsModalVisible(false);
@@ -82,18 +83,28 @@ const AreaPictureUpload = () => {
   };
   const imageUploadingHandler = async () => {
     setIsLoading(true);
-    console.log(loginToken);
-    console.log(imageUrl);
-    await firestore().collection('AllUsers').doc(loginToken).update({
-      image: imageUrl,
-    });
-    setIsLoading(false);
-    await firestore()
-    .collection('Vendors')
-    .doc(loginToken)
-    .update({
-      image: imageUrl,
-    })
+    if (imageUrl) {
+      await firestore().collection('AllUsers').doc(loginToken).update({
+        image: imageUrl,
+      });
+      await firestore()
+        .collection('Vendors')
+        .doc(loginToken)
+        .update({
+          image: imageUrl,
+        })
+        .then(() => {
+          setIsLoading(false);
+          navigation.navigate('VendorBottomNavigation');
+        })
+        .catch(err => {
+          setIsLoading(false);
+          console.log(err);
+        });
+    } else {
+      setIsLoading(false);
+      console.log('url not present');
+    }
   };
   return (
     <View style={[STYLES.flex1]}>

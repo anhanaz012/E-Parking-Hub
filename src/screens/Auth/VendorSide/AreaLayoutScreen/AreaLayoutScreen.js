@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {Dimensions, ScrollView, TouchableOpacity, View} from 'react-native';
 import Modal from 'react-native-modal';
-import {SVG} from './src/assets/svg';
-import {COLORS, Fonts, STYLES} from './src/assets/theme';
-import AppHeader from './src/components/AppHeader/AppHeader';
-import AppText from './src/components/AppText/AppText';
-import AppButton from './src/components/Button/Button';
-import Icon from './src/components/Icon/Icon';
-import ModalBox from './src/components/ModalBox/ModalBox';
-import Space from './src/components/Space/Space';
-import {slotsStatus} from './src/data/appData';
-import {LABELS} from './src/labels';
-import {styles} from './styles';
-const ChooseParkingAreaScreen = () => {
+import {SVG} from '../../../../assets/svg';
+import {Fonts, STYLES} from '../../../../assets/theme';
+import AppHeader from '../../../../components/AppHeader/AppHeader';
+import AppText from '../../../../components/AppText/AppText';
+import AppButton from '../../../../components/Button/Button';
+import Icon from '../../../../components/Icon/Icon';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
+import Space from '../../../../components/Space/Space';
+import {slotsStatus} from '../../../../data/appData';
+import {LABELS} from '../../../../labels';
+import { styles } from './styles';
+const AreaLayoutScreen = () => {
   const [spots, setSpots] = useState();
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [selectedStatus, setselectedStatus] = useState('Available');
@@ -295,4 +295,4 @@ const ChooseParkingAreaScreen = () => {
   );
 };
 
-export default ChooseParkingAreaScreen;
+export default AreaLayoutScreen;
