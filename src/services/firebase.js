@@ -1,11 +1,10 @@
 import auth from '@react-native-firebase/auth';
-import {Toast} from '../utils/native';
-import firestore from '@react-native-firebase/firestore';
 import {LABELS} from '../labels';
+import {Toast} from '../utils/native';
 export const RegistrationHandler = async ({email, password}) => {
   try {
-    await auth().createUserWithEmailAndPassword(email, password);
-    return null;
+    const res = await auth().createUserWithEmailAndPassword(email, password);
+    return {uid: res.user.uid};
   } catch (error) {
     if (error.code === 'auth/email-already-in-use') {
       return 'That email address is already in use!';
@@ -19,8 +18,8 @@ export const RegistrationHandler = async ({email, password}) => {
 };
 export const LoginHandler = async ({email, password}) => {
   try {
-    await auth().signInWithEmailAndPassword(email, password);
-    return null;
+    const res = await auth().signInWithEmailAndPassword(email, password);
+    return {uid: res.user.uid};
   } catch (error) {
     console.log('error', error.code);
     if (error.code === 'auth/user-not-found') {

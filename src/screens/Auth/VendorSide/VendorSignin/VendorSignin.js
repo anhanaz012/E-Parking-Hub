@@ -14,6 +14,7 @@ import {ERRORS} from '../../../../labels/error';
 import {LoginHandler} from '../../../../services/firebase';
 import {Toast} from '../../../../utils/native';
 import {isValidatedLogin} from '../../../../utils/validation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const VendorSignIn = ({navigation}) => {
   const initialInputStates = {
     email: false,
@@ -38,14 +39,22 @@ const VendorSignIn = ({navigation}) => {
     } else if (isValidatedLogin({email, password})) {
       setIsLoading(true);
       const message = await LoginHandler({email, password});
-      if (message) {
+      if (typeof message === 'string') {
         setIsLoading(false);
         Toast(message);
       } else {
-        setFormValues({email: '', password: ''});
-        setIsLoading(false);
-        Toast(LABELS.loginSuccess);
-        navigation.navigate('VendorAuthStack', {screen: 'AddDetailsScreen'});
+        try {
+          const uid = message.uid;
+          await AsyncStorage.setItem('loginToken', uid);
+          if (uid) {
+            setIsLoading(false);
+            Toast(LABELS.loginSuccess);
+            setFormValues({email: '', password: ''});
+            navigation.navigate('VendorBottomNavigation');
+          }
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
   };

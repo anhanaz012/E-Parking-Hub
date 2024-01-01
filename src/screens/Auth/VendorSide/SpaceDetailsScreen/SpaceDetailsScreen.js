@@ -1,10 +1,10 @@
 import firestore from '@react-native-firebase/firestore';
-import React, { useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
-import { useSelector } from 'react-redux';
-import { SVG } from '../../../../assets/svg';
-import { COLORS, COMMON_COLORS, Fonts, STYLES } from '../../../../assets/theme';
+import React, {useEffect, useState} from 'react';
+import {ScrollView, View} from 'react-native';
+import {Dropdown} from 'react-native-element-dropdown';
+import {useDispatch, useSelector} from 'react-redux';
+import {SVG} from '../../../../assets/svg';
+import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppText from '../../../../components/AppText/AppText';
@@ -15,19 +15,22 @@ import {
   rowsPosition,
   verticalEntryExitDirection,
 } from '../../../../data/appData';
-import { LABELS } from '../../../../labels';
-import { ERRORS } from '../../../../labels/error';
-import { Toast } from '../../../../utils/native';
-import { isSpaceDetailsValid } from '../../../../utils/validation';
-import { styles } from './styles';
+import {LABELS} from '../../../../labels';
+import {ERRORS} from '../../../../labels/error';
+import {Toast} from '../../../../utils/native';
+import {isSpaceDetailsValid} from '../../../../utils/validation';
+import {styles} from './styles';
+import {setSpaceData} from '../../../../store/slices/authSlice';
 const SpaceDetailsScreen = ({navigation}) => {
   const theme = 'light';
   const style = styles(theme);
   const [isFocus, setIsFocus] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
   const [vendorData, setVendorData] = useState();
   const loginToken = useSelector(state => state.auth.loginToken);
   useEffect(() => {
+    console.log('loginToken', loginToken);
     setTimeout(() => {
       const getVendorData = async () => {
         const user = await firestore()
@@ -99,16 +102,20 @@ const SpaceDetailsScreen = ({navigation}) => {
           Toast(ERRORS.columnsNotDivisible);
         } else {
           const formValues = {...initialFormValues, noOfColumns: noOfCols};
+          const allData = {...vendorData, formValues};
+          console.log('allData', allData);
           setIsLoading(true);
-          await firestore()
-            .collection('Vendors')
-            .doc(loginToken)
-            .set({...vendorData, formValues});
+
           await firestore()
             .collection('ParkingAreas')
             .doc(loginToken)
-            .set({...vendorData, formValues})
-            .then(() => {
+            .set(allData)
+            .then(async () => {
+              await firestore()
+                .collection('Vendors')
+                .doc(loginToken)
+                .set(allData);
+              dispatch(setSpaceData(formValues));
               setInitialFormValues({
                 spaceName: '',
                 address: '',

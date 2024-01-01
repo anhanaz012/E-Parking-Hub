@@ -1,5 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ScrollView, View} from 'react-native';
 import PhoneInput from 'react-native-phone-number-input';
 import uuid from 'react-native-uuid';
@@ -18,22 +19,25 @@ import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
 import {ERRORS} from '../../../../labels/error';
 import {RegistrationHandler} from '../../../../services/firebase';
-import {setLoginToken} from '../../../../store/slices/authSlice';
 import {Toast} from '../../../../utils/native';
 import {isVendorValidated} from '../../../../utils/validation';
 import {styles} from './styles';
+import {setLoginToken} from '../../../../store/slices/authSlice';
 const VendorSignUp = ({navigation}) => {
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
   const initialInputStates = {
     fullName: false,
     email: false,
     phone: false,
     password: false,
   };
-  const [isFocused, setIsFocused] = React.useState(initialInputStates);
-  const [phoneNumber, setPhoneNumber] = React.useState('');
+  const [isFocused, setIsFocused] = useState(initialInputStates);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [isChecked, setIsChecked] = React.useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const phoneInput = useRef(null);
   const [initialFormValues, setInitialFormValues] = useState({
     fullName: '',
@@ -75,37 +79,43 @@ const VendorSignUp = ({navigation}) => {
         setPhoneNumber('+92' + phone);
         setIsLoading(true);
         const message = await RegistrationHandler({email, password});
-        if (message) {
+        if (typeof message === 'string') {
           setIsLoading(false);
           Toast(message);
         } else {
-          const randomId = uuid.v4();
-          const formData = {
-            ...initialFormValues,
-            image: '',
-            role: 'vendor',
-            token: randomId,
-          };
-          await firestore().collection('Vendors').doc(randomId).set(formData);
-          await firestore()
-            .collection('AllUsers')
-            .doc(randomId)
-            .set(formData)
-            .then(() => {
-              dispatch(setLoginToken(randomId));
-              setInitialFormValues({
-                fullName: '',
-                email: '',
-                password: '',
-                phone: '',
-                isChecked: false,
+          const uid = message.uid;
+          if (uid) {
+            const randomId = uuid.v4();
+            const formData = {
+              ...initialFormValues,
+              image: '',
+              role: 'vendor',
+              token: uid,
+            };
+            await firestore().collection('AllUsers').doc(uid).set(formData);
+            await firestore().collection('Vendors').doc(uid).set(formData);
+            dispatch(setLoginToken(uid));
+            try {
+              await AsyncStorage.setItem('vendorLoginToken', uid);
+              await AsyncStorage.getItem('vendorLoginToken').then(res => {
+                console.log(res,'res f async storage');
               });
-              navigation.navigate('VendorAuthStack', {
-                screen: 'SpaceDetailsScreen',
-              });
-              setIsLoading(false);
-              Toast(LABELS.successfullyRegistered);
+            } catch (e) {
+              console.log('error async storage');
+            }
+            setInitialFormValues({
+              fullName: '',
+              email: '',
+              password: '',
+              phone: '',
+              isChecked: false,
             });
+            navigation.navigate('VendorAuthStack', {
+              screen: 'SpaceDetailsScreen',
+            });
+            setIsLoading(false);
+            Toast(LABELS.successfullyRegistered);
+          }
         }
       } else {
         Toast(ERRORS.phoneValidation);

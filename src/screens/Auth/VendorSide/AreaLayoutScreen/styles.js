@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS} from './src/assets/theme';
+import { COLORS } from '../../../../assets/theme';
 export const styles = vendorData =>
   StyleSheet.create({
     row: {

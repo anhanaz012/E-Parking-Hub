@@ -1,11 +1,12 @@
+import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import React, {useEffect, useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import React, { useState } from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Modal from 'react-native-modal';
-import {useSelector} from 'react-redux';
-import {SVG} from '../../../../assets/svg';
-import {Fonts, STYLES} from '../../../../assets/theme';
+import { useSelector } from 'react-redux';
+import { SVG } from '../../../../assets/svg';
+import { Fonts, STYLES } from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
@@ -13,21 +14,20 @@ import GradientButton from '../../../../components/GradientButton/GradientButton
 import Icon from '../../../../components/Icon/Icon';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import {LABELS} from '../../../../labels';
-import {ERRORS} from '../../../../labels/error';
-import firestore from '@react-native-firebase/firestore';
-import {Toast} from '../../../../utils/native';
-import {styles} from './styles';
+import { LABELS } from '../../../../labels';
+import { ERRORS } from '../../../../labels/error';
+import { Toast } from '../../../../utils/native';
+import { styles } from './styles';
 const AreaPictureUpload = ({navigation}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const loginToken = useSelector(state => state.auth.loginToken);
+  console.log('area picture login token', loginToken)
   const style = styles;
   const launchCameraHandler = async () => {
     launchCamera({}, async res => {
       setIsLoading(true);
-
       if (res.didCancel) {
         setIsLoading(false);
         setIsModalVisible(false);
@@ -83,7 +83,8 @@ const AreaPictureUpload = ({navigation}) => {
   };
   const imageUploadingHandler = async () => {
     setIsLoading(true);
-    if (imageUrl) {
+    if (imageUrl && loginToken) {
+      console.log(loginToken)
       await firestore().collection('AllUsers').doc(loginToken).update({
         image: imageUrl,
       });
@@ -93,9 +94,15 @@ const AreaPictureUpload = ({navigation}) => {
         .update({
           image: imageUrl,
         })
+        await firestore()
+        .collection('ParkingAreas')
+        .doc(loginToken)
+        .update({
+          image: imageUrl,
+        })
         .then(() => {
           setIsLoading(false);
-          navigation.navigate('VendorBottomNavigation');
+          navigation.navigate('VendorAuthStack', {screen: 'AreaLayout'});
         })
         .catch(err => {
           setIsLoading(false);
@@ -103,7 +110,7 @@ const AreaPictureUpload = ({navigation}) => {
         });
     } else {
       setIsLoading(false);
-      console.log('url not present');
+     Toast(ERRORS.uploadImage)
     }
   };
   return (
@@ -184,7 +191,7 @@ const AreaPictureUpload = ({navigation}) => {
       <Space mT={50} />
       <View style={[STYLES.pH('10%')]}>
         <GradientButton
-          title={LABELS.upload}
+          title={LABELS.continue}
           textColor={'white'}
           onPress={imageUploadingHandler}
         />

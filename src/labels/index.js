@@ -1,6 +1,8 @@
 export const LABELS = {
   FullName: 'Full Name',
   takePhoto: 'Take Picture',
+  AreaLayoutUpdated:'The layout of your Parking area is successfully stored!',
+  ParkingDashboard:'Parking Dashboard',
   update:'Update',
   booked:'Booked',
   updateSlotMessage: 'Select the new status for this slot',

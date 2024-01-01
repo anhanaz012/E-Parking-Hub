@@ -74,7 +74,6 @@ const SignUpScreen = ({navigation}) => {
         setPhoneNumber('+92' + phone);
         setIsLoading(true);
         const message = await RegistrationHandler({email, password});
-
         if (message) {
           setIsLoading(false);
           Toast(message);

@@ -1,5 +1,7 @@
 export const ERRORS = {
   noInternet: 'No Internet Connection',
+  uploadImage:'Please upload image',
+  gettingDataError:'There is something wrong while fetching data. Kindly ensure your account',
   columnsNotDivisible:
     'Please ensure that the number of spots is evenly divisible by the number of rows for a balanced layout',
   emailNotRegistered: 'Entered email address is not registered',

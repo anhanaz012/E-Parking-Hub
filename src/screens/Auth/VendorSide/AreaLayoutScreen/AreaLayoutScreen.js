@@ -1,29 +1,29 @@
-import React, {useEffect, useState} from 'react';
-import {Dimensions, ScrollView, TouchableOpacity, View} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, ScrollView, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
-import {SVG} from '../../../../assets/svg';
-import {Fonts, STYLES} from '../../../../assets/theme';
+import { useSelector } from 'react-redux';
+import { SVG } from '../../../../assets/svg';
+import { Fonts, STYLES } from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
 import Icon from '../../../../components/Icon/Icon';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import {slotsStatus} from '../../../../data/appData';
-import {LABELS} from '../../../../labels';
+import { slotsStatus } from '../../../../data/appData';
+import { LABELS } from '../../../../labels';
+import { ERRORS } from '../../../../labels/error';
+import { Toast } from '../../../../utils/native';
 import { styles } from './styles';
-const AreaLayoutScreen = () => {
+const AreaLayoutScreen = ({navigation}) => {
   const [spots, setSpots] = useState();
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [selectedStatus, setselectedStatus] = useState('Available');
   const [isSlotEdit, setIsSlotEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const vendorData = {
-    numRows: 4,
-    numSpots: 16,
-    entryExitPoints: 'center',
-    rowsPosition: 'horizontal',
-  };
+  const loginToken = useSelector(state => state.auth.loginToken);
+  const vendorData = useSelector(state => state.auth.spaceData);
   const handleSlotSelection = slotDetails => {
     setSelectedSpot(slotDetails);
     const tempSpots = [...spots];
@@ -39,12 +39,12 @@ const AreaLayoutScreen = () => {
       slotGenerator();
       setIsLoading(false);
     }, 1000);
-    const slotGenerator = () => {
+    const slotGenerator = async () => {
       const tempSpots = [];
-      for (let row = 1; row <= vendorData.numRows; row++) {
+      for (let row = 1; row <= vendorData.noOfRows; row++) {
         for (
           let col = 1;
-          col <= vendorData.numSpots / vendorData.numRows;
+          col <= vendorData.noOfLots / vendorData.noOfRows;
           col++
         ) {
           const slotId = `abc_${row}_${col}`;
@@ -80,17 +80,46 @@ const AreaLayoutScreen = () => {
     const value = item.value;
     setselectedStatus(value);
   };
+  const dataSetHandler = async () => {
+    setIsLoading(true);
+    if (loginToken) {
+      await firestore()
+        .collection('Vendors')
+        .doc(loginToken)
+        .get()
+        .then(async res => {
+          const previousData = res.data();
+          const completeData = {...previousData, spots};
+          await firestore()
+            .collection('Vendors')
+            .doc(loginToken)
+            .set(completeData);
+          await firestore()
+            .collection('ParkingAreas')
+            .doc(loginToken)
+            .set(completeData);
+          setIsLoading(false);
+          Toast(LABELS.AreaLayoutUpdated);
+          navigation.navigate('VendorBottomNavigation');
+        })
+        .catch(err => {
+          Toast(ERRORS.somethingWent);
+        });
+    } else {
+      Toast(ERRORS.somethingWent);
+    }
+  };
   const generateParkingLayout = () => {
     const parkingLayout = [];
-    for (let row = 1; row <= vendorData.numRows; row++) {
+    for (let row = 1; row <= vendorData.noOfRows; row++) {
       const rowContainer = [];
       for (
         let col = 1;
-        col <= vendorData.numSpots / vendorData.numRows;
+        col <= vendorData.noOfLots / vendorData.noOfRows;
         col++
       ) {
         const {width} = Dimensions.get('window');
-        const cols = vendorData.numSpots / vendorData.numRows;
+        const cols = vendorData.noOfLots / vendorData.noOfRows;
         const slotWidth = width / cols - 15;
         const slotId = `abc_${row}_${col}`;
         const slotName = `A${row}${col}`;
@@ -161,15 +190,15 @@ const AreaLayoutScreen = () => {
         </View>
       </View>
     );
-    if (vendorData.entryExitPoints === 'center') {
-      parkingLayout.splice(vendorData.numRows / 2, 0, entryExitRoute);
+    if (vendorData.entryExitDirection === 'Center') {
+      parkingLayout.splice(vendorData.noOfRows / 2, 0, entryExitRoute);
     }
-    if (vendorData.entryExitPoints === 'top') {
+    if (vendorData.entryExitDirection === 'Top') {
       parkingLayout.splice(0, 0, entryExitRoute);
     }
 
-    if (vendorData.entryExitPoints === 'bottom') {
-      parkingLayout.splice(vendorData.numRows, 0, entryExitRoute);
+    if (vendorData.entryExitDirection === 'Bottom') {
+      parkingLayout.splice(vendorData.noOfRows, 0, entryExitRoute);
     }
     return parkingLayout;
   };
@@ -179,7 +208,7 @@ const AreaLayoutScreen = () => {
       <ScrollView style={style.topContainer}>
         {isLoading && <ModalBox isVisible={isLoading} />}
         <AppHeader
-          title={LABELS.pickSpot}
+          title={LABELS.ParkingDashboard}
           mL={15}
           theme={'dark'}
           iconLeft={<SVG.leftArrow fill={'white'} height={20} width={20} />}
@@ -197,7 +226,7 @@ const AreaLayoutScreen = () => {
           generateParkingLayout()
         )}
         <AppButton
-          title={'Continue'}
+          title={LABELS.continue}
           extraStyle={{
             btnContainer: {
               marginVertical: 20,
@@ -205,6 +234,7 @@ const AreaLayoutScreen = () => {
               alignSelf: 'center',
             },
           }}
+          onPress={dataSetHandler}
         />
         {isSlotEdit && (
           <Modal isVisible={isSlotEdit} style={{flex: 1}}>

@@ -1,6 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
   loginToken: '',
+  spaceData: null,
+  imageUri: '',
+  personalData: null,
+  slotsData: null,
 };
 const authSlice = createSlice({
   name: 'auth',
@@ -9,7 +13,10 @@ const authSlice = createSlice({
     setLoginToken: (state, action) => {
       state.loginToken = action.payload;
     },
+    setSpaceData: (state, action) => {
+      state.spaceData = action.payload;
+    },
   },
 });
 export default authSlice.reducer;
-export const {setLoginToken} = authSlice.actions;
+export const {setLoginToken,setSpaceData} = authSlice.actions;

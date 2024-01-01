@@ -1,5 +1,4 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { SVG } from '../../../assets/svg';
 import { COLORS } from '../../../assets/theme';
@@ -10,11 +9,7 @@ import VendorProfile from '../../../screens/Main/VendorSide/VendorProfile/Vendor
 import { styles } from './styles';
 const Tab = createBottomTabNavigator();
 const VendorBottomNavigation = ({navigation}) => {
-  const focused = useIsFocused();
   const style = styles;
-  const options = {
-    headerShown: false,
-  };
   return (
     <Tab.Navigator
       screenOptions={() => ({
