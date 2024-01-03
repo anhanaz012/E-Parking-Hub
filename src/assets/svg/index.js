@@ -16,7 +16,6 @@ export const SVG = {
   bell: require('./Bell.svg').default,
   carModel: require('./Label.svg').default,
   carNumber: require('./DriverLicense.svg').default,
-  cancel: require('./cancel.svg').default,
   starFilled: require('./filledStar.svg').default,
   starUnfilled: require('./unfilledStar.svg').default,
   phone: require('./Phone.svg').default,
@@ -37,5 +36,8 @@ export const SVG = {
   lightRightArrow:require('./lightRightArrow.svg').default,
   entryLeftArrow:require('./entryleftArrow.svg').default,
   exitRightArrow:require('./entryRightArrow.svg').default,
-  camera:require('./camera.svg').default
+  camera:require('./camera.svg').default,
+  locationArrow:require('./locationArrow.svg').default,
+  accept:require('./accept.svg').default,
+  cancel:require('./cancel.svg').default,
 };

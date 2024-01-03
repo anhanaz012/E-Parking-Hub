@@ -1,9 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {ScrollView, View} from 'react-native';
 import PhoneInput from 'react-native-phone-number-input';
-import uuid from 'react-native-uuid';
 import {useDispatch} from 'react-redux';
 import {SVG} from '../../../../assets/svg';
 import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
@@ -19,14 +17,11 @@ import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
 import {ERRORS} from '../../../../labels/error';
 import {RegistrationHandler} from '../../../../services/firebase';
+import {setLoginToken} from '../../../../store/slices/authSlice';
 import {Toast} from '../../../../utils/native';
 import {isVendorValidated} from '../../../../utils/validation';
 import {styles} from './styles';
-import {setLoginToken} from '../../../../store/slices/authSlice';
 const VendorSignUp = ({navigation}) => {
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
   const initialInputStates = {
     fullName: false,
     email: false,
@@ -85,7 +80,6 @@ const VendorSignUp = ({navigation}) => {
         } else {
           const uid = message.uid;
           if (uid) {
-            const randomId = uuid.v4();
             const formData = {
               ...initialFormValues,
               image: '',
@@ -94,15 +88,6 @@ const VendorSignUp = ({navigation}) => {
             };
             await firestore().collection('AllUsers').doc(uid).set(formData);
             await firestore().collection('Vendors').doc(uid).set(formData);
-            dispatch(setLoginToken(uid));
-            try {
-              await AsyncStorage.setItem('vendorLoginToken', uid);
-              await AsyncStorage.getItem('vendorLoginToken').then(res => {
-                console.log(res,'res f async storage');
-              });
-            } catch (e) {
-              console.log('error async storage');
-            }
             setInitialFormValues({
               fullName: '',
               email: '',
@@ -110,11 +95,11 @@ const VendorSignUp = ({navigation}) => {
               phone: '',
               isChecked: false,
             });
+            setIsLoading(false)
+            Toast(LABELS.successfullyRegistered);
             navigation.navigate('VendorAuthStack', {
               screen: 'SpaceDetailsScreen',
             });
-            setIsLoading(false);
-            Toast(LABELS.successfullyRegistered);
           }
         }
       } else {
@@ -136,7 +121,7 @@ const VendorSignUp = ({navigation}) => {
           }}
         />
         <Space mT={10} />
-        {isLoading && <ModalBox isVisible={isLoading} />}
+        {/* {isLoading && <ModalBox isVisible={isLoading} />} */}
         <View style={[STYLES.pH(20)]}>
           <View style={[STYLES.height('15%')]}>
             <AppText

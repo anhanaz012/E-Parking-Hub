@@ -1,9 +1,9 @@
 import firestore from '@react-native-firebase/firestore';
-import React, { useRef, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import React, {useRef, useState} from 'react';
+import {ScrollView, View} from 'react-native';
 import PhoneInput from 'react-native-phone-number-input';
-import { SVG } from '../../../../assets/svg';
-import { COLORS, COMMON_COLORS, Fonts, STYLES } from '../../../../assets/theme';
+import {SVG} from '../../../../assets/svg';
+import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppText from '../../../../components/AppText/AppText';
@@ -13,12 +13,12 @@ import GradientButton from '../../../../components/GradientButton/GradientButton
 import Icon from '../../../../components/Icon/Icon';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import { LABELS } from '../../../../labels';
-import { ERRORS } from '../../../../labels/error';
-import { RegistrationHandler } from '../../../../services/firebase';
-import { Toast } from '../../../../utils/native';
-import { isValidatedSignUp } from '../../../../utils/validation';
-import { styles } from './styles';
+import {LABELS} from '../../../../labels';
+import {ERRORS} from '../../../../labels/error';
+import {RegistrationHandler} from '../../../../services/firebase';
+import {Toast} from '../../../../utils/native';
+import {isValidatedSignUp} from '../../../../utils/validation';
+import {styles} from './styles';
 
 const SignUpScreen = ({navigation}) => {
   const initialInputStates = {
@@ -74,25 +74,36 @@ const SignUpScreen = ({navigation}) => {
         setPhoneNumber('+92' + phone);
         setIsLoading(true);
         const message = await RegistrationHandler({email, password});
-        if (message) {
+        if (typeof message === 'string') {
           setIsLoading(false);
           Toast(message);
         } else {
-          await firestore()
-            .collection('Users')
-            .add(initialFormValues)
-            .then(() => {
-              setInitialFormValues({
-                fullName: '',
-                email: '',
-                password: '',
-                phone: '',
-                isChecked: false,
-              });
-              setIsLoading(false);
-              Toast(LABELS.successfullyRegistered);
-              navigation.navigate('AuthStack', {screen: 'SignInScreen'});
+          const uid = message.uid;
+          if (uid) {
+            const formData = {
+              ...initialFormValues,
+              role: 'user',
+              token: uid,
+            };
+            await firestore().collection('AllUsers').doc(uid).set(formData);
+            await firestore().collection('Users').doc(uid).set(formData);
+            try {
+              await AsyncStorage.setItem('userLoginToken', uid)
+            } catch (e) {
+              console.log('error async storage');
+            }
+            setInitialFormValues({
+              fullName: '',
+              email: '',
+              password: '',
+              phone: '',
+              carModel: '',
+              isChecked: false,
             });
+            setIsLoading(false);
+            Toast(LABELS.successfullyRegistered);
+            navigation.navigate('AuthStack', {screen: 'SignInScreen'});
+          }
         }
       } else {
         Toast(ERRORS.phoneValidation);

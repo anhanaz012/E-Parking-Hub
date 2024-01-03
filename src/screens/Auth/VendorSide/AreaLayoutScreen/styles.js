@@ -36,7 +36,7 @@ export const styles = vendorData =>
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-    entryPoint: {
+    entryPoint:{
       height: 50,
       alignItems: 'center',
       justifyContent: 'center',

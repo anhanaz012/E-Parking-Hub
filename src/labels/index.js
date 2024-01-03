@@ -1,6 +1,8 @@
 export const LABELS = {
   FullName: 'Full Name',
   takePhoto: 'Take Picture',
+  allBookings:'All Booking requests',
+  step1:'Step 1 of 4',
   AreaLayoutUpdated:'The layout of your Parking area is successfully stored!',
   ParkingDashboard:'Parking Dashboard',
   update:'Update',
@@ -39,6 +41,7 @@ export const LABELS = {
   addSpace: 'Add Space',
   details: 'Details',
   rejected: 'Rejected',
+  requests:'Requests',
   bookingRequests: 'Booking Requests',
   total: 'Total',
   accept: 'Accept',

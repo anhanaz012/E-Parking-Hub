@@ -1,6 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import React, {useEffect, useState} from 'react';
-import {ScrollView, View} from 'react-native';
+import {BackHandler, ScrollView, View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useDispatch, useSelector} from 'react-redux';
 import {SVG} from '../../../../assets/svg';
@@ -9,7 +9,6 @@ import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppText from '../../../../components/AppText/AppText';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
-import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
 import {
   rowsPosition,
@@ -17,10 +16,10 @@ import {
 } from '../../../../data/appData';
 import {LABELS} from '../../../../labels';
 import {ERRORS} from '../../../../labels/error';
+import {setSpaceData} from '../../../../store/slices/authSlice';
 import {Toast} from '../../../../utils/native';
 import {isSpaceDetailsValid} from '../../../../utils/validation';
 import {styles} from './styles';
-import {setSpaceData} from '../../../../store/slices/authSlice';
 const SpaceDetailsScreen = ({navigation}) => {
   const theme = 'light';
   const style = styles(theme);
@@ -30,7 +29,16 @@ const SpaceDetailsScreen = ({navigation}) => {
   const [vendorData, setVendorData] = useState();
   const loginToken = useSelector(state => state.auth.loginToken);
   useEffect(() => {
-    console.log('loginToken', loginToken);
+    const onBackPress = () => {
+      return true;
+    };
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  }, []);
+
+  useEffect(() => {
+    console.log('this is vendor data',vendorData)
     setTimeout(() => {
       const getVendorData = async () => {
         const user = await firestore()
@@ -142,15 +150,19 @@ const SpaceDetailsScreen = ({navigation}) => {
         style={[STYLES.bgColor(COLORS[theme].background), STYLES.flex1]}>
         <AppHeader
           theme={theme}
+          mL={15}
+          title={LABELS.step1}
+          fontFamily={Fonts.latoRegular}
           iconLeft={
-            <SVG.leftArrow height={25} width={25} fill={COLORS[theme].text} />
+            <SVG.leftArrow height={20} width={20} fill={COLORS[theme].text} />
           }
           onLeftIconPress={() => {
             navigation.goBack();
           }}
         />
         <Space mT={10} />
-        {isLoading && <ModalBox isVisible={isLoading} />}
+
+        {/* {isLoading && <ModalBox isVisible={isLoading} />} */}
         <View style={[STYLES.pH(20)]}>
           <View style={[STYLES.height('15%')]}>
             <AppText
@@ -282,10 +294,7 @@ const SpaceDetailsScreen = ({navigation}) => {
             textColor={'white'}
             textVariant={'h5'}
             fontFamily={Fonts.mavenRegular}
-            onPress={
-              SpaceDetailsHandler
-              // navigation.navigate('VendorBottomNavigation', {screen: 'Home'});
-            }
+            onPress={SpaceDetailsHandler}
           />
           <Space mT={25} />
         </View>

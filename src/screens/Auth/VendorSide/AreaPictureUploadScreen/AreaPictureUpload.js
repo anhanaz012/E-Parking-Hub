@@ -1,29 +1,28 @@
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import React, { useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import React, {useState} from 'react';
+import {TouchableOpacity, View} from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'react-native-modal';
-import { useSelector } from 'react-redux';
-import { SVG } from '../../../../assets/svg';
-import { Fonts, STYLES } from '../../../../assets/theme';
+import {useSelector} from 'react-redux';
+import {SVG} from '../../../../assets/svg';
+import {Fonts, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import Icon from '../../../../components/Icon/Icon';
-import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import { LABELS } from '../../../../labels';
-import { ERRORS } from '../../../../labels/error';
-import { Toast } from '../../../../utils/native';
-import { styles } from './styles';
+import {LABELS} from '../../../../labels';
+import {ERRORS} from '../../../../labels/error';
+import {Toast} from '../../../../utils/native';
+import {styles} from './styles';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
 const AreaPictureUpload = ({navigation}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const loginToken = useSelector(state => state.auth.loginToken);
-  console.log('area picture login token', loginToken)
   const style = styles;
   const launchCameraHandler = async () => {
     launchCamera({}, async res => {
@@ -48,6 +47,7 @@ const AreaPictureUpload = ({navigation}) => {
             setIsModalVisible(false);
           })
           .catch(err => {
+            setIsLoading(false);
             Toast(ERRORS.somethingWent);
           });
       }
@@ -61,6 +61,7 @@ const AreaPictureUpload = ({navigation}) => {
         setIsModalVisible(false);
         Toast(ERRORS.cancelledImageUploading);
       } else {
+        setIsLoading(true);
         let filename = res.assets[0].fileName;
         let fileuri = res.assets[0].uri;
         const reference = storage().ref(`parkingAreas/${filename}`);
@@ -82,35 +83,21 @@ const AreaPictureUpload = ({navigation}) => {
     });
   };
   const imageUploadingHandler = async () => {
-    setIsLoading(true);
     if (imageUrl && loginToken) {
-      console.log(loginToken)
+      setIsLoading(true);
       await firestore().collection('AllUsers').doc(loginToken).update({
         image: imageUrl,
       });
-      await firestore()
-        .collection('Vendors')
-        .doc(loginToken)
-        .update({
-          image: imageUrl,
-        })
-        await firestore()
-        .collection('ParkingAreas')
-        .doc(loginToken)
-        .update({
-          image: imageUrl,
-        })
-        .then(() => {
-          setIsLoading(false);
-          navigation.navigate('VendorAuthStack', {screen: 'AreaLayout'});
-        })
-        .catch(err => {
-          setIsLoading(false);
-          console.log(err);
-        });
-    } else {
+      await firestore().collection('Vendors').doc(loginToken).update({
+        image: imageUrl,
+      });
+      await firestore().collection('ParkingAreas').doc(loginToken).update({
+        image: imageUrl,
+      });
       setIsLoading(false);
-     Toast(ERRORS.uploadImage)
+      navigation.navigate('VendorAuthStack', {screen: 'AreaLayout'});
+    } else {
+      Toast(ERRORS.uploadImage);
     }
   };
   return (
@@ -121,8 +108,8 @@ const AreaPictureUpload = ({navigation}) => {
         iconLeft={<SVG.leftArrow height={20} width={20} fill={'black'} />}
         mL={15}
       />
-      <Space mT={50} />
       {isLoading && <ModalBox isVisible={isLoading} />}
+      <Space mT={50} />
       <TouchableOpacity
         style={style.profileContainer}
         onPress={() => {

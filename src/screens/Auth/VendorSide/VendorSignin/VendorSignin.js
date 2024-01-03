@@ -43,17 +43,20 @@ const VendorSignIn = ({navigation}) => {
         setIsLoading(false);
         Toast(message);
       } else {
-        try {
-          const uid = message.uid;
-          await AsyncStorage.setItem('loginToken', uid);
-          if (uid) {
-            setIsLoading(false);
-            Toast(LABELS.loginSuccess);
-            setFormValues({email: '', password: ''});
-            navigation.navigate('VendorBottomNavigation');
+        const uid = message.uid;
+        if (uid) {
+          try {
+            await AsyncStorage.setItem('vendoroginToken', uid);
+            await AsyncStorage.getItem('vendoroginToken').then(res => {
+              console.log(res, 'res f async storage');
+            });
+          } catch (e) {
+            console.log('error async storage');
           }
-        } catch (e) {
-          console.log(e);
+          setIsLoading(false);
+          Toast(LABELS.loginSuccess);
+          setFormValues({email: '', password: ''});
+          navigation.navigate('VendorBottomNavigation');
         }
       }
     }

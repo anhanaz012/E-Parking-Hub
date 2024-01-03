@@ -1,13 +1,13 @@
-import {StyleSheet} from 'react-native';
-import {COLORS} from '../../../../assets/theme';
+import { StyleSheet } from 'react-native';
+import { COLORS } from '../../../../assets/theme';
 export const styles = StyleSheet.create({
   bookingsContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#F5F5F9',
     flex: 1,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     paddingHorizontal: 15,
-    bottom: 10,
+    bottom: 20,
   },
   bookingCard: {
     height: 160,
@@ -15,8 +15,24 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'center',
     paddingVertical: 10,
-    backgroundColor: COLORS.light.steelGrey,
+    backgroundColor:'white',
     elevation: 5,
     borderRadius: 10,
   },
+  declineBtn:{
+    width: '40%',
+    backgroundColor: 'transparent',
+    borderColor: COLORS.light.red,
+    elevation: 0,
+    borderWidth: 1,
+    height: 45,
+  },
+  acceptBtn:{
+    width: '40%',
+    backgroundColor: 'transparent',
+    borderColor: COLORS.light.primary,
+    elevation: 0,
+    borderWidth: 1,
+    height: 45,
+  }
 });

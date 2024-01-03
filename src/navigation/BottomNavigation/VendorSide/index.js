@@ -94,7 +94,7 @@ const VendorBottomNavigation = ({navigation}) => {
                   />
                 }
                 onPress={() => {
-                  navigation.navigate('UserProfileScreen');
+                  navigation.navigate('VendorProfile');
                 }}
               />
             </>

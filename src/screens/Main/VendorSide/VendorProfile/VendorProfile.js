@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import React, {useEffect, useState} from 'react';
-import {ScrollView, TouchableOpacity, View} from 'react-native';
-import {SVG} from '../../../../assets/svg';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { SVG } from '../../../../assets/svg';
 import {
   COLORS,
   Fonts,
@@ -15,11 +16,10 @@ import AppText from '../../../../components/AppText/AppText';
 import Icon from '../../../../components/Icon/Icon';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import {LABELS} from '../../../../labels';
-import {styles} from './styles';
-import {Toast} from '../../../../utils/native';
-import auth from '@react-native-firebase/auth';
-import {ERRORS} from '../../../../labels/error';
+import { LABELS } from '../../../../labels';
+import { ERRORS } from '../../../../labels/error';
+import { Toast } from '../../../../utils/native';
+import { styles } from './styles';
 
 const VendorProfile = ({navigation}) => {
   const [vendorData, setVendorData] = useState(null);
@@ -27,7 +27,7 @@ const VendorProfile = ({navigation}) => {
   useEffect(() => {
     const getLoginToken = async () => {
       try {
-        const token = await AsyncStorage.getItem('loginToken');
+        const token = await AsyncStorage.getItem('vendorLoginToken');
         if (token !== null) {
           setIsLoading(true);
           const user = await firestore().collection('Vendors').doc(token).get();
@@ -49,7 +49,7 @@ const VendorProfile = ({navigation}) => {
     auth()
       .signOut()
       .then(() => {
-        navigation.replace('AuthStack', {
+        navigation.navigate('AuthStack', {
           screen: 'IntroScreen',
         });
       });
@@ -183,7 +183,7 @@ const VendorProfile = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </>
-      )}
+       )} 
     </ScrollView>
   );
 };
