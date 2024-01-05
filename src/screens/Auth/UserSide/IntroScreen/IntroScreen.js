@@ -1,95 +1,104 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { firebase } from '@react-native-firebase/auth';
-import React, { useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { IMAGES } from '../../../../assets/images';
-import { COLORS, COMMON_COLORS, Fonts, STYLES } from '../../../../assets/theme';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import React, {useEffect, useRef, useState} from 'react';
+import {ScrollView, View} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {IMAGES} from '../../../../assets/images';
+import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
 import AppLogo from '../../../../components/AppLogo/AppLogo';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import { LABELS } from '../../../../labels';
-import { setLoginToken, setSpaceData } from '../../../../store/slices/authSlice';
-import { styles } from './styles';
+import {LABELS} from '../../../../labels';
+import {setLoginToken, setSpaceData} from '../../../../store/slices/authSlice';
+import {styles} from './styles';
 const IntroScreen = ({navigation}) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const isIntroScreenMounted = useRef(true);
   const theme = 'light';
   const style = styles(theme);
   const dispatch = useDispatch();
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(async user => {
-      if (user) {
-        setIsLoading(true);
+    const unsubscribe = auth().onAuthStateChanged(async user => {
+      if (isIntroScreenMounted.current && user) {
         const userUid = user.uid;
-        if (userUid) {
-          const userDoc = await firebase
-            .firestore()
+        try {
+          const userData = await firestore()
             .collection('AllUsers')
             .doc(userUid)
             .get();
-          if (userDoc.exists) {
-            const userRole = userDoc.data().role;
-            if (userRole === 'user') {
-              try {
-                await AsyncStorage.setItem('userLoginToken', userUid);
-              } catch (err) {
-                console.log(err);
-              }
+
+          if (userData.exists) {
+            const {role} = userData.data();
+            if (role === 'user') {
+              if (isIntroScreenMounted.current) {
+              await AsyncStorage.setItem('userLoginToken', userUid);
               setIsLoading(false);
-              navigation.navigate('BottomNavigation');
-            }
-            if (userRole === 'vendor') {
-              try {
-                console.log(userUid);
-                dispatch(setLoginToken(userUid));
-                await AsyncStorage.setItem('vendorLoginToken', userUid);
-              } catch (err) {
-                console.log('err from asyncstorage', err);
+                navigation.navigate('BottomNavigation');
               }
-              const vendorData = await firebase
-                .firestore()
+            } else if (role === 'vendor') {
+              dispatch(setLoginToken(userUid));
+              await AsyncStorage.setItem('vendorLoginToken', userUid);
+              const vendorData = await firestore()
                 .collection('Vendors')
                 .doc(userUid)
                 .get();
               if (vendorData.exists) {
-                const spotsData = vendorData.data().spots;
-                const spaceValues = vendorData.data().formValues;
-                const spaceImage = vendorData.data().image;
-               
-                if (spaceValues === undefined || spaceValues === null) {
-                  navigation.navigate('VendorAuthStack', {
-                    screen: 'SpaceDetailsScreen',
-                  });
-                } else if (spaceValues !== undefined && spaceValues !== null && !spaceImage) {
-                  navigation.navigate('VendorAuthStack', {
-                    screen: 'AreaPictureUpload',
-                  });
-                } else if (
-                  spaceValues !== undefined &&
-                  spaceValues !== null &&
-                  (spotsData === undefined || spotsData === null)
-                ) {
-                  dispatch(setSpaceData(spaceValues));
-                  navigation.navigate('VendorAuthStack', {
-                    screen: 'AreaLayout',
-                  });
-                } else {
+                const {formValues, image, spots} = vendorData.data();
+                if (formValues === undefined || formValues === null) {
+                  if (isIntroScreenMounted.current) {
+                    setIsLoading(false);
+                    navigation.navigate('VendorAuthStack', {
+                      screen: 'SpaceDetailsScreen',
+                    });
+                  }
+                } else if (image === '') {
                   setIsLoading(false);
-                  navigation.navigate('VendorBottomNavigation');
+                  if (isIntroScreenMounted.current) {
+                    navigation.navigate('VendorAuthStack', {
+                      screen: 'AreaPictureUpload',
+                    });
+                  }
+                } else if (spots === undefined || spots === null) {
+                  if (isIntroScreenMounted.current) {
+                    dispatch(setSpaceData(formValues));
+                    setTimeout(() => {
+                      setIsLoading(false);
+                      navigation.navigate('VendorAuthStack', {
+                        screen: 'AreaLayout',
+                      });
+                    }, 1000);
+                  }
+                } else {
+                  if (isIntroScreenMounted.current) {
+                    setIsLoading(false);
+                    navigation.navigate('VendorBottomNavigation');
+                  }
                 }
               } else {
                 setIsLoading(false);
+                console.log('user data does not exist in firestore');
               }
             }
           }
+        } catch (err) {
+          setIsLoading(false);
+          console.error('Error during authentication or data retrieval', err);
         }
       } else {
-        console.log('no user found');
+        if (isIntroScreenMounted.current) {
+          setIsLoading(false);
+        }
       }
     });
+
+    return () => {
+      isIntroScreenMounted.current = false;
+      unsubscribe();
+    };
   }, []);
   const vendorSideNavigation = async () => {
     navigation.navigate('VendorAuthStack', {screen: 'VendorSignUpScreen'});

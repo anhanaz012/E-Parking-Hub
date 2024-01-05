@@ -1,10 +1,10 @@
 import firestore from '@react-native-firebase/firestore';
-import React, {useRef, useState} from 'react';
-import {ScrollView, View} from 'react-native';
+import React, { useRef, useState } from 'react';
+import { ScrollView, View } from 'react-native';
 import PhoneInput from 'react-native-phone-number-input';
-import {useDispatch} from 'react-redux';
-import {SVG} from '../../../../assets/svg';
-import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
+import { useDispatch } from 'react-redux';
+import { SVG } from '../../../../assets/svg';
+import { COLORS, COMMON_COLORS, Fonts, STYLES } from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppText from '../../../../components/AppText/AppText';
@@ -14,13 +14,12 @@ import GradientButton from '../../../../components/GradientButton/GradientButton
 import Icon from '../../../../components/Icon/Icon';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import {LABELS} from '../../../../labels';
-import {ERRORS} from '../../../../labels/error';
-import {RegistrationHandler} from '../../../../services/firebase';
-import {setLoginToken} from '../../../../store/slices/authSlice';
-import {Toast} from '../../../../utils/native';
-import {isVendorValidated} from '../../../../utils/validation';
-import {styles} from './styles';
+import { LABELS } from '../../../../labels';
+import { ERRORS } from '../../../../labels/error';
+import { RegistrationHandler } from '../../../../services/firebase';
+import { Toast } from '../../../../utils/native';
+import { isVendorValidated } from '../../../../utils/validation';
+import { styles } from './styles';
 const VendorSignUp = ({navigation}) => {
   const initialInputStates = {
     fullName: false,
@@ -88,6 +87,7 @@ const VendorSignUp = ({navigation}) => {
             };
             await firestore().collection('AllUsers').doc(uid).set(formData);
             await firestore().collection('Vendors').doc(uid).set(formData);
+            setIsLoading(false);
             setInitialFormValues({
               fullName: '',
               email: '',
@@ -95,7 +95,6 @@ const VendorSignUp = ({navigation}) => {
               phone: '',
               isChecked: false,
             });
-            setIsLoading(false)
             Toast(LABELS.successfullyRegistered);
             navigation.navigate('VendorAuthStack', {
               screen: 'SpaceDetailsScreen',
@@ -103,6 +102,7 @@ const VendorSignUp = ({navigation}) => {
           }
         }
       } else {
+        setIsLoading(false);
         Toast(ERRORS.phoneValidation);
       }
     }
@@ -121,7 +121,7 @@ const VendorSignUp = ({navigation}) => {
           }}
         />
         <Space mT={10} />
-        {/* {isLoading && <ModalBox isVisible={isLoading} />} */}
+        {isLoading && <ModalBox isVisible={isLoading} />}
         <View style={[STYLES.pH(20)]}>
           <View style={[STYLES.height('15%')]}>
             <AppText

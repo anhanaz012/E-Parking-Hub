@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import React, { useEffect, useState } from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
-import { SVG } from '../../../../assets/svg';
+import React, {useEffect, useState} from 'react';
+import {ScrollView, TouchableOpacity, View} from 'react-native';
+import {SVG} from '../../../../assets/svg';
 import {
   COLORS,
   Fonts,
@@ -16,10 +16,10 @@ import AppText from '../../../../components/AppText/AppText';
 import Icon from '../../../../components/Icon/Icon';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import { LABELS } from '../../../../labels';
-import { ERRORS } from '../../../../labels/error';
-import { Toast } from '../../../../utils/native';
-import { styles } from './styles';
+import {LABELS} from '../../../../labels';
+import {ERRORS} from '../../../../labels/error';
+import {Toast} from '../../../../utils/native';
+import {styles} from './styles';
 
 const VendorProfile = ({navigation}) => {
   const [vendorData, setVendorData] = useState(null);
@@ -166,6 +166,51 @@ const VendorProfile = ({navigation}) => {
                 variant={'h4'}
               />
             </View>
+            <View style={style.infoContainer}>
+              <View
+                style={{
+                  width: '50%',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                }}>
+                <Icon
+                  SVGIcon={
+                    <SVG.rupee
+                      fill={COLORS.light.grey}
+                      height={18}
+                      width={18}
+                    />
+                  }
+                />
+                <Space mL={15} />
+                <AppText
+                  title={`${vendorData?.formValues.price}/hr`}
+                  theme={theme}
+                  color={COLORS.light.grey}
+                  fontFamily={Fonts.latoRegular}
+                  variant={'h4'}
+                />
+              </View>
+              <View
+                style={{
+                  width: '50%',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                }}>
+                <AppText
+                  title={'Edit'}
+                  fontFamily={Fonts.latoRegular}
+                  variant={'body2'}
+                  color={COLORS.light.primary}
+                  extraStyle={[STYLES.textDecorationLine('underline')]}
+                  onPress={() => {
+                    console.log('edit price');
+                  }}
+                />
+                <Space mL={10} />
+              </View>
+            </View>
             <TouchableOpacity
               style={style.logoutContainer}
               onPress={logoutHandler}>
@@ -183,7 +228,7 @@ const VendorProfile = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </>
-       )} 
+      )}
     </ScrollView>
   );
 };

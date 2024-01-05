@@ -1,84 +1,84 @@
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import React, {useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import React, { useState,useEffect } from 'react';
+import { BackHandler, TouchableOpacity, View } from 'react-native';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Modal from 'react-native-modal';
-import {useSelector} from 'react-redux';
-import {SVG} from '../../../../assets/svg';
-import {Fonts, STYLES} from '../../../../assets/theme';
+import { useSelector } from 'react-redux';
+import { SVG } from '../../../../assets/svg';
+import { Fonts, STYLES } from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import Icon from '../../../../components/Icon/Icon';
-import Space from '../../../../components/Space/Space';
-import {LABELS} from '../../../../labels';
-import {ERRORS} from '../../../../labels/error';
-import {Toast} from '../../../../utils/native';
-import {styles} from './styles';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
+import Space from '../../../../components/Space/Space';
+import { LABELS } from '../../../../labels';
+import { ERRORS } from '../../../../labels/error';
+import { Toast } from '../../../../utils/native';
+import { styles } from './styles';
 const AreaPictureUpload = ({navigation}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const loginToken = useSelector(state => state.auth.loginToken);
   const style = styles;
+  useEffect(() => {
+    const onBackPress = () => {
+      return true;
+    };
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  }, []);
   const launchCameraHandler = async () => {
     launchCamera({}, async res => {
-      setIsLoading(true);
       if (res.didCancel) {
-        setIsLoading(false);
-        setIsModalVisible(false);
         Toast(ERRORS.cancelledImageUploading);
+        setIsModalVisible(false);
       } else {
-        let filename = res.assets[0].fileName;
-        let fileuri = res.assets[0].uri;
-        const reference = storage().ref(`parkingAreas/${filename}`);
-        await reference.putFile(fileuri);
-        await storage()
-          .ref(`parkingAreas/${filename}`)
-          .getDownloadURL()
-          .then(uri => {
-            let imageUri = uri;
-            setImageUrl(imageUri);
-            setIsLoading(false);
-            Toast(LABELS.imageUploaded);
-            setIsModalVisible(false);
-          })
-          .catch(err => {
-            setIsLoading(false);
-            Toast(ERRORS.somethingWent);
-          });
+        try {
+          setIsLoading(true);
+          const filename = res.assets[0].fileName;
+          const fileuri = res.assets[0].uri;
+          const reference = storage().ref(`parkingAreas/${filename}`);
+          await reference.putFile(fileuri);
+          const downloadURL = await reference.getDownloadURL();
+          setImageUrl(downloadURL);
+          setIsLoading(false);
+          Toast(LABELS.imageUploaded);
+          setIsModalVisible(false);
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          setIsLoading(false);
+          Toast(ERRORS.somethingWent);
+        }
       }
     });
   };
   const chooseFromGalleryHandler = async () => {
     launchImageLibrary({}, async res => {
-      setIsLoading(true);
       if (res.didCancel) {
-        setIsLoading(false);
-        setIsModalVisible(false);
         Toast(ERRORS.cancelledImageUploading);
+        setIsModalVisible(false);
       } else {
-        setIsLoading(true);
-        let filename = res.assets[0].fileName;
-        let fileuri = res.assets[0].uri;
-        const reference = storage().ref(`parkingAreas/${filename}`);
-        await reference.putFile(fileuri);
-        await storage()
-          .ref(`parkingAreas/${filename}`)
-          .getDownloadURL()
-          .then(uri => {
-            let imageUri = uri;
-            setImageUrl(imageUri);
-            setIsLoading(false);
-            Toast(LABELS.imageUploaded);
-            setIsModalVisible(false);
-          })
-          .catch(err => {
-            Toast(ERRORS.somethingWent);
-          });
+        try {
+          setIsLoading(true);
+          const filename = res.assets[0].fileName;
+          const fileuri = res.assets[0].uri;
+          const reference = storage().ref(`parkingAreas/${filename}`);
+          await reference.putFile(fileuri);
+          const downloadURL = await reference.getDownloadURL();
+          setImageUrl(downloadURL);
+          setIsLoading(false);
+          Toast(LABELS.imageUploaded);
+          setIsModalVisible(false);
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          setIsLoading(false);
+          Toast(ERRORS.somethingWent);
+        }
       }
     });
   };
@@ -103,9 +103,12 @@ const AreaPictureUpload = ({navigation}) => {
   return (
     <View style={[STYLES.flex1]}>
       <AppHeader
-        title={LABELS.uploadProfile}
+        title={'Step 2 of 3'}
         theme={'light'}
         iconLeft={<SVG.leftArrow height={20} width={20} fill={'black'} />}
+        onLeftIconPress={() => {
+          navigation.goBack();
+        }}
         mL={15}
       />
       {isLoading && <ModalBox isVisible={isLoading} />}
@@ -118,7 +121,7 @@ const AreaPictureUpload = ({navigation}) => {
         <View style={style.dottedContainer}>
           <Icon SVGIcon={<SVG.camera height={40} width={40} />} />
           <Space mT={20} />
-          <AppText title={LABELS.upload} fontFamily={Fonts.latoRegular} />
+          <AppText title={LABELS.uploadProfile} fontFamily={Fonts.latoRegular} variant = {'h5'}/>
         </View>
       </TouchableOpacity>
       <Modal isVisible={isModalVisible} style={[STYLES.pH(15)]}>

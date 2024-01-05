@@ -1,19 +1,18 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import React, {useEffect, useState} from 'react';
 import {BackHandler, ScrollView, View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {SVG} from '../../../../assets/svg';
 import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppText from '../../../../components/AppText/AppText';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import {
-  rowsPosition,
-  verticalEntryExitDirection,
-} from '../../../../data/appData';
+import {verticalEntryExitDirection} from '../../../../data/appData';
 import {LABELS} from '../../../../labels';
 import {ERRORS} from '../../../../labels/error';
 import {setSpaceData} from '../../../../store/slices/authSlice';
@@ -27,8 +26,25 @@ const SpaceDetailsScreen = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const [vendorData, setVendorData] = useState();
-  const loginToken = useSelector(state => state.auth.loginToken);
+  const [loginToken, setLoginToken] = useState();
   useEffect(() => {
+    const getLoginToken = async () => {
+      try {
+        const userToken = await AsyncStorage.getItem('vendorLoginToken');
+        setLoginToken(userToken);
+        const getVendorData = async () => {
+          const user = await firestore()
+            .collection('Vendors')
+            .doc(userToken)
+            .get();
+          setVendorData(user.data());
+        };
+        getVendorData();
+      } catch (err) {
+        console.log('error in getting token', err);
+      }
+    };
+    getLoginToken();
     const onBackPress = () => {
       return true;
     };
@@ -36,29 +52,12 @@ const SpaceDetailsScreen = ({navigation}) => {
     return () =>
       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
   }, []);
-
-  useEffect(() => {
-    console.log('this is vendor data',vendorData)
-    setTimeout(() => {
-      const getVendorData = async () => {
-        const user = await firestore()
-          .collection('Vendors')
-          .doc(loginToken)
-          .get();
-        setVendorData(user.data());
-      };
-      getVendorData();
-    }, 1000);
-  }, []);
   const [initialFormValues, setInitialFormValues] = useState({
     spaceName: '',
     address: '',
     noOfRows: '',
     noOfLots: '',
-    latitudeOfArea: '',
-    longitudeOfArea: '',
     price: '',
-    rowsDirection: '',
     entryExitDirection: '',
   });
   const handleFormValues = (inputName, value) => {
@@ -68,26 +67,14 @@ const SpaceDetailsScreen = ({navigation}) => {
     }));
   };
   const SpaceDetailsHandler = async () => {
-    const {
-      spaceName,
-      address,
-      noOfRows,
-      noOfLots,
-      latitudeOfArea,
-      longitudeOfArea,
-      price,
-      rowsDirection,
-      entryExitDirection,
-    } = initialFormValues;
+    const {spaceName, address, noOfRows, noOfLots, price, entryExitDirection} =
+      initialFormValues;
     if (
       !spaceName &&
       !address &&
       !noOfRows &&
       !noOfLots &&
-      !latitudeOfArea &&
-      !longitudeOfArea &&
       !price &&
-      !rowsDirection &&
       !entryExitDirection
     ) {
       Toast(ERRORS.emptyForm);
@@ -98,10 +85,7 @@ const SpaceDetailsScreen = ({navigation}) => {
           address,
           noOfRows,
           noOfLots,
-          latitudeOfArea,
-          longitudeOfArea,
           price,
-          rowsDirection,
           entryExitDirection,
         })
       ) {
@@ -111,9 +95,7 @@ const SpaceDetailsScreen = ({navigation}) => {
         } else {
           const formValues = {...initialFormValues, noOfColumns: noOfCols};
           const allData = {...vendorData, formValues};
-          console.log('allData', allData);
           setIsLoading(true);
-
           await firestore()
             .collection('ParkingAreas')
             .doc(loginToken)
@@ -129,16 +111,15 @@ const SpaceDetailsScreen = ({navigation}) => {
                 address: '',
                 noOfRows: '',
                 noOfLots: '',
-                latitudeOfArea: '',
-                longitudeOfArea: '',
                 price: '',
-                rowsDirection: '',
                 entryExitDirection: '',
               });
               setIsLoading(false);
-              navigation.navigate('VendorAuthStack', {
-                screen: 'AreaPictureUpload',
-              });
+              setTimeout(() => {
+                navigation.navigate('VendorAuthStack', {
+                  screen: 'AreaPictureUpload',
+                });
+              }, 1000);
             });
         }
       }
@@ -162,7 +143,7 @@ const SpaceDetailsScreen = ({navigation}) => {
         />
         <Space mT={10} />
 
-        {/* {isLoading && <ModalBox isVisible={isLoading} />} */}
+        {isLoading && <ModalBox isVisible={isLoading} />}
         <View style={[STYLES.pH(20)]}>
           <View style={[STYLES.height('15%')]}>
             <AppText
@@ -177,7 +158,7 @@ const SpaceDetailsScreen = ({navigation}) => {
               color={COMMON_COLORS.secondary}
             />
           </View>
-          <Space mT={10} />
+          <Space mT={30} />
           <AppInput
             placeholder={LABELS.spaceName}
             theme={theme}
@@ -221,26 +202,6 @@ const SpaceDetailsScreen = ({navigation}) => {
           <Dropdown
             style={style.containerStyle}
             placeholderStyle={style.placeholderStyle}
-            data={rowsPosition}
-            selectedTextStyle={STYLES.fontSize(14)}
-            search={false}
-            showsVerticalScrollIndicator={false}
-            maxHeight={300}
-            labelField="title"
-            valueField="title"
-            placeholder={'Select Rows Position'}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            value={initialFormValues.rowsDirection}
-            onChange={value => {
-              handleFormValues('rowsDirection', value.title);
-            }}
-            dropdownPosition="bottom"
-          />
-          <Space mT={20} />
-          <Dropdown
-            style={style.containerStyle}
-            placeholderStyle={style.placeholderStyle}
             data={verticalEntryExitDirection}
             selectedTextStyle={STYLES.fontSize(14)}
             search={false}
@@ -260,26 +221,6 @@ const SpaceDetailsScreen = ({navigation}) => {
           <Space mT={20} />
 
           <AppInput
-            placeholder={LABELS.latitudeOfArea}
-            theme={theme}
-            keyboardType={'numeric'}
-            value={initialFormValues.latitudeOfArea}
-            onChangeText={value => {
-              handleFormValues('latitudeOfArea', value);
-            }}
-          />
-          <Space mT={20} />
-          <AppInput
-            placeholder={LABELS.longitudeOfArea}
-            theme={theme}
-            keyboardType={'numeric'}
-            value={initialFormValues.longitudeOfArea}
-            onChangeText={value => {
-              handleFormValues('longitudeOfArea', value);
-            }}
-          />
-          <Space mT={20} />
-          <AppInput
             placeholder={LABELS.pricePerHour}
             theme={theme}
             keyboardType={'numeric'}
@@ -288,7 +229,7 @@ const SpaceDetailsScreen = ({navigation}) => {
               handleFormValues('price', value);
             }}
           />
-          <Space mT={50} />
+          <Space mT={40} />
           <GradientButton
             title={'Save'}
             textColor={'white'}
@@ -296,7 +237,7 @@ const SpaceDetailsScreen = ({navigation}) => {
             fontFamily={Fonts.mavenRegular}
             onPress={SpaceDetailsHandler}
           />
-          <Space mT={25} />
+          <Space mT={20} />
         </View>
         <Space mT={25} />
       </ScrollView>

@@ -122,10 +122,7 @@ export const isSpaceDetailsValid = ({
   address = '',
   noOfRows = 0,
   noOfLots = 0,
-  latitudeOfArea = '',
-  longitudeOfArea = '',
   price = '',
-  rowsDirection = '',
   entryExitDirection = '',
 }) => {
   if (!spaceName) {
@@ -160,20 +157,8 @@ export const isSpaceDetailsValid = ({
     Toast(ERRORS.enterNoOfLots);
     return false;
   }
-  if (!latitudeOfArea) {
-    Toast(ERRORS.enterLatitude);
-    return false;
-  }
-  if (!longitudeOfArea) {
-    Toast(ERRORS.enterLongitude);
-    return false;
-  }
   if (isNaN(Number(price)) || Number(price) <= 0) {
     Toast(ERRORS.enterValidPrice);
-    return false;
-  }
-  if (!rowsDirection) {
-    Toast(ERRORS.selectRowsPosition);
     return false;
   }
   if (!entryExitDirection) {

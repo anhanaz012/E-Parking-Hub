@@ -1,12 +1,12 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { SVG } from '../../../assets/svg';
-import { COLORS } from '../../../assets/theme';
+import {SVG} from '../../../assets/svg';
+import {COLORS} from '../../../assets/theme';
 import Icon from '../../../components/Icon/Icon';
 import VendorBookings from '../../../screens/Main/VendorSide/VendorBookings/VendorBookings';
 import VendorHome from '../../../screens/Main/VendorSide/VendorHome/VendorHome';
 import VendorProfile from '../../../screens/Main/VendorSide/VendorProfile/VendorProfile';
-import { styles } from './styles';
+import {styles} from './styles';
 const Tab = createBottomTabNavigator();
 const VendorBottomNavigation = ({navigation}) => {
   const style = styles;
@@ -27,7 +27,6 @@ const VendorBottomNavigation = ({navigation}) => {
         options={{
           tabBarLabel: 'Home',
           tabBarLabelStyle: [style.tabBarLabel],
-
           tabBarIcon: ({focused}) => (
             <>
               <Icon
@@ -41,7 +40,9 @@ const VendorBottomNavigation = ({navigation}) => {
                   />
                 }
                 onPress={() => {
-                  navigation.navigate('HomeScreen');
+                  navigation.navigate('VendorBottomNavigation', {
+                    screen: 'Home',
+                  });
                 }}
               />
             </>
@@ -67,7 +68,9 @@ const VendorBottomNavigation = ({navigation}) => {
                   />
                 }
                 onPress={() => {
-                  navigation.navigate('MyBookingScreen');
+                  navigation.navigate('VendorBottomNavigation', {
+                    screen: 'MyBooking',
+                  });
                 }}
               />
             </>
@@ -94,7 +97,9 @@ const VendorBottomNavigation = ({navigation}) => {
                   />
                 }
                 onPress={() => {
-                  navigation.navigate('VendorProfile');
+                  navigation.navigate('VendorBottomNavigation', {
+                    screen: 'Profile',
+                  });
                 }}
               />
             </>
