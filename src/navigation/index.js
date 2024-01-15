@@ -1,6 +1,6 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import React, {useEffect, useState} from 'react';
 import ForgotPassScreen from '../screens/Auth/UserSide/ForgotPassword/ForgotPassScreen';
 import IntroScreen from '../screens/Auth/UserSide/IntroScreen/IntroScreen';
 import SignUpScreen from '../screens/Auth/UserSide/SignUp/SignUpScreen';
@@ -23,6 +23,7 @@ import PaymentScreen from '../screens/Main/UserSide/PaymentScreen/PaymentScreen'
 import UserProfileScreen from '../screens/Main/UserSide/UserProfileScreen/UserProfileScreen';
 import BottomNavigation from './BottomNavigation/UserSide';
 import VendorBottomNavigation from './BottomNavigation/VendorSide';
+import SpotSelectionScreen from '../screens/Main/UserSide/SpotSelectionScreen/SpotSelectionScreen';
 const Stack = createStackNavigator();
 const options = {
   headerShown: false,
@@ -48,6 +49,7 @@ const HomeStack = () => {
       <Stack.Screen name="MyBookingScreen" component={MyBookingScreen} />
       <Stack.Screen name="AreasListScreen" component={AreasListScreens} />
       <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+      
       <Stack.Screen
         name="ConfirmParkingScreen"
         component={ConfirmParkingScreen}
@@ -57,6 +59,10 @@ const HomeStack = () => {
         component={FeeCalculationScreen}
       />
       <Stack.Screen name="AddFeedbackScreen" component={AddFeedbackScreen} />
+      <Stack.Screen
+        name="SpotSelectionScreen"
+        component={SpotSelectionScreen}
+      />
     </Stack.Navigator>
   );
 };

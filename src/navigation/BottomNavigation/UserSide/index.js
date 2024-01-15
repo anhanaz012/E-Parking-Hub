@@ -83,33 +83,7 @@ const BottomNavigation = ({navigation}) => {
           ),
         }}
       />
-      <Tab.Screen
-        name="Profile"
-        component={UserProfileScreen}
-        options={{
-          tabBarLabel: 'Profile',
-          tabBarLabelStyle: [style.tabBarLabel],
 
-          tabBarIcon: ({focused}) => (
-            <>
-              <Icon
-                SVGIcon={
-                  <SVG.user
-                    fill={
-                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
-                    }
-                    height={20}
-                    width={20}
-                  />
-                }
-                onPress={() => {
-                  navigation.navigate('BottomNavigation', {screen: 'Profile'});
-                }}
-              />
-            </>
-          ),
-        }}
-      />
       <Tab.Screen
         name="MyBooking"
         component={MyBookingScreen}
@@ -133,6 +107,33 @@ const BottomNavigation = ({navigation}) => {
                   navigation.navigate('BottomNavigation', {
                     screen: 'MyBooking',
                   });
+                }}
+              />
+            </>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={UserProfileScreen}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarLabelStyle: [style.tabBarLabel],
+
+          tabBarIcon: ({focused}) => (
+            <>
+              <Icon
+                SVGIcon={
+                  <SVG.user
+                    fill={
+                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
+                    }
+                    height={20}
+                    width={20}
+                  />
+                }
+                onPress={() => {
+                  navigation.navigate('BottomNavigation', {screen: 'Profile'});
                 }}
               />
             </>

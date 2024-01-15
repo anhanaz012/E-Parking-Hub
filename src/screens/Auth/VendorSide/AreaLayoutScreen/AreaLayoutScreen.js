@@ -1,40 +1,55 @@
 import firestore from '@react-native-firebase/firestore';
-import React, { useEffect, useState } from 'react';
-import { Dimensions, ScrollView, TouchableOpacity, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Dimensions, ScrollView, TouchableOpacity, View} from 'react-native';
 import Modal from 'react-native-modal';
-import { useSelector } from 'react-redux';
-import { SVG } from '../../../../assets/svg';
-import { Fonts, STYLES } from '../../../../assets/theme';
+import {useSelector} from 'react-redux';
+import {SVG} from '../../../../assets/svg';
+import {Fonts, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
 import Icon from '../../../../components/Icon/Icon';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import { slotsStatus } from '../../../../data/appData';
-import { LABELS } from '../../../../labels';
-import { ERRORS } from '../../../../labels/error';
-import { Toast } from '../../../../utils/native';
-import { styles } from './styles';
+import {slotsStatus} from '../../../../data/appData';
+import {LABELS} from '../../../../labels';
+import {ERRORS} from '../../../../labels/error';
+import {Toast} from '../../../../utils/native';
+import {styles} from './styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const AreaLayoutScreen = ({navigation}) => {
   const [spots, setSpots] = useState();
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [selectedStatus, setselectedStatus] = useState('Available');
   const [isSlotEdit, setIsSlotEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const loginToken = useSelector(state => state.auth.loginToken);
+  const [loginToken, setLoginToken] = useState(null);
+
   const vendorData = useSelector(state => state.auth.spaceData);
   const handleSlotSelection = slotDetails => {
     setSelectedSpot(slotDetails);
-    const tempSpots = [...spots];
-    const index = tempSpots.findIndex(
-      slot => slot.slotId === slotDetails.slotId,
-    );
-    tempSpots[index].status = 'selected';
-    setSpots(tempSpots);
+    console.log(slotDetails,'selectedSpot')
+    // const tempSpots = [...spots];
+    // const index = tempSpots.findIndex(
+    //   slot => slot.slotId === slotDetails.slotId,
+    // );
+    // tempSpots[index].status = 'selected';
+    // setSpots(tempSpots);
   };
   useEffect(() => {
     setIsLoading(true);
+    const getLoginToken = async () => {
+      try {
+        await AsyncStorage.getItem('vendorLoginToken').then(res => {
+          if (res) {
+            setLoginToken(res);
+          }
+        });
+      } catch (err) {
+        Toast('Error in fetching token');
+      }
+    };
+    getLoginToken();
     setTimeout(() => {
       slotGenerator();
       setIsLoading(false);
@@ -70,6 +85,7 @@ const AreaLayoutScreen = ({navigation}) => {
       const index = tempSpots.findIndex(
         slot => slot.slotId === selectedSpot.slotId,
       );
+      console.log(tempSpots[index]);
       tempSpots[index].status = selectedStatus;
       setSpots(tempSpots);
     }
@@ -81,31 +97,35 @@ const AreaLayoutScreen = ({navigation}) => {
     setselectedStatus(value);
   };
   const dataSetHandler = async () => {
-    setIsLoading(true);
+    console.log(loginToken);
     if (loginToken) {
-      await firestore()
-        .collection('Vendors')
-        .doc(loginToken)
-        .get()
-        .then(async res => {
-          const previousData = res.data();
-          const completeData = {...previousData, spots};
-          await firestore()
-            .collection('Vendors')
-            .doc(loginToken)
-            .set(completeData);
-          await firestore()
-            .collection('ParkingAreas')
-            .doc(loginToken)
-            .set(completeData);
-          setIsLoading(false);
-          Toast(LABELS.AreaLayoutUpdated);
-          navigation.navigate('VendorBottomNavigation');
-        })
-        .catch(err => {
-          Toast(ERRORS.somethingWent);
-        });
+      setIsLoading(true);
+      console.log(spots);
+      setIsLoading(false);
+      // await firestore()
+      //   .collection('Vendors')
+      //   .doc(loginToken)
+      //   .get()
+      //   .then(async res => {
+      //     const previousData = res.data();
+      //     const completeData = {...previousData, spots};
+      //     await firestore()
+      //       .collection('Vendors')
+      //       .doc(loginToken)
+      //       .set(completeData);
+      //     await firestore()
+      //       .collection('ParkingAreas')
+      //       .doc(loginToken)
+      //       .set(completeData);
+      //     setIsLoading(false);
+      //     Toast(LABELS.AreaLayoutUpdated);
+      //     navigation.navigate('VendorBottomNavigation');
+      //   })
+      //   .catch(err => {
+      //     Toast(ERRORS.somethingWent);
+      //   });
     } else {
+      setIsLoading(false);
       Toast(ERRORS.somethingWent);
     }
   };
@@ -149,7 +169,7 @@ const AreaLayoutScreen = ({navigation}) => {
             ]}
             onPress={() => {
               handleSlotSelection(slotDetails);
-              setIsSlotEdit(true);
+              // setIsSlotEdit(true);
             }}>
             <View style={style.rowContainer(slotWidth)}>
               <AppText

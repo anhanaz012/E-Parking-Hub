@@ -1,12 +1,12 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import React, { useState,useEffect } from 'react';
-import { BackHandler, TouchableOpacity, View } from 'react-native';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import React, {useEffect, useState} from 'react';
+import {BackHandler, TouchableOpacity, View} from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'react-native-modal';
-import { useSelector } from 'react-redux';
-import { SVG } from '../../../../assets/svg';
-import { Fonts, STYLES } from '../../../../assets/theme';
+import {SVG} from '../../../../assets/svg';
+import {Fonts, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
@@ -14,17 +14,35 @@ import GradientButton from '../../../../components/GradientButton/GradientButton
 import Icon from '../../../../components/Icon/Icon';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import { LABELS } from '../../../../labels';
-import { ERRORS } from '../../../../labels/error';
-import { Toast } from '../../../../utils/native';
-import { styles } from './styles';
+import {LABELS} from '../../../../labels';
+import {ERRORS} from '../../../../labels/error';
+import {Toast} from '../../../../utils/native';
+import {styles} from './styles';
 const AreaPictureUpload = ({navigation}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const loginToken = useSelector(state => state.auth.loginToken);
+  const [loginToken, setLoginToken] = useState('');
   const style = styles;
   useEffect(() => {
+    try {
+      const getData = async () => {
+        await AsyncStorage.getItem('vendorLoginToken')
+          .then(value => {
+            if (value) {
+              setLoginToken(value);
+            } else {
+              Toast('Error in retrieving loginToken');
+            }
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      };
+      getData();
+    } catch (e) {
+      console.log(e);
+    }
     const onBackPress = () => {
       return true;
     };
@@ -121,7 +139,11 @@ const AreaPictureUpload = ({navigation}) => {
         <View style={style.dottedContainer}>
           <Icon SVGIcon={<SVG.camera height={40} width={40} />} />
           <Space mT={20} />
-          <AppText title={LABELS.uploadProfile} fontFamily={Fonts.latoRegular} variant = {'h5'}/>
+          <AppText
+            title={LABELS.uploadProfile}
+            fontFamily={Fonts.latoRegular}
+            variant={'h5'}
+          />
         </View>
       </TouchableOpacity>
       <Modal isVisible={isModalVisible} style={[STYLES.pH(15)]}>

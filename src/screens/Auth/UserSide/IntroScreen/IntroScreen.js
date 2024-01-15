@@ -1,20 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import React, {useEffect, useRef, useState} from 'react';
-import {ScrollView, View} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {IMAGES} from '../../../../assets/images';
-import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
+import React, { useEffect, useRef, useState } from 'react';
+import { ScrollView, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { IMAGES } from '../../../../assets/images';
+import { COLORS, COMMON_COLORS, Fonts, STYLES } from '../../../../assets/theme';
 import AppLogo from '../../../../components/AppLogo/AppLogo';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import {LABELS} from '../../../../labels';
-import {setLoginToken, setSpaceData} from '../../../../store/slices/authSlice';
-import {styles} from './styles';
+import { LABELS } from '../../../../labels';
+import { setLoginToken, setSpaceData } from '../../../../store/slices/authSlice';
+import { styles } from './styles';
 const IntroScreen = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(true);
   const isIntroScreenMounted = useRef(true);
@@ -26,16 +26,13 @@ const IntroScreen = ({navigation}) => {
       if (isIntroScreenMounted.current && user) {
         const userUid = user.uid;
         try {
-          const userData = await firestore()
-            .collection('AllUsers')
-            .doc(userUid)
-            .get();
-
+          const userData = await firestore().collection('AllUsers').doc(userUid).get();
           if (userData.exists) {
             const {role} = userData.data();
             if (role === 'user') {
               if (isIntroScreenMounted.current) {
               await AsyncStorage.setItem('userLoginToken', userUid);
+              dispatch(setLoginToken(userUid));
               setIsLoading(false);
                 navigation.navigate('BottomNavigation');
               }
@@ -57,6 +54,7 @@ const IntroScreen = ({navigation}) => {
                   }
                 } else if (image === '') {
                   setIsLoading(false);
+                  dispatch(setSpaceData(formValues));
                   if (isIntroScreenMounted.current) {
                     navigation.navigate('VendorAuthStack', {
                       screen: 'AreaPictureUpload',

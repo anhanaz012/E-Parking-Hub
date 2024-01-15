@@ -27,6 +27,7 @@ const SpaceDetailsScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const [vendorData, setVendorData] = useState();
   const [loginToken, setLoginToken] = useState();
+  console.log(loginToken);
   useEffect(() => {
     const getLoginToken = async () => {
       try {
@@ -94,33 +95,35 @@ const SpaceDetailsScreen = ({navigation}) => {
           Toast(ERRORS.columnsNotDivisible);
         } else {
           const formValues = {...initialFormValues, noOfColumns: noOfCols};
-          const allData = {...vendorData, formValues};
-          setIsLoading(true);
-          await firestore()
-            .collection('ParkingAreas')
-            .doc(loginToken)
-            .set(allData)
-            .then(async () => {
-              await firestore()
-                .collection('Vendors')
-                .doc(loginToken)
-                .set(allData);
-              dispatch(setSpaceData(formValues));
-              setInitialFormValues({
-                spaceName: '',
-                address: '',
-                noOfRows: '',
-                noOfLots: '',
-                price: '',
-                entryExitDirection: '',
-              });
-              setIsLoading(false);
-              setTimeout(() => {
-                navigation.navigate('VendorAuthStack', {
-                  screen: 'AreaPictureUpload',
-                });
-              }, 1000);
+          if (vendorData && loginToken) {
+            const allData = {...vendorData, formValues,isApproved:true};
+            setIsLoading(true);
+            await firestore()
+              .collection('ParkingAreas')
+              .doc(loginToken)
+              .set(allData);
+            await firestore()
+              .collection('Vendors')
+              .doc(loginToken)
+              .set(allData);
+            dispatch(setSpaceData(formValues));
+            setInitialFormValues({
+              spaceName: '',
+              address: '',
+              noOfRows: '',
+              noOfLots: '',
+              price: '',
+              entryExitDirection: '',
             });
+            setIsLoading(false);
+            setTimeout(() => {
+              navigation.navigate('VendorAuthStack', {
+                screen: 'AreaPictureUpload',
+              });
+            }, 1000);
+          } else {
+            Toast(ERRORS.somethingWent);
+          }
         }
       }
     }

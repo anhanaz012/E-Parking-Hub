@@ -11,89 +11,100 @@ import AppLogo from '../../../../components/AppLogo/AppLogo';
 import AppText from '../../../../components/AppText/AppText';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import Icon from '../../../../components/Icon/Icon';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
 import {styles} from './styles';
+import {useDispatch} from 'react-redux';
+import {setAreaDetails, setParkingAreas} from '../../../../store/slices/areaSlice';
 const HomeScreen = ({navigation}) => {
-  const [areaList, setAreaList] = useState();
+  const [areasList, setAreasList] = useState(null);
+  const [loginToken, setLoginToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const theme = 'light';
   const style = styles;
-  const getVendorsList = async () => {
-    const userId = await AsyncStorage.getItem('userLoginToken');
-    if (userId) {
-      const data = [];
-      setTimeout(async () => {
-        const vendors = await firestore()
-          .collection('Vendors')
-          .get()
-          .then(res => {
-            res.docs.forEach(doc => {
-              data.push(doc.data());
-            });
-            if(data.length > 3){
-              data.slice(0,3)
-            }
-            setAreaList(data);
-          });
-      }, 1000);
-    } else {
-      console.log('user id is not present');
-    }
+  const dispatch = useDispatch();
+  const getLoginToken = async () => {
+    await AsyncStorage.getItem('userLoginToken').then(res => {
+      if (res) {
+        setLoginToken(res);
+      }
+    });
+  };
+  function onError(error) {
+    console.error(error);
+  }
+  const getRealTimeChanges = () => {
+    const data = [];
+    firestore()
+      .collection('ParkingAreas')
+      .onSnapshot(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          data.push(doc.data());
+        });
+        const approvedAreas = data.filter(item => item.isApproved === true);
+        setAreasList(approvedAreas);
+      }, onError);
   };
   useEffect(() => {
     try {
-      getVendorsList();
+      setIsLoading(true);
+      getLoginToken();
+      getRealTimeChanges();
+      setIsLoading(false);
     } catch (err) {
-      console.log(err);
+      console.log('error while fetching login token', err);
     }
   }, []);
   const searchAreaHandler = () => {
     console.log('hello');
   };
+  const areaSelectionHandler = item => {
+    dispatch(setParkingAreas(item.spots,item.formValues));
+    dispatch(setAreaDetails(item.formValues))
+        navigation.navigate('HomeStack', {
+      screen: 'SpotSelectionScreen'
+    });
+  };
   return (
     <ScrollView style={[STYLES.flex1]}>
+      {isLoading && <ModalBox isVisible={isLoading} />}
       <AppHeader
-        title={'Welcome to'}
+        title={LABELS.welcomeTo}
         theme={theme}
-        textVariant={'body2'}
+        textVariant={'body1'}
         fontFamily={Fonts.mavenRegular}
         children={
           <>
             <AppText
-              title={'E-Parking Hub Management'}
+              title={LABELS.appTitle}
               theme={theme}
-              color={COLORS.dark.secondary}
+              color={COLORS.light.primary}
               fontFamily={Fonts.merriWeatherBold}
-              variant={'h5'}
+              variant={'h4'}
             />
           </>
         }
-        mL={15}
-        iconLeft={<SVG.location fill={'black'} height={20} width={20} />}
+        mL={10}
+        iconLeft={
+          <SVG.location fill={COLORS.light.primary} height={25} width={25} />
+        }
       />
       <Space mT={20} />
       <View style={[STYLES.pH(HORIZON_MARGIN)]}>
         <View style={[STYLES.rowCenter, STYLES.JCAround, STYLES.width100]}>
           <AppInput
             theme={theme}
-            placeholder={'Find Parking'}
+            placeholder={LABELS.findParkingArea}
             iconLeft={<SVG.search fill={'grey'} height={15} width={15} />}
             extraStyle={{
-              textInputContainer: {
-                backgroundColor: 'white',
-                elevation: 5,
-                width: '80%',
-              },
-              textInput: {
-                fontSize: 14,
-                backgroundColor: 'white',
-                fontFamily: Fonts.mavenRegular,
-              },
+              textInputContainer: style.textInputCont,
+              textInput: style.textInput,
             }}
             mL={6}
           />
           <GradientButton
-            extraStyle={{btnContainer: {width: 50}}}
+            extraStyle={{btnContainer: [STYLES.width(50)]}}
             iconLeft={
               <SVG.locationArrow fill={'white'} height={15} width={15} />
             }
@@ -111,7 +122,7 @@ const HomeScreen = ({navigation}) => {
             variant={'h3'}
           />
           <AppText
-            title={'See all'}
+            title={LABELS.seeAll}
             theme={theme}
             color={COLORS[theme].primary}
             fontFamily={Fonts.merriWeatherSansRegular}
@@ -232,7 +243,6 @@ const HomeScreen = ({navigation}) => {
               </View>
             </View>
           </View>
-
           <Space mL={20} />
           <View style={style.horizontalCardContainer}>
             <AppLogo
@@ -309,13 +319,13 @@ const HomeScreen = ({navigation}) => {
         </View>
         <Space mT={20} />
 
-        {areaList &&
-          areaList.map((item, index) => {
+        {areasList &&
+          areasList.map((item, index) => {
             return (
               <>
-                <View style={style.verticalCardContainer} key = {item.email}>
+                <View style={style.verticalCardContainer} key={item.image}>
                   <AppLogo
-                    source={IMAGES.parkingHome}
+                    uri={item.image}
                     height={'85%'}
                     width={'30%'}
                     extraStyle={{borderRadius: 20}}
@@ -326,10 +336,17 @@ const HomeScreen = ({navigation}) => {
                       STYLES.width('70%'),
                       STYLES.pH(10),
                     ]}>
-                    <View style={[STYLES.row, STYLES.width('100%')]}>
+                    <View
+                      style={[
+                        STYLES.row,
+                        STYLES.width('100%'),
+                        STYLES.height('30%'),
+                        STYLES.rowCenter,
+                      ]}>
                       <View style={[STYLES.width('80%')]}>
                         <AppText
-                          title={'License Square'}
+                          title={item.formValues.spaceName}
+                          numberOfLines={1}
                           theme={theme}
                           variant={'h4'}
                           fontFamily={Fonts.merriWeatherSansRegular}
@@ -346,45 +363,65 @@ const HomeScreen = ({navigation}) => {
                             />
                           }
                           onPress={() => {
-                            console.log('test');
+                            areaSelectionHandler(item);
                           }}
                         />
                       </View>
                     </View>
 
-                    <Space mT={5} />
-                    <AppText
-                      title={'1669 Phili , South sanjese, Washington'}
-                      theme={theme}
-                      extraStyle={[STYLES.fontSize(13)]}
-                      color={'gray'}
-                      fontFamily={Fonts.latoRegular}
-                    />
-                    <Space mT={5} />
-                    <View style={[STYLES.rowCenterBt]}>
-                      <View style={[STYLES.row]}>
-                        <Icon SVGIcon={<SVG.starFilled fill={'orange'} />} />
-                        <Space mL={5} />
-                        <AppText
-                          title={'4.5'}
-                          theme={theme}
-                          fontFamily={Fonts.merriWeatherSansRegular}
-                        />
-                      </View>
+                    <View style={[STYLES.height('30%'), STYLES.width100]}>
                       <AppText
-                        title={'$ 4.25/hr'}
+                        title={item.formValues.address}
+                        theme={theme}
+                        numberOfLines={2}
+                        extraStyle={[STYLES.fontSize(13)]}
+                        color={'gray'}
+                        ellipsizeMode={'tail'}
+                        fontFamily={Fonts.latoRegular}
+                      />
+                    </View>
+                    <View
+                      style={[
+                        STYLES.rowCenterBt,
+                        STYLES.AICenter,
+                        STYLES.height('30%'),
+                        STYLES.width100,
+                      ]}>
+                      {item.ratings ? (
+                        <View style={[STYLES.row]}>
+                          <Icon SVGIcon={<SVG.starFilled fill={'orange'} />} />
+                          <Space mL={5} />
+                          <AppText
+                            title={'4.5'}
+                            theme={theme}
+                            fontFamily={Fonts.merriWeatherSansRegular}
+                          />
+                        </View>
+                      ) : (
+                        <View style={[STYLES.rowCenter]}>
+                          <Icon SVGIcon={<SVG.starFilled fill={'orange'} />} />
+                          <Space mL={5} />
+                          <AppText
+                            title={'No Ratings yet'}
+                            theme={theme}
+                            variant={'body2'}
+                            color={COLORS.light.primary}
+                            fontFamily={Fonts.latoRegular}
+                          />
+                        </View>
+                      )}
+                      <AppText
+                        title={`Rs. ${item.formValues.price}/hr`}
                         theme={theme}
                         fontFamily={Fonts.merriWeatherSansRegular}
                       />
                     </View>
                   </View>
-                  
                 </View>
                 <Space mT={20} />
               </>
             );
           })}
-
       </View>
     </ScrollView>
   );

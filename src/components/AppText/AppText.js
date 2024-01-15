@@ -8,6 +8,7 @@ const AppText = props => {
     textAlign = 'left',
     color = 'black',
     variant = 'body1',
+    ellipsizeMode ,
     extraStyle = {},
     title = '',
     fontFamily = Fonts.merriWeatherBold,
@@ -20,6 +21,7 @@ const AppText = props => {
       <Text
         {...props}
         onPress={onPress}
+        ellipsizeMode={ellipsizeMode}
         style={[
           STYLES.fontSize(
             TYPOGRAPHY[variant].fontSize ? TYPOGRAPHY[variant].fontSize : 14,
@@ -27,7 +29,7 @@ const AppText = props => {
           STYLES.fontFamily(fontFamily),
           STYLES.textAlign(textAlign),
           STYLES.color(color ? color : COLORS[theme].text),
-          extraStyle,
+                    extraStyle,
         ]}>
         {title}
       </Text>
