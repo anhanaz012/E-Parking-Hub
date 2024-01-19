@@ -1,7 +1,7 @@
 import React from 'react';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import AppNavigator from './src/navigation';
-import { store } from './src/store';
+import {store} from './src/store';
 const App = () => {
   return (
     <>

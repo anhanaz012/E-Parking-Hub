@@ -28,13 +28,12 @@ const AreaLayoutScreen = ({navigation}) => {
   const vendorData = useSelector(state => state.auth.spaceData);
   const handleSlotSelection = slotDetails => {
     setSelectedSpot(slotDetails);
-    console.log(slotDetails,'selectedSpot')
-    // const tempSpots = [...spots];
-    // const index = tempSpots.findIndex(
-    //   slot => slot.slotId === slotDetails.slotId,
-    // );
-    // tempSpots[index].status = 'selected';
-    // setSpots(tempSpots);
+    const tempSpots = [...spots];
+    const index = tempSpots.findIndex(
+      slot => slot.slotId === slotDetails.slotId,
+    );
+    tempSpots[index].status = 'selected';
+    setSpots(tempSpots);
   };
   useEffect(() => {
     setIsLoading(true);
@@ -85,10 +84,11 @@ const AreaLayoutScreen = ({navigation}) => {
       const index = tempSpots.findIndex(
         slot => slot.slotId === selectedSpot.slotId,
       );
-      console.log(tempSpots[index]);
+      console.log(tempSpots[index], 'updated spot handler index');
       tempSpots[index].status = selectedStatus;
       setSpots(tempSpots);
     }
+    setselectedStatus('Available');
     setIsSlotEdit(false);
   };
 
@@ -97,33 +97,30 @@ const AreaLayoutScreen = ({navigation}) => {
     setselectedStatus(value);
   };
   const dataSetHandler = async () => {
-    console.log(loginToken);
     if (loginToken) {
       setIsLoading(true);
-      console.log(spots);
-      setIsLoading(false);
-      // await firestore()
-      //   .collection('Vendors')
-      //   .doc(loginToken)
-      //   .get()
-      //   .then(async res => {
-      //     const previousData = res.data();
-      //     const completeData = {...previousData, spots};
-      //     await firestore()
-      //       .collection('Vendors')
-      //       .doc(loginToken)
-      //       .set(completeData);
-      //     await firestore()
-      //       .collection('ParkingAreas')
-      //       .doc(loginToken)
-      //       .set(completeData);
-      //     setIsLoading(false);
-      //     Toast(LABELS.AreaLayoutUpdated);
-      //     navigation.navigate('VendorBottomNavigation');
-      //   })
-      //   .catch(err => {
-      //     Toast(ERRORS.somethingWent);
-      //   });
+      await firestore()
+        .collection('Vendors')
+        .doc(loginToken)
+        .get()
+        .then(async res => {
+          const previousData = res.data();
+          const completeData = {...previousData, spots};
+          await firestore()
+            .collection('Vendors')
+            .doc(loginToken)
+            .set(completeData);
+          await firestore()
+            .collection('ParkingAreas')
+            .doc(loginToken)
+            .set(completeData);
+          setIsLoading(false);
+          Toast(LABELS.AreaLayoutUpdated);
+          navigation.navigate('VendorBottomNavigation');
+        })
+        .catch(err => {
+          Toast(ERRORS.somethingWent);
+        });
     } else {
       setIsLoading(false);
       Toast(ERRORS.somethingWent);
@@ -169,7 +166,7 @@ const AreaLayoutScreen = ({navigation}) => {
             ]}
             onPress={() => {
               handleSlotSelection(slotDetails);
-              // setIsSlotEdit(true);
+              setIsSlotEdit(true);
             }}>
             <View style={style.rowContainer(slotWidth)}>
               <AppText

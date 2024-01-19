@@ -1,5 +1,6 @@
 export const LABELS = {
   FullName: 'Full Name',
+  Duration:'Duration',
   takePhoto: 'Take Picture',
   findParkingArea: 'Find Parking Area',
   appTitle:'E-Parking Management',

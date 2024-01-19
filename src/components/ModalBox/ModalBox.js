@@ -6,7 +6,7 @@ import { STYLES } from '../../assets/theme';
 const ModalBox = ({isVisible}) => {
   return (
     <Modal isVisible={isVisible} style={[STYLES.JCCenter, STYLES.AICenter]}>
-      <Fold color={'white'} size={48} />
+      <Fold color = {'white'} size = {48} />
     </Modal>
   );
 };

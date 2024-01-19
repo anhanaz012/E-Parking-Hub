@@ -14,7 +14,7 @@ export const COMMON_COLORS = {
   gradientBlue:'#565DD4',
   primary: '#7200BC',
   secondary: '#5D4DC3',
-  glassBlack: 'rgba(0,0,0,0.5)',
+  glassBlack: '#0E142F',
   gray: '#E5E5E5',
   lightgray: '#616161',
   bgColor: '#D0CBF1',

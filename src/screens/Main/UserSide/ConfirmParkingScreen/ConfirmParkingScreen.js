@@ -11,7 +11,8 @@ import {LABELS} from '../../../../labels';
 import {styles} from './styles';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-const ConfirmParkingScreen = ({navigation}) => {
+const ConfirmParkingScreen = ({navigation,selectedSpot}) => {
+  console.log(selectedSpot,'selectedSpot confirm Parking screen')
   const [selected, setSelected] = useState('');
   const [showCalender, setShowCalender] = useState(true);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
