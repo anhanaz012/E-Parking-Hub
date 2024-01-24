@@ -15,6 +15,8 @@ import {LoginHandler} from '../../../../services/firebase';
 import {Toast} from '../../../../utils/native';
 import {isValidatedLogin} from '../../../../utils/validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {setLoginToken} from '../../../../store/slices/authSlice';
 const VendorSignIn = ({navigation}) => {
   const initialInputStates = {
     email: false,
@@ -25,6 +27,7 @@ const VendorSignIn = ({navigation}) => {
   const [formValues, setFormValues] = useState({email: '', password: ''});
   const [isLoading, setIsLoading] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const dispatch = useDispatch();
   const theme = 'light';
   const handleFocus = initialValue => {
     setIsFocused({...isFocused, [initialValue]: true});
@@ -46,12 +49,10 @@ const VendorSignIn = ({navigation}) => {
         const uid = message.uid;
         if (uid) {
           try {
-            await AsyncStorage.setItem('vendoroginToken', uid);
-            await AsyncStorage.getItem('vendoroginToken').then(res => {
-              console.log(res, 'res f async storage');
-            });
+            await AsyncStorage.setItem('vendorLoginToken', uid);
+            dispatch(setLoginToken(uid));
           } catch (e) {
-            console.log('error async storage');
+            console.log('error async storage',e);
           }
           setIsLoading(false);
           Toast(LABELS.loginSuccess);

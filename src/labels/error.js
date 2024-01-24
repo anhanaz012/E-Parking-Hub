@@ -40,4 +40,8 @@ export const ERRORS = {
   enterValidPrice: 'Please enter a valid price.',
   selectRowsPosition: 'Please select the rows position.',
   selectEntryExitDirection: 'Please select the entry exit direction.',
+  spotAvailability:'This spot is already ',
+  noSlotSelection:'Please select a slot first',
+  selectDate:'Please select a date',
+  selectTime:'Please select a time',
 };

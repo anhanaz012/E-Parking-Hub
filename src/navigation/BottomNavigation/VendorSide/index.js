@@ -53,7 +53,7 @@ const VendorBottomNavigation = ({navigation}) => {
         name="MyBooking"
         component={VendorBookings}
         options={{
-          tabBarLabel: 'Bookings',
+          tabBarLabel: 'MyBooking',
           tabBarLabelStyle: [style.tabBarLabel],
           tabBarIcon: ({focused}) => (
             <>

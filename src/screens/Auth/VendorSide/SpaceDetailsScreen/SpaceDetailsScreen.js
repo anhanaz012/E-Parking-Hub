@@ -96,7 +96,7 @@ const SpaceDetailsScreen = ({navigation}) => {
         } else {
           const formValues = {...initialFormValues, noOfColumns: noOfCols};
           if (vendorData && loginToken) {
-            const allData = {...vendorData, formValues,isApproved:true};
+            const allData = {...vendorData, formValues,isApproved:true,count:0};
             setIsLoading(true);
             await firestore()
               .collection('ParkingAreas')

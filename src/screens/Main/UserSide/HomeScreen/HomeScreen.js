@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, View} from 'react-native';
-import {IMAGES} from '../../../../assets/images';
+import {useDispatch} from 'react-redux';
 import {SVG} from '../../../../assets/svg';
 import {COLORS, Fonts, HORIZON_MARGIN, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
@@ -14,13 +14,19 @@ import Icon from '../../../../components/Icon/Icon';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
+import {
+  setAreaDetails,
+  setAreaImage,
+  setParkingAreas,
+  setUserToken,
+  setVendorToken,
+} from '../../../../store/slices/areaSlice';
 import {styles} from './styles';
-import {useDispatch} from 'react-redux';
-import {setAreaDetails, setParkingAreas} from '../../../../store/slices/areaSlice';
 const HomeScreen = ({navigation}) => {
   const [areasList, setAreasList] = useState(null);
   const [loginToken, setLoginToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [popularAreas, setPopularAreas] = useState(null);
   const theme = 'light';
   const style = styles;
   const dispatch = useDispatch();
@@ -31,20 +37,32 @@ const HomeScreen = ({navigation}) => {
       }
     });
   };
-  function onError(error) {
-    console.error(error);
-  }
   const getRealTimeChanges = () => {
-    const data = [];
-    firestore()
+    const unsubscribe = firestore()
       .collection('ParkingAreas')
-      .onSnapshot(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          data.push(doc.data());
-        });
-        const approvedAreas = data.filter(item => item.isApproved === true);
-        setAreasList(approvedAreas);
-      }, onError);
+      .onSnapshot(
+        querySnapshot => {
+          const firestoreData = [];
+          querySnapshot.forEach(doc => {
+            firestoreData.push({id: doc.id, ...doc.data()});
+          });
+          const popularAreas = firestoreData
+            .filter(item => item.count > 0)
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 5);
+          setPopularAreas(popularAreas);
+          const allAreas = firestoreData.filter(
+            item => !popularAreas.includes(item),
+          );
+          setAreasList(allAreas);
+        },
+        error => {
+          console.error('Error getting real-time changes: ', error);
+        },
+      );
+    return () => {
+      unsubscribe();
+    };
   };
   useEffect(() => {
     try {
@@ -60,10 +78,14 @@ const HomeScreen = ({navigation}) => {
     console.log('hello');
   };
   const areaSelectionHandler = item => {
-    dispatch(setParkingAreas(item.spots,item.formValues));
-    dispatch(setAreaDetails(item.formValues))
-        navigation.navigate('HomeStack', {
-      screen: 'SpotSelectionScreen'
+    console.log('item from home', item);
+    dispatch(setParkingAreas(item.spots, item.formValues));
+    dispatch(setAreaDetails(item.formValues));
+    dispatch(setVendorToken(item.token));
+    dispatch(setUserToken(loginToken));
+    dispatch(setAreaImage(item.image));
+    navigation.navigate('HomeStack', {
+      screen: 'SpotSelectionScreen',
     });
   };
   return (
@@ -137,166 +159,75 @@ const HomeScreen = ({navigation}) => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           style={[STYLES.height(220)]}>
-          <View style={style.horizontalCardContainer}>
-            <AppLogo
-              source={IMAGES.parkingHome}
-              height={'50%'}
-              width={'100%'}
-              extraStyle={[STYLES.bR(20)]}
-            />
-            <Space mT={10} />
-            <View style={[STYLES.height('45%'), STYLES.JCCenter]}>
-              <AppText
-                title={'Liecester Square'}
-                theme={theme}
-                variant={'h4'}
-                fontFamily={Fonts.merriWeatherSansRegular}
-              />
-              <Space mT={2} />
-              <AppText
-                title={'39-42 WhiteComb Street'}
-                theme={theme}
-                extraStyle={{fontSize: 12}}
-                color={'grey'}
-                fontFamily={Fonts.latoRegular}
-              />
-              <Space mT={10} />
-              <View style={[STYLES.rowCenterBt]}>
-                <AppText
-                  title={'$ 4.25/hr'}
-                  theme={theme}
-                  fontFamily={Fonts.merriWeatherSansRegular}
-                />
-                <GradientButton
-                  theme={theme}
-                  extraStyle={{
-                    btnContainer: {
-                      height: 30,
-                      width: 30,
-                      borderRadius: 15,
-                      backgroundColor: 'transparent',
-                      elevation: 0,
-                    },
-                  }}
-                  iconLeft={
-                    <SVG.boxrightarrow fill={'white'} height={17} width={17} />
-                  }
-                  onPress={() => {
-                    navigation.navigate('HomeStack', {
-                      screen: 'ChooseParkingSlot',
-                    });
-                  }}
-                />
-              </View>
-            </View>
-          </View>
-          <Space mL={20} />
-
-          <View style={style.horizontalCardContainer}>
-            <AppLogo
-              source={IMAGES.parkingHome}
-              height={'50%'}
-              width={'100%'}
-              extraStyle={[STYLES.bR(20)]}
-            />
-            <Space mT={10} />
-            <View style={[STYLES.height('45%'), STYLES.JCCenter]}>
-              <AppText
-                title={'Liecester Square'}
-                theme={theme}
-                variant={'h4'}
-                fontFamily={Fonts.merriWeatherSansRegular}
-              />
-              <Space mT={2} />
-              <AppText
-                title={'39-42 WhiteComb Street'}
-                theme={theme}
-                extraStyle={{fontSize: 12}}
-                color={'grey'}
-                fontFamily={Fonts.latoRegular}
-              />
-              <Space mT={10} />
-              <View style={[STYLES.rowCenterBt]}>
-                <AppText
-                  title={'$ 4.25/hr'}
-                  theme={theme}
-                  fontFamily={Fonts.merriWeatherSansRegular}
-                />
-                <GradientButton
-                  onPress={() => {
-                    navigation.navigate('HomeStack', {
-                      screen: 'AreasListScreen',
-                    });
-                  }}
-                  theme={theme}
-                  extraStyle={{
-                    btnContainer: {
-                      height: 30,
-                      width: 30,
-                      borderRadius: 15,
-                    },
-                  }}
-                  iconLeft={
-                    <SVG.leftArrow fill={'white'} height={15} width={15} />
-                  }
-                />
-              </View>
-            </View>
-          </View>
-          <Space mL={20} />
-          <View style={style.horizontalCardContainer}>
-            <AppLogo
-              source={IMAGES.parkingHome}
-              height={'50%'}
-              width={'100%'}
-              extraStyle={[STYLES.bR(20)]}
-            />
-            <Space mT={10} />
-            <View style={[STYLES.height('45%'), STYLES.JCCenter]}>
-              <AppText
-                title={'Liecester Square'}
-                theme={theme}
-                variant={'h4'}
-                fontFamily={Fonts.merriWeatherSansRegular}
-              />
-              <Space mT={2} />
-              <AppText
-                title={'39-42 WhiteComb Street'}
-                theme={theme}
-                extraStyle={{fontSize: 12}}
-                color={'grey'}
-                fontFamily={Fonts.latoRegular}
-              />
-              <Space mT={10} />
-              <View style={[STYLES.rowCenterBt]}>
-                <AppText
-                  title={'$ 4.25/hr'}
-                  theme={theme}
-                  fontFamily={Fonts.merriWeatherSansRegular}
-                />
-                <GradientButton
-                  onPress={() => {
-                    navigation.navigate('HomeStack', {
-                      screen: 'AreasListScreen',
-                    });
-                  }}
-                  theme={theme}
-                  extraStyle={{
-                    btnContainer: {
-                      height: 30,
-                      width: 30,
-                      borderRadius: 15,
-                    },
-                  }}
-                  iconLeft={
-                    <SVG.leftArrow fill={'white'} height={15} width={15} />
-                  }
-                />
-              </View>
-            </View>
-          </View>
+          {popularAreas &&
+            popularAreas.map((item, index) => {
+              return (
+                <>
+                  <View style={style.horizontalCardContainer}>
+                    <AppLogo
+                      uri={item.image}
+                      height={'50%'}
+                      width={'100%'}
+                      extraStyle={[STYLES.bR(20)]}
+                    />
+                    <Space mT={10} />
+                    <View style={[STYLES.height('45%'), STYLES.JCCenter]}>
+                      <AppText
+                        title={item.formValues.spaceName}
+                        numberOfLines={1}
+                        theme={theme}
+                        variant={'h4'}
+                        fontFamily={Fonts.merriWeatherSansRegular}
+                      />
+                      <Space mT={2} />
+                      <AppText
+                        title={item.formValues.address}
+                        theme={theme}
+                        numberOfLines={2}
+                        extraStyle={{fontSize: 12}}
+                        color={'grey'}
+                        fontFamily={Fonts.latoRegular}
+                      />
+                      <Space mT={10} />
+                      <View style={[STYLES.rowCenterBt]}>
+                        <AppText
+                          title={`Rs. ${item.formValues.price}/hr`}
+                          theme={theme}
+                          fontFamily={Fonts.merriWeatherSansRegular}
+                        />
+                        <GradientButton
+                          theme={theme}
+                          extraStyle={{
+                            btnContainer: {
+                              height: 30,
+                              width: 30,
+                              borderRadius: 15,
+                              backgroundColor: 'transparent',
+                              elevation: 0,
+                            },
+                          }}
+                          iconLeft={
+                            <SVG.boxrightarrow
+                              fill={'white'}
+                              height={17}
+                              width={17}
+                            />
+                          }
+                          onPress={() => {
+                            areaSelectionHandler(item);
+                          }}
+                          onLeftIconPress={() => {
+                            areaSelectionHandler(item);
+                          }}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                  <Space mR={20} />
+                </>
+              );
+            })}
         </ScrollView>
-
         <View
           style={[STYLES.width('100%'), STYLES.rowCenterBt, STYLES.AICenter]}>
           <AppText

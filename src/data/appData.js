@@ -23,6 +23,32 @@ export const feedbackStars = [
     isSelected: false,
   },
 ];
+export const ParkingDuration = [
+  {
+    id: 1,
+    value: LABELS.oneHour,
+  },
+  {
+    id: 2,
+    value: LABELS.twoHours,
+  },
+  {
+    id: 3,
+    value: LABELS.threeHours,
+  },
+  {
+    id: 4,
+    value: LABELS.fourHours,
+  },
+  {
+    id: 5,
+    value: LABELS.fiveHours,
+  },
+  {
+    id: 6,
+    value: LABELS.sixHours,
+  },
+];
 export const PaymentData = [
   {
     id: 1,
@@ -92,17 +118,41 @@ export const rowsPosition = [
 export const slotsStatus = [
   {
     id: 1,
-    value: 'Available',
+    value: 'available',
     isSelected: true,
   },
   {
     id: 2,
-    value: 'Booked',
+    value: 'booked',
     isSelected: false,
   },
   {
     id: 3,
-    value: 'Occupied',
+    value: 'occupied',
+    isSelected: false,
+  },
+];
+export const vendorBookingsType = [
+  {
+    id: 1,
+    value: 'accepted',
+    isSelected: true,
+  },
+  {
+    id: 2,
+    value: 'rejected',
+    isSelected: false,
+  },
+];
+export const userBookingsType = [
+  {
+    id: 1,
+    value: 'upcoming',
+    isSelected: true,
+  },
+  {
+    id: 2,
+    value: 'past',
     isSelected: false,
   },
 ];

@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 import { COLORS } from '../../../../assets/theme';
 export const styles = StyleSheet.create({
   bookingsContainer: {
-    backgroundColor: '#F5F5F9',
     flex: 1,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

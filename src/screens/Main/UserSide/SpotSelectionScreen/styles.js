@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import { COLORS } from '../../../../assets/theme';
+import { COLORS, HEIGHT } from '../../../../assets/theme';
 export const styles = spaceDetails =>
   StyleSheet.create({
     slot: slotWidth => ({
@@ -99,8 +99,9 @@ export const styles = spaceDetails =>
       justifyContent: 'center',
     },
     container: {
-      height: 100,
       width: '100%',
+      height:200,
+      backgroundColor:'yellow'
     },
     topContainer: {
       height: '100%',
@@ -312,6 +313,7 @@ export const styles = spaceDetails =>
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 15,
+      marginRight:10,
       backgroundColor: 'purple',
     },
     unSelectedDurationContainer: {
@@ -321,6 +323,31 @@ export const styles = spaceDetails =>
       borderColor: 'purple',
       justifyContent: 'center',
       alignItems: 'center',
+      marginRight:10,
       borderRadius: 15,
     },
+    bookingModalContainer:{
+      backgroundColor: 'white',
+      height: HEIGHT * 0.5,
+      position: 'absolute',
+      bottom: 0,
+      width: '100%',
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      paddingVertical: 10,
+    },
+    contentContainer:{
+      flexDirection:'row',
+      justifyContent:'space-between',
+      width:'100%',
+      alignItems:'center',
+      paddingHorizontal:15,
+      height:'10%'
+    },
+    bookingDetailsContainer:{
+      paddingHorizontal:15,
+      height:'90%',
+      alignItems:'center',
+      justifyContent:'center'
+    }
   });

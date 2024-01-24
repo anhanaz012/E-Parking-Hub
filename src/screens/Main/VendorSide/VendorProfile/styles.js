@@ -16,4 +16,10 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.light.gray,
     alignItems: 'center',
   },
+  editModalContainer: {
+    height: 170,
+    width: '100%',
+    backgroundColor: COLORS.light.white,
+    paddingHorizontal:20,
+  },
 });

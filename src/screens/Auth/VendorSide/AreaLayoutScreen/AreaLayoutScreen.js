@@ -20,7 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const AreaLayoutScreen = ({navigation}) => {
   const [spots, setSpots] = useState();
   const [selectedSpot, setSelectedSpot] = useState(null);
-  const [selectedStatus, setselectedStatus] = useState('Available');
+  const [selectedStatus, setselectedStatus] = useState('available');
   const [isSlotEdit, setIsSlotEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loginToken, setLoginToken] = useState(null);
@@ -88,7 +88,7 @@ const AreaLayoutScreen = ({navigation}) => {
       tempSpots[index].status = selectedStatus;
       setSpots(tempSpots);
     }
-    setselectedStatus('Available');
+    setselectedStatus('available');
     setIsSlotEdit(false);
   };
 

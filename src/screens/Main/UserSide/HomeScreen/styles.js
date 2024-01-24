@@ -2,9 +2,9 @@ import {StyleSheet} from 'react-native';
 import { Fonts } from '../../../../assets/theme';
 export const styles = StyleSheet.create({
   horizontalCardContainer: {
-    height: 200,
+    height: 210,
     padding: 10,
-    width: 175,
+    width: 185,
     backgroundColor: 'white',
     elevation: 1,
     borderRadius: 20,

@@ -167,3 +167,7 @@ export const isSpaceDetailsValid = ({
   }
   return true;
 };
+
+const isBookingDetailsValid = ({
+  
+})

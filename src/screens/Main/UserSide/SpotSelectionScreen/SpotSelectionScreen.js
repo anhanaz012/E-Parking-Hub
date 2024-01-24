@@ -1,7 +1,9 @@
+import firestore from '@react-native-firebase/firestore';
 import React, {useState} from 'react';
 import {Dimensions, ScrollView, TouchableOpacity, View} from 'react-native';
 import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import uuid from 'react-native-uuid';
 import {useSelector} from 'react-redux';
 import {SVG} from '../../../../assets/svg';
 import {Fonts, HORIZON_MARGIN, STYLES} from '../../../../assets/theme';
@@ -10,18 +12,113 @@ import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import Icon from '../../../../components/Icon/Icon';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
+import {ParkingDuration} from '../../../../data/appData';
 import {LABELS} from '../../../../labels';
+import {ERRORS} from '../../../../labels/error';
+import {Toast} from '../../../../utils/native';
 import {styles} from './styles';
 const SpotSelectionScreen = ({navigation}) => {
   const theme = 'light';
   const [isLoading, setIsLoading] = useState(false);
   const spotsData = useSelector(state => state.area.parkingAreas);
   const spaceDetails = useSelector(state => state.area.areaDetails);
-  console.log(spaceDetails, 'spaceDetails');
+  const vendorToken = useSelector(state => state.area.vendorToken);
+  const userToken = useSelector(state => state.area.userToken);
+  const areaImage = useSelector(state => state.area.areaImage);
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [userName, setUserName] = useState('');
+  const [selectedDuration, setSelectedDuration] = useState(LABELS.oneHour);
+  const [duration, setDuration] = useState(1);
+  const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
+  const [dateTimeMode, setDateTimeMode] = useState('date');
   const style = styles(spaceDetails);
+  const showDateTimePicker = mode => {
+    setDateTimeMode(mode);
+    setDateTimePickerVisible(true);
+  };
+  const hideDateTimePicker = () => {
+    setDateTimePickerVisible(false);
+  };
+  const handlePickedValue = value => {
+    if (dateTimeMode === 'date') {
+      const formattedDate = value.toLocaleDateString();
+      setSelectedDate(formattedDate);
+    }
+    if (dateTimeMode === 'time') {
+      const formattedTime = value.toLocaleTimeString();
+      setSelectedTime(formattedTime);
+    }
+    hideDateTimePicker();
+  };
+  setTimeout(() => {
+    const getUserData = async () => {
+      const user = await firestore().collection('Users').doc(userToken).get();
+      const name = user.data().fullName;
+      setUserName(name);
+    };
+    getUserData();
+  }, 1000);
+  const bookingConfirmationHandler = async () => {
+    const randomId = uuid.v4();
+    const bookingDetails = {
+      areaName: spaceDetails.spaceName,
+      price: spaceDetails.price,
+      date: selectedDate,
+      time: selectedTime,
+      duration: selectedDuration,
+      isPaid: false,
+      amount: Number(spaceDetails.price) * duration,
+      userToken: userToken,
+      vendorToken: vendorToken,
+      status: 'pending',
+      isCompleted: false,
+      isStarted: false,
+      userName: userName,
+      isRejected: false,
+      slotDetails: selectedSpot,
+      bookingId: randomId,
+      image: areaImage,
+    };
+    if (selectedDate && selectedTime && userToken && vendorToken) {
+      setIsLoading(true);
+      firestore()
+        .collection('ParkingAreas')
+        .doc(vendorToken)
+        .update({
+          count: firestore.FieldValue.increment(1),
+        });
+      await firestore()
+        .collection(`user${userToken}Bookings`)
+        .doc(randomId)
+        .set(bookingDetails)
+        .then(async () => {
+          await firestore()
+            .collection(`vendor${vendorToken}Bookings`)
+            .doc(randomId)
+            .set(bookingDetails);
+          setSelectedDate(null);
+          setSelectedTime(null);
+          Toast('Your booking request has been sent');
+          setShowConfirmModal(false);
+          navigation.goBack();
+        });
+      setDuration(1);
+      setSelectedDuration(LABELS.oneHour);
+      setIsLoading(false);
+    } else if (!selectedDate) {
+      Toast(ERRORS.selectDate);
+    } else if (!selectedTime) {
+      Toast(ERRORS.selectTime);
+    } else {
+      setIsLoading(false);
+      Toast(ERRORS.somethingWent);
+    }
+  };
   const generateParkingLayout = () => {
     const parkingLayout = [];
     const {width} = Dimensions.get('window');
@@ -119,31 +216,18 @@ const SpotSelectionScreen = ({navigation}) => {
     return parkingLayout;
   };
   const spotSelectionHandler = () => {
-    if (selectedSpot) {
+    if (selectedSpot && selectedSpot.status === 'available') {
       setShowConfirmModal(true);
+    } else if (selectedSpot && selectedSpot.status != 'available') {
+      Toast(`${ERRORS.spotAvailability} ${selectedSpot.status}`);
+    } else {
+      Toast(ERRORS.noSlotSelection);
     }
-  };
-  const [selected, setSelected] = useState('');
-  const [showCalender, setShowCalender] = useState(true);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-  const handleConfirm = date => {
-    const newDate = date.toDateString();
-    const newTime = date.toLocaleTimeString();
-    hideDatePicker();
   };
   return (
     <>
       <ScrollView style={[STYLES.flex1, STYLES.bgColor('black')]}>
+        {isLoading && <ModalBox isVisible={isLoading} />}
         <AppHeader
           title={'Select Parking Spot'}
           theme={'dark'}
@@ -159,20 +243,15 @@ const SpotSelectionScreen = ({navigation}) => {
             textColor={'white'}
             onPress={spotSelectionHandler}
           />
+          <Space mT={20} />
         </View>
         <Modal
           isVisible={showConfirmModal}
           style={{
             margin: 0,
           }}>
-          <View style={style.container}>
-            <View
-              style={[
-                STYLES.rowCenterBt,
-                STYLES.width100,
-                STYLES.AICenter,
-                STYLES.pH(15),
-              ]}>
+          <View style={style.bookingModalContainer}>
+            <View style={style.contentContainer}>
               <View style={[STYLES.width('50%')]}>
                 <AppText
                   title={LABELS.confirmBooking}
@@ -182,15 +261,14 @@ const SpotSelectionScreen = ({navigation}) => {
                 />
               </View>
               <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode="date"
-                onConfirm={handleConfirm}
-                onCancel={hideDatePicker}
+                isVisible={isDateTimePickerVisible}
+                mode={dateTimeMode}
+                onConfirm={handlePickedValue}
+                onCancel={hideDateTimePicker}
               />
             </View>
-            <Space mT={20} />
-            <View style={[STYLES.pH(HORIZON_MARGIN)]}>
-              <Space mT={20} />
+            <View style={style.bookingDetailsContainer}>
+              <Space mT={15} />
               <View style={[STYLES.row]}>
                 <View style={[STYLES.width('50%')]}>
                   <AppText
@@ -254,44 +332,53 @@ const SpotSelectionScreen = ({navigation}) => {
                     title={spaceDetails && `Rs.${spaceDetails.price}/hr`}
                     theme={theme}
                     variant={'body1'}
-                    fontFamily = {Fonts.latoRegular}
+                    fontFamily={Fonts.latoRegular}
                   />
                   <Space mT={15} />
                   <View style={[STYLES.row]}>
                     <AppText
-                      title={'Select Date'}
+                      title={LABELS.selectDate}
                       theme={theme}
                       variant={'body1'}
                       fontFamily={Fonts.latoRegular}
-                      onPress={showDatePicker}
+                      onPress={() => {
+                        showDateTimePicker('date');
+                      }}
                     />
                     <Space mL={5} />
                     <Icon
                       SVGIcon={
                         <SVG.calender fill={'black'} height={15} width={15} />
                       }
-                      onPress={showDatePicker}
+                      onPress={() => {
+                        showDateTimePicker('date');
+                      }}
                     />
                   </View>
                   <Space mT={15} />
                   <View style={[STYLES.row]}>
                     <AppText
-                      title={'Select Time'}
+                      title={LABELS.selectTime}
                       theme={theme}
                       variant={'body1'}
                       fontFamily={Fonts.latoRegular}
+                      onPress={() => {
+                        showDateTimePicker('time');
+                      }}
                     />
                     <Space mL={5} />
                     <Icon
                       SVGIcon={
                         <SVG.clock fill={'black'} height={15} width={15} />
                       }
+                      onPress={() => {
+                        showDateTimePicker('time');
+                      }}
                     />
                   </View>
                 </View>
               </View>
-
-              <Space mT={15} />
+              <Space mT={10} />
               <View style={[STYLES.row, STYLES.AICenter]}>
                 <View style={[STYLES.width('50%')]}>
                   <AppText
@@ -306,27 +393,44 @@ const SpotSelectionScreen = ({navigation}) => {
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}>
                   <View style={[STYLES.row]}>
-                    <View style={style.selectedDurationContainer}>
-                      <AppText
-                        title={'1 Hour'}
-                        variant={'body2'}
-                        fontFamily={Fonts.latoRegular}
-                        color={'white'}
-                      />
-                    </View>
-                    <Space mR={10} />
-                    <View style={style.unSelectedDurationContainer}>
-                      <AppText
-                        title={'2 Hour'}
-                        variant={'body2'}
-                        fontFamily={Fonts.latoRegular}
-                        color={'purple'}
-                      />
-                    </View>
+                    {ParkingDuration &&
+                      ParkingDuration.map((item, index) => {
+                        return (
+                          <View key={index}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setSelectedDuration(item.value);
+                                setDuration(item.id);
+                              }}>
+                              <View
+                                style={
+                                  selectedDuration == item.value
+                                    ? style.selectedDurationContainer
+                                    : style.unSelectedDurationContainer
+                                }>
+                                <AppText
+                                  title={item.value}
+                                  variant={'body2'}
+                                  fontFamily={Fonts.latoRegular}
+                                  color={
+                                    selectedDuration == item.value
+                                      ? 'white'
+                                      : 'purple'
+                                  }
+                                  onPress={() => {
+                                    setSelectedDuration(item.value);
+                                    setDuration(item.id);
+                                  }}
+                                />
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+                        );
+                      })}
                   </View>
                 </ScrollView>
               </View>
-              <Space mT={35} />
+              <Space mT={15} />
               <View
                 style={[
                   STYLES.rowCenterBt,
@@ -348,11 +452,7 @@ const SpotSelectionScreen = ({navigation}) => {
                   textColor={'white'}
                   textVariant={'h5'}
                   theme={'light'}
-                  onPress={() => {
-                    navigation.navigate('HomeStack', {
-                      screen: 'FeeCalculationScreen',
-                    });
-                  }}
+                  onPress={bookingConfirmationHandler}
                 />
               </View>
             </View>
