@@ -67,7 +67,7 @@ const VendorBottomNavigation = ({navigation}) => {
                     width={20}
                   />
                 }
-                onPress={() => {
+                onPress = {() => {
                   navigation.navigate('VendorBottomNavigation', {
                     screen: 'MyBooking',
                   });

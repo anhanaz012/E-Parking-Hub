@@ -1,10 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
-import React, {useRef, useState} from 'react';
-import {ScrollView, View} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ScrollView, View } from 'react-native';
 import PhoneInput from 'react-native-phone-number-input';
-import {useDispatch} from 'react-redux';
-import {SVG} from '../../../../assets/svg';
-import {COLORS, COMMON_COLORS, Fonts, STYLES} from '../../../../assets/theme';
+import { useDispatch } from 'react-redux';
+import { SVG } from '../../../../assets/svg';
+import { COLORS, COMMON_COLORS, Fonts, STYLES } from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppInput from '../../../../components/AppInput/AppInput';
 import AppText from '../../../../components/AppText/AppText';
@@ -14,13 +15,13 @@ import GradientButton from '../../../../components/GradientButton/GradientButton
 import Icon from '../../../../components/Icon/Icon';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
-import {LABELS} from '../../../../labels';
-import {ERRORS} from '../../../../labels/error';
-import {RegistrationHandler} from '../../../../services/firebase';
-import {Toast} from '../../../../utils/native';
-import {isVendorValidated} from '../../../../utils/validation';
-import {styles} from './styles';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LABELS } from '../../../../labels';
+import { ERRORS } from '../../../../labels/error';
+import { RegistrationHandler } from '../../../../services/firebase';
+import { Toast } from '../../../../utils/native';
+import messaging from '@react-native-firebase/messaging';
+import { isVendorValidated } from '../../../../utils/validation';
+import { styles } from './styles';
 const VendorSignUp = ({navigation}) => {
   const initialInputStates = {
     fullName: false,
@@ -54,7 +55,6 @@ const VendorSignUp = ({navigation}) => {
   const handleFocus = inputName => {
     setIsFocused(prevState => ({...prevState, [inputName]: true}));
   };
-
   const handleBlur = inputName => {
     setIsFocused(prevState => ({...prevState, [inputName]: false}));
   };
@@ -80,30 +80,38 @@ const VendorSignUp = ({navigation}) => {
         } else {
           const uid = message.uid;
           if (uid) {
-            const formData = {
-              ...initialFormValues,
-              image: '',
-              role: 'vendor',
-              token: uid,
-            };
-            await firestore().collection('AllUsers').doc(uid).set(formData);
-            await firestore().collection('Vendors').doc(uid).set(formData);
-            try {
-              await AsyncStorage.setItem('vendorLoginToken', uid);
+            await messaging().registerDeviceForRemoteMessages();
+            const token = await messaging().getToken();
+            if (token) {
+              const formData = {
+                ...initialFormValues,
+                image: '',
+                role: 'vendor',
+                token: uid,
+                messagingToken: token,
+              };
+              await firestore().collection('AllUsers').doc(uid).set(formData);
+              await firestore().collection('Vendors').doc(uid).set(formData);
+              try {
+                await AsyncStorage.setItem('vendorLoginToken', uid);
+                setIsLoading(false);
+                setInitialFormValues({
+                  fullName: '',
+                  email: '',
+                  password: '',
+                  phone: '',
+                  isChecked: false,
+                });
+                Toast(LABELS.successfullyRegistered);
+                navigation.navigate('VendorAuthStack', {
+                  screen: 'SpaceDetailsScreen',
+                });
+              } catch {
+                console.error('error in setting token');
+              }
+            } else {
               setIsLoading(false);
-              setInitialFormValues({
-                fullName: '',
-                email: '',
-                password: '',
-                phone: '',
-                isChecked: false,
-              });
-              Toast(LABELS.successfullyRegistered);
-              navigation.navigate('VendorAuthStack', {
-                screen: 'SpaceDetailsScreen',
-              });
-            } catch {
-              console.error('error in setting token');
+              Toast(ERRORS.tokenNotGenerated);
             }
           }
         }

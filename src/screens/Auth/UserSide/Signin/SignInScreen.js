@@ -13,6 +13,7 @@ import {LABELS} from '../../../../labels';
 import {ERRORS} from '../../../../labels/error';
 import {LoginHandler} from '../../../../services/firebase';
 import {Toast} from '../../../../utils/native';
+import messaging from '@react-native-firebase/messaging';
 import {isValidatedLogin} from '../../../../utils/validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const SignInScreen = ({navigation}) => {
@@ -48,7 +49,12 @@ const SignInScreen = ({navigation}) => {
           if (uid) {
             try {
               await AsyncStorage.setItem('userLoginToken', uid);
-              
+              messaging().onTokenRefresh(async newToken => {
+                await messaging().registerDeviceForRemoteMessages();
+                firestore().collection('Users').doc(uid).update({
+                  messagingToken: newToken,
+                });
+              });
               setIsLoading(false);
               Toast(LABELS.loginSuccess);
               setFormValues({email: '', password: ''});

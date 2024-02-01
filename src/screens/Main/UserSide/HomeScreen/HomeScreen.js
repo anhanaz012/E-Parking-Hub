@@ -27,6 +27,10 @@ const HomeScreen = ({navigation}) => {
   const [loginToken, setLoginToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [popularAreas, setPopularAreas] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [firestoreData, setFirestoreData] = useState(null);
+  const [filteredBookings, setFilteredBookings] = useState(null);
+
   const theme = 'light';
   const style = styles;
   const dispatch = useDispatch();
@@ -54,6 +58,7 @@ const HomeScreen = ({navigation}) => {
           const allAreas = firestoreData.filter(
             item => !popularAreas.includes(item),
           );
+          setFirestoreData(firestoreData);
           setAreasList(allAreas);
         },
         error => {
@@ -74,9 +79,7 @@ const HomeScreen = ({navigation}) => {
       console.log('error while fetching login token', err);
     }
   }, []);
-  const searchAreaHandler = () => {
-    console.log('hello');
-  };
+  const searchAreaHandler = () => {};
   const areaSelectionHandler = item => {
     console.log('item from home', item);
     dispatch(setParkingAreas(item.spots, item.formValues));
@@ -124,6 +127,16 @@ const HomeScreen = ({navigation}) => {
               textInput: style.textInput,
             }}
             mL={6}
+            value={searchQuery}
+            onChangeText={text => {
+              setSearchQuery(text);
+              const filteredData = firestoreData.filter(area =>
+                area.formValues.spaceName
+                  .toLowerCase()
+                  .includes(text.toLowerCase()),
+              );
+              setFilteredBookings(filteredData);
+            }}
           />
           <GradientButton
             extraStyle={{btnContainer: [STYLES.width(50)]}}
@@ -133,127 +146,12 @@ const HomeScreen = ({navigation}) => {
             onPress={searchAreaHandler}
           />
         </View>
-        <Space mT={30} />
-        <View
-          style={[STYLES.width('100%'), STYLES.rowCenterBt, STYLES.AICenter]}>
-          <AppText
-            title={LABELS.popularLocations}
-            theme={theme}
-            color={'black'}
-            fontFamily={Fonts.merriWeatherSansRegular}
-            variant={'h3'}
-          />
-          <AppText
-            title={LABELS.seeAll}
-            theme={theme}
-            color={COLORS[theme].primary}
-            fontFamily={Fonts.merriWeatherSansRegular}
-            variant={'body2'}
-            onPress={() => {
-              navigation.navigate('HomeStack', {screen: 'AreasListScreen'});
-            }}
-          />
-        </View>
-        <Space mT={20} />
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={[STYLES.height(220)]}>
-          {popularAreas &&
-            popularAreas.map((item, index) => {
-              return (
-                <>
-                  <View style={style.horizontalCardContainer}>
-                    <AppLogo
-                      uri={item.image}
-                      height={'50%'}
-                      width={'100%'}
-                      extraStyle={[STYLES.bR(20)]}
-                    />
-                    <Space mT={10} />
-                    <View style={[STYLES.height('45%'), STYLES.JCCenter]}>
-                      <AppText
-                        title={item.formValues.spaceName}
-                        numberOfLines={1}
-                        theme={theme}
-                        variant={'h4'}
-                        fontFamily={Fonts.merriWeatherSansRegular}
-                      />
-                      <Space mT={2} />
-                      <AppText
-                        title={item.formValues.address}
-                        theme={theme}
-                        numberOfLines={2}
-                        extraStyle={{fontSize: 12}}
-                        color={'grey'}
-                        fontFamily={Fonts.latoRegular}
-                      />
-                      <Space mT={10} />
-                      <View style={[STYLES.rowCenterBt]}>
-                        <AppText
-                          title={`Rs. ${item.formValues.price}/hr`}
-                          theme={theme}
-                          fontFamily={Fonts.merriWeatherSansRegular}
-                        />
-                        <GradientButton
-                          theme={theme}
-                          extraStyle={{
-                            btnContainer: {
-                              height: 30,
-                              width: 30,
-                              borderRadius: 15,
-                              backgroundColor: 'transparent',
-                              elevation: 0,
-                            },
-                          }}
-                          iconLeft={
-                            <SVG.boxrightarrow
-                              fill={'white'}
-                              height={17}
-                              width={17}
-                            />
-                          }
-                          onPress={() => {
-                            areaSelectionHandler(item);
-                          }}
-                          onLeftIconPress={() => {
-                            areaSelectionHandler(item);
-                          }}
-                        />
-                      </View>
-                    </View>
-                  </View>
-                  <Space mR={20} />
-                </>
-              );
-            })}
-        </ScrollView>
-        <View
-          style={[STYLES.width('100%'), STYLES.rowCenterBt, STYLES.AICenter]}>
-          <AppText
-            title={'All areas'}
-            theme={theme}
-            color={'black'}
-            fontFamily={Fonts.merriWeatherSansRegular}
-            variant={'h3'}
-          />
-          <AppText
-            title={'See all'}
-            theme={theme}
-            color={COLORS[theme].primary}
-            fontFamily={Fonts.merriWeatherSansRegular}
-            variant={'body2'}
-            onPress={() => {
-              navigation.navigate('HomeStack', {screen: 'AreasListScreen'});
-            }}
-          />
-        </View>
-        <Space mT={20} />
-
-        {areasList &&
-          areasList.map((item, index) => {
+        <Space mT = {10}/>
+        {searchQuery ? (
+          filteredBookings.map((item, index) => {
             return (
               <>
+                <Space mT={20} />
                 <View style={style.verticalCardContainer} key={item.image}>
                   <AppLogo
                     uri={item.image}
@@ -352,7 +250,227 @@ const HomeScreen = ({navigation}) => {
                 <Space mT={20} />
               </>
             );
-          })}
+          })
+        ) : (
+          <>
+            <Space mT={30} />
+            <View
+              style={[
+                STYLES.width('100%'),
+                STYLES.rowCenterBt,
+                STYLES.AICenter,
+              ]}>
+              <AppText
+                title={LABELS.popularLocations}
+                theme={theme}
+                color={'black'}
+                fontFamily={Fonts.merriWeatherSansRegular}
+                variant={'h3'}
+              />
+            </View>
+            <Space mT={20} />
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              style={[STYLES.height(220)]}>
+              {popularAreas &&
+                popularAreas.map((item, index) => {
+                  return (
+                    <>
+                      <View style={style.horizontalCardContainer}>
+                        <AppLogo
+                          uri={item.image}
+                          height={'50%'}
+                          width={'100%'}
+                          extraStyle={[STYLES.bR(20)]}
+                        />
+                        <Space mT={10} />
+                        <View style={[STYLES.height('45%'), STYLES.JCCenter]}>
+                          <AppText
+                            title={item.formValues.spaceName}
+                            numberOfLines={1}
+                            theme={theme}
+                            variant={'h4'}
+                            fontFamily={Fonts.merriWeatherSansRegular}
+                          />
+                          <Space mT={2} />
+                          <AppText
+                            title={item.formValues.address}
+                            theme={theme}
+                            numberOfLines={2}
+                            extraStyle={{fontSize: 12}}
+                            color={'grey'}
+                            fontFamily={Fonts.latoRegular}
+                          />
+                          <Space mT={10} />
+                          <View style={[STYLES.rowCenterBt]}>
+                            <AppText
+                              title={`Rs. ${item.formValues.price}/hr`}
+                              theme={theme}
+                              fontFamily={Fonts.merriWeatherSansRegular}
+                            />
+                            <GradientButton
+                              theme={theme}
+                              extraStyle={{
+                                btnContainer: {
+                                  height: 30,
+                                  width: 30,
+                                  borderRadius: 15,
+                                  backgroundColor: 'transparent',
+                                  elevation: 0,
+                                },
+                              }}
+                              iconLeft={
+                                <SVG.boxrightarrow
+                                  fill={'white'}
+                                  height={17}
+                                  width={17}
+                                />
+                              }
+                              onPress={() => {
+                                areaSelectionHandler(item);
+                              }}
+                              onLeftIconPress={() => {
+                                areaSelectionHandler(item);
+                              }}
+                            />
+                          </View>
+                        </View>
+                      </View>
+                      <Space mR={20} />
+                    </>
+                  );
+                })}
+            </ScrollView>
+            <View
+              style={[
+                STYLES.width('100%'),
+                STYLES.rowCenterBt,
+                STYLES.AICenter,
+              ]}>
+              <AppText
+                title={'All areas'}
+                theme={theme}
+                color={'black'}
+                fontFamily={Fonts.merriWeatherSansRegular}
+                variant={'h3'}
+              />
+            </View>
+            <Space mT={20} />
+
+            {areasList &&
+              areasList.map((item, index) => {
+                return (
+                  <>
+                    <View style={style.verticalCardContainer} key={item.image}>
+                      <AppLogo
+                        uri={item.image}
+                        height={'85%'}
+                        width={'30%'}
+                        extraStyle={{borderRadius: 20}}
+                      />
+                      <View
+                        style={[
+                          STYLES.JCCenter,
+                          STYLES.width('70%'),
+                          STYLES.pH(10),
+                        ]}>
+                        <View
+                          style={[
+                            STYLES.row,
+                            STYLES.width('100%'),
+                            STYLES.height('30%'),
+                            STYLES.rowCenter,
+                          ]}>
+                          <View style={[STYLES.width('80%')]}>
+                            <AppText
+                              title={item.formValues.spaceName}
+                              numberOfLines={1}
+                              theme={theme}
+                              variant={'h4'}
+                              fontFamily={Fonts.merriWeatherSansRegular}
+                            />
+                          </View>
+                          <View
+                            style={[
+                              STYLES.width('20%'),
+                              STYLES.row,
+                              STYLES.JCEnd,
+                            ]}>
+                            <Icon
+                              SVGIcon={
+                                <SVG.rightarrow
+                                  fill={'purple'}
+                                  height={18}
+                                  width={18}
+                                />
+                              }
+                              onPress={() => {
+                                areaSelectionHandler(item);
+                              }}
+                            />
+                          </View>
+                        </View>
+
+                        <View style={[STYLES.height('30%'), STYLES.width100]}>
+                          <AppText
+                            title={item.formValues.address}
+                            theme={theme}
+                            numberOfLines={2}
+                            extraStyle={[STYLES.fontSize(13)]}
+                            color={'gray'}
+                            ellipsizeMode={'tail'}
+                            fontFamily={Fonts.latoRegular}
+                          />
+                        </View>
+                        <View
+                          style={[
+                            STYLES.rowCenterBt,
+                            STYLES.AICenter,
+                            STYLES.height('30%'),
+                            STYLES.width100,
+                          ]}>
+                          {item.ratings ? (
+                            <View style={[STYLES.row]}>
+                              <Icon
+                                SVGIcon={<SVG.starFilled fill={'orange'} />}
+                              />
+                              <Space mL={5} />
+                              <AppText
+                                title={'4.5'}
+                                theme={theme}
+                                fontFamily={Fonts.merriWeatherSansRegular}
+                              />
+                            </View>
+                          ) : (
+                            <View style={[STYLES.rowCenter]}>
+                              <Icon
+                                SVGIcon={<SVG.starFilled fill={'orange'} />}
+                              />
+                              <Space mL={5} />
+                              <AppText
+                                title={'No Ratings yet'}
+                                theme={theme}
+                                variant={'body2'}
+                                color={COLORS.light.primary}
+                                fontFamily={Fonts.latoRegular}
+                              />
+                            </View>
+                          )}
+                          <AppText
+                            title={`Rs. ${item.formValues.price}/hr`}
+                            theme={theme}
+                            fontFamily={Fonts.merriWeatherSansRegular}
+                          />
+                        </View>
+                      </View>
+                    </View>
+                    <Space mT={20} />
+                  </>
+                );
+              })}
+          </>
+        )}
       </View>
     </ScrollView>
   );

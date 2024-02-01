@@ -9,3 +9,4 @@ export const Toast = (text, delay) => {
       SimpleToast.show(text, 100);
     }
   };
+  

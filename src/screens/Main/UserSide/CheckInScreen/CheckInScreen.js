@@ -1,28 +1,43 @@
 import React from 'react';
-import {Text, View} from 'react-native';
-import {styles} from './styles';
-import AppLogo from '../../../../components/AppLogo/AppLogo';
+import {ScrollView, View} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {IMAGES} from '../../../../assets/images';
-import {COLORS, Fonts, HORIZON_MARGIN, STYLES, WIDTH} from '../../../../assets/theme';
-import AppHeader from '../../../../components/AppHeader/AppHeader';
 import {SVG} from '../../../../assets/svg';
+import {
+  COLORS,
+  Fonts,
+  HEIGHT,
+  HORIZON_MARGIN,
+  STYLES,
+} from '../../../../assets/theme';
+import AppHeader from '../../../../components/AppHeader/AppHeader';
+import AppLogo from '../../../../components/AppLogo/AppLogo';
 import AppText from '../../../../components/AppText/AppText';
-import Space from '../../../../components/Space/Space';
+import AppButton from '../../../../components/Button/Button';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
+import Space from '../../../../components/Space/Space';
+import {styles} from './styles';
 import {LABELS} from '../../../../labels';
-const CheckInScreen = () => {
+import {setSelectedArea} from '../../../../store/slices/bookingSlice';
+const CheckInScreen = ({navigation}) => {
   const style = styles;
+  const area = useSelector(state => state.booking.selectedArea);
+  const dispatch = useDispatch();
+  const displayDirectionHandler = () => {
+    dispatch(setSelectedArea(area));
+    navigation.navigate('HomeStack', {screen: 'DisplayDirectionsScreen'});
+  };
   return (
-    <View style={[STYLES.flex1]}>
+    <ScrollView style={[STYLES.flex1]}>
       <View
         style={[
-          STYLES.height('40%'),
+          STYLES.height(HEIGHT * 0.35),
           STYLES.width100,
           STYLES.bgColor(COLORS.dark.glassBlack),
           STYLES.JCCenter,
         ]}>
         <AppHeader
-          title={'Parking Entry Check in'}
+          title={LABELS.parkingCheckIn}
           theme={'dark'}
           iconLeft={<SVG.leftArrow height={20} width={20} fill={'white'} />}
           mL={15}
@@ -37,50 +52,72 @@ const CheckInScreen = () => {
         />
         <Space mT={20} />
       </View>
-      <Space mT={40} />
-      <View style={[STYLES.pH(HORIZON_MARGIN)]}>
+      <View
+        style={[
+          STYLES.pH(HORIZON_MARGIN),
+          STYLES.height(HEIGHT * 0.5),
+          STYLES.JCCenter,
+        ]}>
         <View
           style={[
             STYLES.rowCenter,
             STYLES.JCAround,
             STYLES.pH(HORIZON_MARGIN),
           ]}>
-          <View style={[STYLES.width('33%'), STYLES.AICenter]}>
-            <AppText title={'Parking'} />
-            <Space mT={20} />
+          <View style={style.detailsCardContainer}>
             <AppText
-              title={'Louis Franklin Building'}
+              title={area && area.areaName}
+              variant={'h3'}
               fontFamily={Fonts.merriWeatherSansRegular}
-              variant={'body2'}
-              color={COLORS.dark.primary}
             />
-          </View>
-          <View style={[STYLES.width('33%'), STYLES.AICenter]}>
-            <AppText title={'Slot Id'} />
+            <Space mT={10} />
+            <View style={[STYLES.rowCenterBt]}>
+              <AppText
+                title={`Row no: ${area.slotDetails.row}`}
+                color={COLORS.dark.gradientPurple}
+                variant={'body2'}
+                fontFamily={Fonts.latoRegular}
+              />
+              <AppText
+                title={`Col no: ${area.slotDetails.col}`}
+                color={COLORS.dark.gradientPurple}
+                variant={'body2'}
+                fontFamily={Fonts.latoRegular}
+              />
+            </View>
             <Space mT={20} />
-            <AppText
-              title={'A-11'}
-              fontFamily={Fonts.merriWeatherSansRegular}
-              variant={'body2'}
-              color={COLORS.dark.primary}
-            />
-          </View>
-          <View style={[STYLES.width('33%'), STYLES.AICenter]}>
-            <AppText title={LABELS.price} />
-            <Space mT={20} />
-            <AppText
-              title={'Rs./20-'}
-              fontFamily={Fonts.merriWeatherSansRegular}
-              variant={'body2'}
-              color={COLORS.dark.primary}
-            />
+            <View style={[STYLES.rowCenterBt]}>
+              <View style={style.areaTimeContainer}>
+                <AppText
+                  title={`Date: ${area.date}`}
+                  color={COLORS.dark.gradientPurple}
+                  variant={'body2'}
+                  fontFamily={Fonts.latoRegular}
+                />
+              </View>
+              <View style={style.areaTimeContainer}>
+                <AppText
+                  title={`Time: ${area.time}`}
+                  color={COLORS.dark.gradientPurple}
+                  variant={'body2'}
+                  fontFamily={Fonts.latoRegular}
+                />
+              </View>
+            </View>
           </View>
         </View>
-        <Space mT={50} />
-        <Space mT={'50%'} />
-        <GradientButton title={'Lets Park'} textColor={'white'} />
+        <Space mT={70} />
+        <View style={[STYLES.rowCenterBt]}>
+          <AppButton
+            title={LABELS.showDirections}
+            textColor={'black'}
+            extraStyle={{btnContainer: {width: '40%'}}}
+            onPress={displayDirectionHandler}
+          />
+          <GradientButton title={LABELS.letsPark} textColor={'white'} />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

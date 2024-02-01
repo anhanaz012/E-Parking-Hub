@@ -14,16 +14,17 @@ import VendorSignUp from '../screens/Auth/VendorSide/VendorSignUp/VendorSignUp';
 import VendorSignIn from '../screens/Auth/VendorSide/VendorSignin/VendorSignin';
 import AddFeedbackScreen from '../screens/Main/UserSide/AddFeedbackScreen/AddFeedbackScreen';
 import AreasListScreens from '../screens/Main/UserSide/AreasListScreen/AreasListScreens';
-import ConfirmParkingScreen from '../screens/Main/UserSide/ConfirmParkingScreen/ConfirmParkingScreen';
 import FeeCalculationScreen from '../screens/Main/UserSide/FeeCalculationScreen/FeeCalculationScreen';
 import HomeScreen from '../screens/Main/UserSide/HomeScreen/HomeScreen';
 import MyBookingScreen from '../screens/Main/UserSide/MyBookingScreen/MyBookingScreen';
 import NotificationScreen from '../screens/Main/UserSide/NotificationScreen/NotificationScreen';
 import PaymentScreen from '../screens/Main/UserSide/PaymentScreen/PaymentScreen';
+import SpotSelectionScreen from '../screens/Main/UserSide/SpotSelectionScreen/SpotSelectionScreen';
 import UserProfileScreen from '../screens/Main/UserSide/UserProfileScreen/UserProfileScreen';
 import BottomNavigation from './BottomNavigation/UserSide';
 import VendorBottomNavigation from './BottomNavigation/VendorSide';
-import SpotSelectionScreen from '../screens/Main/UserSide/SpotSelectionScreen/SpotSelectionScreen';
+import DisplayDirectionsScreen from '../screens/Main/UserSide/DisplayDirectionScreen/DisplayDirectionScreen';
+import CheckInScreen from '../screens/Main/UserSide/CheckInScreen/CheckInScreen';
 const Stack = createStackNavigator();
 const options = {
   headerShown: false,
@@ -50,10 +51,6 @@ const HomeStack = () => {
       <Stack.Screen name="AreasListScreen" component={AreasListScreens} />
       <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
       <Stack.Screen
-        name="ConfirmParkingScreen"
-        component={ConfirmParkingScreen}
-      />
-      <Stack.Screen
         name="FeeCalculationScreen"
         component={FeeCalculationScreen}
       />
@@ -61,6 +58,14 @@ const HomeStack = () => {
       <Stack.Screen
         name="SpotSelectionScreen"
         component={SpotSelectionScreen}
+      />
+      <Stack.Screen
+        name="DisplayDirectionsScreen"
+        component={DisplayDirectionsScreen}
+      />
+       <Stack.Screen
+        name="CheckInScreen"
+        component={CheckInScreen}
       />
     </Stack.Navigator>
   );

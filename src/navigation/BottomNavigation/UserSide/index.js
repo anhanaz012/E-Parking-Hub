@@ -60,7 +60,6 @@ const BottomNavigation = ({navigation}) => {
         options={{
           tabBarLabel: 'Notification',
           tabBarLabelStyle: [style.tabBarLabel],
-
           tabBarIcon: ({focused}) => (
             <>
               <Icon

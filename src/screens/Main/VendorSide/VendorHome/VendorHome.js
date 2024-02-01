@@ -1,19 +1,19 @@
+import firestore from '@react-native-firebase/firestore';
+import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, View} from 'react-native';
+import {useSelector} from 'react-redux';
 import {IMAGES} from '../../../../assets/images';
 import {SVG} from '../../../../assets/svg';
-import {COLORS, Fonts, STYLES} from '../../../../assets/theme';
+import {COLORS, Fonts, HEIGHT, STYLES} from '../../../../assets/theme';
 import AppLogo from '../../../../components/AppLogo/AppLogo';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
 import Icon from '../../../../components/Icon/Icon';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
 import {LABELS} from '../../../../labels';
 import {styles} from './styles';
-import firestore from '@react-native-firebase/firestore';
-import {useSelector} from 'react-redux';
-import {Toast} from '../../../../utils/native';
-import ModalBox from '../../../../components/ModalBox/ModalBox';
 
 const VendorHome = () => {
   const vendorLoginToken = useSelector(state => state.auth.loginToken);
@@ -21,7 +21,6 @@ const VendorHome = () => {
   const requestCount = bookingsRequests?.length;
   const [isLoading, setIsLoading] = useState(false);
   const style = styles;
-
   useEffect(() => {
     const getRealTimeChanges = () => {
       const collectionName = `vendor${vendorLoginToken}Bookings`;
@@ -86,6 +85,71 @@ const VendorHome = () => {
           status: 'accepted',
         })
         .then(() => {
+          const registrationToken = item.messagingToken;
+          const data = JSON.stringify({
+            data: {},
+            notification: {
+              body: `Your Booking Request at ${item.areaName} has been accepted`,
+              title: 'Booking Accepted',
+              color: 'purple',
+            },
+            to: registrationToken,
+          });
+          var config = {
+            method: 'post',
+            url: 'https://fcm.googleapis.com/fcm/send',
+            headers: {
+              Authorization:
+                'key=AAAAI2Br1ko:APA91bFN_OkOaWejDdFKUqzcmvfXqMHnGJUnEszUzRvRANuEAheAQtSRNuaZ4Kow5MmCjvCjwiqHTMaQs3D7PrsSX34gwuXP4WDLNzY9Y85SKaKDY530er_b0bfTR_cBYJbKibvMzqYn',
+              'Content-Type': 'application/json',
+            },
+            data: data,
+          };
+          axios(config)
+            .then(async res => {
+              console.log(res, 'res');
+              const previousNotifications = await firestore()
+                .collection('Notifications')
+                .doc(userDocId)
+                .get();
+              if (previousNotifications.exists) {
+                const previousData = previousNotifications.data().notifications;
+                previousData.push({
+                  title: 'Booking Accepted',
+                  message: `Your Booking Request at ${item.areaName} has been accepted`,
+                  date: new Date().toLocaleDateString(),
+                  notificationId: item.bookingId,
+                  bookingDate: item.date,
+                  bookingTime: item.time,
+                });
+                await firestore()
+                  .collection('Notifications')
+                  .doc(userDocId)
+                  .set({
+                    notifications: previousData,
+                  });
+              } else {
+                const notificationData = new Array();
+                notificationData.push({
+                  title: 'Booking Accepted',
+                  message: `Your Booking Request at ${item.areaName} has been accepted`,
+                  date: new Date().toLocaleDateString(),
+                  notificationId: item.bookingId,
+                  bookingDate: item.date,
+                  bookingTime: item.time,
+                });
+                await firestore()
+                  .collection('Notifications')
+                  .doc(userDocId)
+                  .set({
+                    notifications: notificationData,
+                  });
+              }
+              setIsLoading(false);
+            })
+            .catch(error => {
+              console.log('error');
+            });
           setIsLoading(false);
         })
         .catch(err => {
@@ -113,14 +177,73 @@ const VendorHome = () => {
         status: 'rejected',
       })
       .then(() => {
-        setIsLoading(false);
+        const registrationToken = item.messagingToken;
+        const data = JSON.stringify({
+          data: {},
+          notification: {
+            body: `Your Booking Request at ${item.areaName} has been rejected`,
+            title: 'Booking Rejected',
+            color: 'purple',
+            sound: 'default',
+          },
+          to: registrationToken,
+        });
+        var config = {
+          method: 'post',
+          url: 'https://fcm.googleapis.com/fcm/send',
+          headers: {
+            Authorization:
+              'key=AAAAI2Br1ko:APA91bFN_OkOaWejDdFKUqzcmvfXqMHnGJUnEszUzRvRANuEAheAQtSRNuaZ4Kow5MmCjvCjwiqHTMaQs3D7PrsSX34gwuXP4WDLNzY9Y85SKaKDY530er_b0bfTR_cBYJbKibvMzqYn',
+            'Content-Type': 'application/json',
+          },
+          data: data,
+        };
+        axios(config)
+          .then(async res => {
+            console.log(res);
+            const previousNotifications = await firestore()
+              .collection('Notifications')
+              .doc(userDocId)
+              .get();
+            if (previousNotifications.exists) {
+              const previousData = previousNotifications.data().notifications;
+              previousData.push({
+                title: 'Booking Rejected',
+                message: `Your Booking Request at ${item.areaName} has been rejected`,
+                date: new Date().toLocaleDateString(),
+                notificationId: item.bookingId,
+                bookingDate: item.date,
+                bookingTime: item.time,
+              });
+              await firestore().collection('Notifications').doc(userDocId).set({
+                notifications: previousData,
+              });
+            } else {
+              const notificationData = new Array();
+              notificationData.push({
+                title: 'Booking Rejected',
+                message: `Your Booking Request at ${item.areaName} has been accepted`,
+                date: new Date().toLocaleDateString(),
+                notificationId: item.bookingId,
+                bookingDate: item.date,
+                bookingTime: item.time,
+              });
+              await firestore().collection('Notifications').doc(userDocId).set({
+                notifications: notificationData,
+              });
+            }
+            setIsLoading(false);
+          })
+          .catch(err => {
+            setIsLoading(false);
+            console.log(err, 'err');
+          });
       })
       .catch(err => {
-        console.log(err);
+        console.log(err, 'error here');
         setIsLoading(false);
       });
   };
-
   return (
     <>
       <ScrollView style={[STYLES.flex1, STYLES.bgColor('#FAFAFA')]}>
@@ -332,7 +455,18 @@ const VendorHome = () => {
               );
             })
           ) : (
-            <AppText title={LABELS.noBookingsYet} />
+            <View
+              style={[
+                STYLES.flex1,
+                STYLES.AICenter,
+                STYLES.JCCenter,
+                STYLES.height(HEIGHT * 0.5),
+              ]}>
+              <AppText
+                title={LABELS.noBookingsYet}
+                fontFamily={Fonts.merriWeatherSansRegular}
+              />
+            </View>
           )}
         </View>
         <Space mT={20} />

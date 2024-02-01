@@ -3,7 +3,7 @@ import firestore from '@react-native-firebase/firestore';
 import React, {useEffect, useState} from 'react';
 import {Modal, ScrollView, View} from 'react-native';
 import {SVG} from '../../../../assets/svg';
-import {COLORS, Fonts, HORIZON_MARGIN, STYLES} from '../../../../assets/theme';
+import {COLORS, Fonts, HEIGHT, HORIZON_MARGIN, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppText from '../../../../components/AppText/AppText';
 import AppButton from '../../../../components/Button/Button';
@@ -225,7 +225,12 @@ const VendorBookings = ({navigation}) => {
             );
           })
         ) : (
-          <AppText title={'Nothing to display'} />
+          <View style={[STYLES.height(HEIGHT * 0.6), STYLES.JCCenter, STYLES.AICenter]}>
+            <AppText
+              title={'Nothing to Display'}
+              fontFamily={Fonts.merriWeatherSansRegular}
+            />
+          </View>
         )}
       </View>
     </ScrollView>

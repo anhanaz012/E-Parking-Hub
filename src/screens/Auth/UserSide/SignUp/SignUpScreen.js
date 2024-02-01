@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import React, {useRef, useState} from 'react';
 import {ScrollView, View} from 'react-native';
@@ -19,7 +20,7 @@ import {RegistrationHandler} from '../../../../services/firebase';
 import {Toast} from '../../../../utils/native';
 import {isValidatedSignUp} from '../../../../utils/validation';
 import {styles} from './styles';
-
+import messaging from '@react-native-firebase/messaging';
 const SignUpScreen = ({navigation}) => {
   const initialInputStates = {
     fullName: false,
@@ -80,29 +81,37 @@ const SignUpScreen = ({navigation}) => {
         } else {
           const uid = message.uid;
           if (uid) {
-            const formData = {
-              ...initialFormValues,
-              role: 'user',
-              token: uid,
-            };
-            await firestore().collection('AllUsers').doc(uid).set(formData);
-            await firestore().collection('Users').doc(uid).set(formData);
-            try {
-              await AsyncStorage.setItem('userLoginToken', uid)
-            } catch (e) {
-              console.log('error async storage');
+            await messaging().registerDeviceForRemoteMessages();
+            const messagingToken = await messaging().getToken();
+            if (messagingToken) {
+              const formData = {
+                ...initialFormValues,
+                role: 'user',
+                token: uid,
+                messagingToken: messagingToken,
+              };
+              await firestore().collection('AllUsers').doc(uid).set(formData);
+              await firestore().collection('Users').doc(uid).set(formData);
+              try {
+                await AsyncStorage.setItem('userLoginToken', uid);
+              } catch (e) {
+                console.log('error async storage', e);
+              }
+              setInitialFormValues({
+                fullName: '',
+                email: '',
+                password: '',
+                phone: '',
+                carModel: '',
+                isChecked: false,
+              });
+              setIsLoading(false);
+              Toast(LABELS.successfullyRegistered);
+              navigation.navigate('AuthStack', {screen: 'SignInScreen'});
+            } else {
+              setIsLoading(false);
+              Toast(ERRORS.messagingToken);
             }
-            setInitialFormValues({
-              fullName: '',
-              email: '',
-              password: '',
-              phone: '',
-              carModel: '',
-              isChecked: false,
-            });
-            setIsLoading(false);
-            Toast(LABELS.successfullyRegistered);
-            navigation.navigate('AuthStack', {screen: 'SignInScreen'});
           }
         }
       } else {

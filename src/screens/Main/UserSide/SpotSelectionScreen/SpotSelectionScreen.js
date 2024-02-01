@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Dimensions, ScrollView, TouchableOpacity, View} from 'react-native';
 import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -15,6 +15,7 @@ import Icon from '../../../../components/Icon/Icon';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
 import Space from '../../../../components/Space/Space';
 import {ParkingDuration} from '../../../../data/appData';
+import messaging from '@react-native-firebase/messaging';
 import {LABELS} from '../../../../labels';
 import {ERRORS} from '../../../../labels/error';
 import {Toast} from '../../../../utils/native';
@@ -26,6 +27,7 @@ const SpotSelectionScreen = ({navigation}) => {
   const spaceDetails = useSelector(state => state.area.areaDetails);
   const vendorToken = useSelector(state => state.area.vendorToken);
   const userToken = useSelector(state => state.area.userToken);
+  const [messagingToken, setMessagingToken] = useState(null);
   const areaImage = useSelector(state => state.area.areaImage);
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -37,6 +39,7 @@ const SpotSelectionScreen = ({navigation}) => {
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
   const [dateTimeMode, setDateTimeMode] = useState('date');
   const style = styles(spaceDetails);
+
   const showDateTimePicker = mode => {
     setDateTimeMode(mode);
     setDateTimePickerVisible(true);
@@ -55,14 +58,19 @@ const SpotSelectionScreen = ({navigation}) => {
     }
     hideDateTimePicker();
   };
-  setTimeout(() => {
-    const getUserData = async () => {
-      const user = await firestore().collection('Users').doc(userToken).get();
-      const name = user.data().fullName;
-      setUserName(name);
-    };
-    getUserData();
-  }, 1000);
+  useEffect(() => {
+    setTimeout(() => {
+      const getUserData = async () => {
+        const user = await firestore().collection('Users').doc(userToken).get();
+        const name = user.data().fullName;
+        const token = await messaging().getToken();
+        
+        setUserName(name);
+        setMessagingToken(token);
+      };
+      getUserData();
+    }, 1000);
+  }, []);
   const bookingConfirmationHandler = async () => {
     const randomId = uuid.v4();
     const bookingDetails = {
@@ -83,6 +91,7 @@ const SpotSelectionScreen = ({navigation}) => {
       slotDetails: selectedSpot,
       bookingId: randomId,
       image: areaImage,
+      messagingToken: messagingToken,
     };
     if (selectedDate && selectedTime && userToken && vendorToken) {
       setIsLoading(true);

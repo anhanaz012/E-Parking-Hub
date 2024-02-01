@@ -10,10 +10,10 @@ export const IMAGES = {
   vallet:require('./vallet.png'),
   cancel:require('./cancel.png'),
   lock:require('./lock.png'),
-  goldenCar:require('./GoldenCar.png'),
   chair:require('./Parking7.png'),
   parkingHome:require('./ParkingHome.jpg'),
   carSlot1:require('./CarSlot1.png'),
   header:require('./Header.png'),
   imageHome:require('./ImageHome.jpg'),
+  success:require('./successful.png')
 };

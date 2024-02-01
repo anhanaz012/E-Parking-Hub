@@ -26,17 +26,21 @@ const IntroScreen = ({navigation}) => {
       if (isIntroScreenMounted.current && user) {
         const userUid = user.uid;
         try {
-          const userData = await firestore().collection('AllUsers').doc(userUid).get();
+          const userData = await firestore()
+            .collection('AllUsers')
+            .doc(userUid)
+            .get();
+          console.log(userData);
           if (userData.exists) {
             const {role} = userData.data();
             if (role === 'user') {
               if (isIntroScreenMounted.current) {
-              await AsyncStorage.setItem('userLoginToken', userUid);
-              dispatch(setLoginToken(userUid));
-              setIsLoading(false);
+                await AsyncStorage.setItem('userLoginToken', userUid);
+                dispatch(setLoginToken(userUid));
+                setIsLoading(false);
                 navigation.navigate('BottomNavigation');
               }
-            } else if (role === 'vendor') {
+            } else if (role === 'vendor'){
               dispatch(setLoginToken(userUid));
               await AsyncStorage.setItem('vendorLoginToken', userUid);
               const vendorData = await firestore()
@@ -96,11 +100,14 @@ const IntroScreen = ({navigation}) => {
     return () => {
       isIntroScreenMounted.current = false;
       unsubscribe();
+      setIsLoading(false);
     };
   }, []);
+
   const vendorSideNavigation = async () => {
     navigation.navigate('VendorAuthStack', {screen: 'VendorSignUpScreen'});
   };
+
   const userAuthStateValidation = async () => {
     navigation.navigate('AuthStack', {screen: 'SignUpScreen'});
   };

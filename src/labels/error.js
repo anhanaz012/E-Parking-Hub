@@ -44,4 +44,6 @@ export const ERRORS = {
   noSlotSelection:'Please select a slot first',
   selectDate:'Please select a date',
   selectTime:'Please select a time',
+  tokenNotGenerated:'Token not generated',
+  messagingToken:'Messaging token not generated',
 };

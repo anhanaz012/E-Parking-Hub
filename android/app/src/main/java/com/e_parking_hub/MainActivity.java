@@ -22,7 +22,7 @@ public class MainActivity extends ReactActivity {
    * (aka React 18) with two boolean flags.
    */
   @Override
-  protected ReactActivityDelegate createReactActivityDelegate() {
+  protected ReactActivityDelegate createReactActivityDelegate(){
     return new DefaultReactActivityDelegate(
         this,
         getMainComponentName(),

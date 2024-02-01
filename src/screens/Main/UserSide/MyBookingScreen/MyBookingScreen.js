@@ -4,7 +4,13 @@ import React, {useEffect, useState} from 'react';
 import {ScrollView, View} from 'react-native';
 import {IMAGES} from '../../../../assets/images';
 import {SVG} from '../../../../assets/svg';
-import {COLORS, Fonts, HORIZON_MARGIN, STYLES} from '../../../../assets/theme';
+import {
+  COLORS,
+  Fonts,
+  HEIGHT,
+  HORIZON_MARGIN,
+  STYLES,
+} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppLogo from '../../../../components/AppLogo/AppLogo';
 import AppText from '../../../../components/AppText/AppText';
@@ -15,6 +21,8 @@ import {userBookingsType} from '../../../../data/appData';
 import {LABELS} from '../../../../labels';
 import {styles} from './styles';
 import ModalBox from '../../../../components/ModalBox/ModalBox';
+import {useDispatch} from 'react-redux';
+import {setSelectedArea} from '../../../../store/slices/bookingSlice';
 
 const MyBookingScreen = ({navigation}) => {
   const theme = 'light';
@@ -24,6 +32,7 @@ const MyBookingScreen = ({navigation}) => {
   const [pastBookings, setPastBookings] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState(false);
+  const dispatch = useDispatch();
   const style = styles;
   useEffect(() => {
     const getRealTimeChanges = async () => {
@@ -41,7 +50,10 @@ const MyBookingScreen = ({navigation}) => {
                 firestoreData.push({id: doc.id, ...doc.data()});
               });
               if (bookingsType == 'upcoming') {
-                setUpcomingBookings(firestoreData);
+                const filteredBookings = firestoreData.filter(
+                  item => item.status != 'rejected',
+                );
+                setUpcomingBookings(filteredBookings);
               } else {
                 setPastBookings(firestoreData);
               }
@@ -62,6 +74,12 @@ const MyBookingScreen = ({navigation}) => {
     };
     getRealTimeChanges();
   }, [bookingsType]);
+  const selectBookingHandler = item => {
+    dispatch(setSelectedArea(item));
+    navigation.navigate('HomeStack', {
+      screen: 'CheckInScreen',
+    });
+  };
   return (
     <ScrollView style={[STYLES.flex1]}>
       <AppHeader
@@ -166,6 +184,9 @@ const MyBookingScreen = ({navigation}) => {
                       title={LABELS.View}
                       extraStyle={{btnContainer: {height: 40, width: 100}}}
                       textColor={'white'}
+                      onPress={() => {
+                        selectBookingHandler(item);
+                      }}
                     />
                   </View>
                 </View>
@@ -212,7 +233,18 @@ const MyBookingScreen = ({navigation}) => {
             );
           })
         ) : (
-          <AppText title={'No Bookings Found'} />
+          <View
+            style={[
+              STYLES.flex1,
+              STYLES.height(HEIGHT * 0.5),
+              STYLES.JCCenter,
+              STYLES.AICenter,
+            ]}>
+            <AppText
+              title={LABELS.noBookingsYet}
+              fontFamily={Fonts.merriWeatherSansRegular}
+            />
+          </View>
         )}
       </View>
     </ScrollView>
