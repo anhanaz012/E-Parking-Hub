@@ -1,19 +1,44 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
+import {useSelector} from 'react-redux';
 import {SVG} from '../../../../assets/svg';
 import {Fonts, HORIZON_MARGIN, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppText from '../../../../components/AppText/AppText';
+import GradientButton from '../../../../components/GradientButton/GradientButton';
 import Space from '../../../../components/Space/Space';
+import BackgroundTimer from 'react-native-background-timer';
+import firestore from '@react-native-firebase/firestore';
 import {LABELS} from '../../../../labels';
 import {styles} from './styles';
-import AppButton from '../../../../components/Button/Button';
-import GradientButton from '../../../../components/GradientButton/GradientButton';
 
 const FeeCalculationScreen = ({navigation}) => {
   const theme = 'light';
-  const style = styles;
+  const [address, setAddress] = useState('');
+  const timerData = useSelector(state => state.booking.selectedArea);
+  const duration = timerData.duration;
+  const [timeLeft, setTimeLeft] = useState(duration);
+  const [time, setTime] = useState(0);
+  const [timer, setTimer] = useState(0);
+  const [hours, setHours] = useState(parseInt(duration));
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  useEffect(() => {
+    const getSpaceDetails = async () => {
+      if (timerData) {
+        const vendorToken = timerData.vendorToken;
+        const user = await firestore()
+          .collection('Vendors')
+          .doc(vendorToken)
+          .get();
+        if (user.exists) setAddress(user.data().formValues.address);
+        if (!user.exists) return console.log('No such user!');
+      }
+    };
+    getSpaceDetails();
+  }, []);
 
+  const style = styles;
   return (
     <>
       <AppHeader
@@ -30,7 +55,8 @@ const FeeCalculationScreen = ({navigation}) => {
         <View>
           <View style={[STYLES.row]}>
             <AppText title={'01'} variant={'h1'} />
-            <AppText title={'  :'} variant={'h1'} />
+            <Space mL={20} />
+            <AppText title={':'} variant={'h1'} />
           </View>
           <AppText
             title={'Hours'}
@@ -42,7 +68,8 @@ const FeeCalculationScreen = ({navigation}) => {
         <View>
           <View style={[STYLES.row]}>
             <AppText title={'26'} variant={'h1'} />
-            <AppText title={'  :'} variant={'h1'} />
+            <Space mL={20} />
+            <AppText title={':'} variant={'h1'} />
           </View>
           <AppText
             title={'Minutes'}
@@ -65,112 +92,144 @@ const FeeCalculationScreen = ({navigation}) => {
       <Space mT={80} />
       <View style={[STYLES.pH(HORIZON_MARGIN)]}>
         <View style={styles.container}>
-          <View style={[STYLES.rowCenterBt]}>
-            <AppText
-              title={LABELS.parkingArea}
-              theme={theme}
-              variant={'body1'}
-              color={'grey'}
-              fontFamily={Fonts.latoRegular}
-            />
-            <AppText
-              title={'Louis Marventen'}
-              theme={theme}
-              variant={'body1'}
-              fontFamily={Fonts.latoRegular}
-            />
+          <View
+            style={[STYLES.rowCenterBt, STYLES.height(25), STYLES.AICenter]}>
+            <View style={[STYLES.width('30%')]}>
+              <AppText
+                title={LABELS.parkingArea}
+                theme={theme}
+                variant={'body1'}
+                color={'black'}
+                fontFamily={Fonts.merriWeatherSansRegular}
+              />
+            </View>
+            <View style={[STYLES.width('70%'), {maxWidth: '50%'}]}>
+              <AppText
+                title={timerData.areaName}
+                theme={theme}
+                variant={'body2'}
+                fontFamily={Fonts.latoRegular}
+              />
+            </View>
           </View>
           <Space mT={10} />
-          <View style={[STYLES.rowCenterBt]}>
-            <AppText
-              title={LABELS.address}
-              theme={theme}
-              variant={'body1'}
-              color={'grey'}
-              fontFamily={Fonts.latoRegular}
-            />
-            <AppText
-              title={'North Nazimabad, Karachi'}
-              theme={theme}
-              variant={'body1'}
-              fontFamily={Fonts.latoRegular}
-            />
+          <View
+            style={[STYLES.rowCenterBt, STYLES.height(30), STYLES.AICenter]}>
+            <View style={[STYLES.width('30%')]}>
+              <AppText
+                title={LABELS.address}
+                theme={theme}
+                variant={'body1'}
+                color={'black'}
+                fontFamily={Fonts.merriWeatherSansRegular}
+              />
+            </View>
+            <View style={[STYLES.width('70%'), {maxWidth: '50%'}]}>
+              <AppText
+                title={address}
+                theme={theme}
+                variant={'body2'}
+                fontFamily={Fonts.latoRegular}
+                numberOfLines={2}
+              />
+            </View>
           </View>
           <Space mT={10} />
-          <View style={[STYLES.rowCenterBt]}>
-            <AppText
-              title={LABELS.slotID}
-              theme={theme}
-              variant={'body1'}
-              color={'grey'}
-              fontFamily={Fonts.latoRegular}
-            />
-            <AppText
-              title={'B12'}
-              theme={theme}
-              variant={'body1'}
-              fontFamily={Fonts.latoRegular}
-            />
+          <View
+            style={[STYLES.rowCenterBt, STYLES.height(25), STYLES.AICenter]}>
+            <View style={[STYLES.width('30%')]}>
+              <AppText
+                title={LABELS.slotID}
+                theme={theme}
+                variant={'body1'}
+                color={'black'}
+                fontFamily={Fonts.merriWeatherSansRegular}
+              />
+            </View>
+            <View style={[STYLES.width('70%'), {maxWidth: '50%'}]}>
+              <AppText
+                title={timerData.slotDetails.slotId}
+                theme={theme}
+                variant={'body2'}
+                fontFamily={Fonts.latoRegular}
+              />
+            </View>
           </View>
           <Space mT={10} />
-          <View style={[STYLES.rowCenterBt]}>
-            <AppText
-              title={LABELS.extraCharges}
-              theme={theme}
-              variant={'body1'}
-              color={'grey'}
-              fontFamily={Fonts.latoRegular}
-            />
-            <AppText
-              title={'5% GST'}
-              theme={theme}
-              variant={'body1'}
-              fontFamily={Fonts.latoRegular}
-            />
+          <View
+            style={[STYLES.rowCenterBt, STYLES.height(25), STYLES.AICenter]}>
+            <View style={[STYLES.width('30%')]}>
+              <AppText
+                title={LABELS.Duration}
+                theme={theme}
+                variant={'body1'}
+                color={'black'}
+                fontFamily={Fonts.merriWeatherSansRegular}
+              />
+            </View>
+            <View style={[STYLES.width('70%'), {maxWidth: '50%'}]}>
+              <AppText
+                title={timerData.duration}
+                theme={theme}
+                variant={'body2'}
+                fontFamily={Fonts.latoRegular}
+              />
+            </View>
           </View>
           <Space mT={10} />
-          <View style={[STYLES.rowCenterBt]}>
-            <AppText
-              title={LABELS.price}
-              theme={theme}
-              variant={'body1'}
-              color={'grey'}
-              fontFamily={Fonts.latoRegular}
-            />
-            <AppText
-              title={'$ 5/hr'}
-              theme={theme}
-              variant={'body1'}
-              fontFamily={Fonts.latoRegular}
-            />
+          <View
+            style={[STYLES.rowCenterBt, STYLES.height(25), STYLES.AICenter]}>
+            <View style={[STYLES.width('30%')]}>
+              <AppText
+                title={LABELS.price}
+                theme={theme}
+                variant={'body1'}
+                color={'black'}
+                fontFamily={Fonts.merriWeatherSansRegular}
+              />
+            </View>
+            <View style={[STYLES.width('70%'), {maxWidth: '50%'}]}>
+              <AppText
+                title={`Rs. ${timerData.price}/-`}
+                theme={theme}
+                variant={'body2'}
+                fontFamily={Fonts.latoRegular}
+              />
+            </View>
           </View>
           <Space mT={10} />
-          <View style={[STYLES.rowCenterBt]}>
-            <AppText
-              title={LABELS.total}
-              theme={theme}
-              variant={'body1'}
-              color={'grey'}
-              fontFamily={Fonts.latoRegular}
-            />
-            <AppText
-              title={'$ 20.00'}
-              theme={theme}
-              variant={'body1'}
-              fontFamily={Fonts.latoRegular}
-            />
+          <View
+            style={[STYLES.rowCenterBt, STYLES.height(25), STYLES.AICenter]}>
+            <View style={[STYLES.width('30%')]}>
+              <AppText
+                title={LABELS.slotName}
+                theme={theme}
+                variant={'body1'}
+                color={'black'}
+                fontFamily={Fonts.merriWeatherSansRegular}
+              />
+            </View>
+            <View style={[STYLES.width('70%'), {maxWidth: '50%'}]}>
+              <AppText
+                title={timerData.slotDetails.slotName}
+                theme={theme}
+                variant={'body2'}
+                fontFamily={Fonts.latoRegular}
+              />
+            </View>
           </View>
           <Space mT={10} />
+          <Space mT={10} />
+          <GradientButton
+            title={LABELS.endParking}
+            textColor={'white'}
+            textVariant={'h5'}
+            onPress={() => {
+              navigation.navigate('HomeStack', {screen: 'AddFeedbackScreen'});
+            }}
+          />
         </View>
         <Space mT={80} />
-        <GradientButton
-          title={'Proceed to Pay'}
-          textColor={'white'}
-          textVariant={'h5'}
-          onPress={() => {
-            navigation.navigate('HomeStack', {screen: 'PaymentScreen'});
-          }}
-        />
       </View>
     </>
   );

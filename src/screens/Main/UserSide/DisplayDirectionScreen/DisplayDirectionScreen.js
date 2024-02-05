@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {ImageBackground, StyleSheet, View} from 'react-native';
-import {IMAGES} from '../../../../assets/images';
-import {SVG} from '../../../../assets/svg';
-import {COLORS, Fonts, STYLES} from '../../../../assets/theme';
+import firestore from '@react-native-firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { ImageBackground, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { IMAGES } from '../../../../assets/images';
+import { SVG } from '../../../../assets/svg';
+import { COLORS, Fonts, STYLES } from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppText from '../../../../components/AppText/AppText';
 import Space from '../../../../components/Space/Space';
-import {LABELS} from '../../../../labels';
-import {styles} from './styles';
-import firestore from '@react-native-firebase/firestore';
-import {useSelector} from 'react-redux';
-const DisplayDirectionsScreen = () => {
+import { LABELS } from '../../../../labels';
+import { styles } from './styles';
+const DisplayDirectionsScreen = ({navigation}) => {
   const style = styles;
   const areaDetails = useSelector(state => state.booking.selectedArea);
   const [address, setAddress] = useState('');
@@ -42,6 +42,9 @@ const DisplayDirectionsScreen = () => {
               position: 'absolute',
               top: 0,
             },
+          }}
+          onLeftIconPress={() => {
+            navigation.goBack();
           }}
         />
         <Space mT={100} />

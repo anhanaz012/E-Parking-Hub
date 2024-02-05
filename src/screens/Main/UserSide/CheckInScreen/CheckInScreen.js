@@ -27,6 +27,11 @@ const CheckInScreen = ({navigation}) => {
     dispatch(setSelectedArea(area));
     navigation.navigate('HomeStack', {screen: 'DisplayDirectionsScreen'});
   };
+  const feeCaluclationHandler = () => {
+    navigation.navigate('HomeStack', {
+      screen: 'FeeCalculationScreen',
+    });
+  };
   return (
     <ScrollView style={[STYLES.flex1]}>
       <View
@@ -41,6 +46,9 @@ const CheckInScreen = ({navigation}) => {
           theme={'dark'}
           iconLeft={<SVG.leftArrow height={20} width={20} fill={'white'} />}
           mL={15}
+          onLeftIconPress={() => {
+            navigation.goBack();
+          }}
         />
         <Space mT={20} />
 
@@ -69,6 +77,12 @@ const CheckInScreen = ({navigation}) => {
               title={area && area.areaName}
               variant={'h3'}
               fontFamily={Fonts.merriWeatherSansRegular}
+            />
+            <AppText
+              title={`Duration: ${area.duration}`}
+              variant={'body2'}
+              fontFamily={Fonts.merriWeatherSansRegular}
+              color={'purple'}
             />
             <Space mT={10} />
             <View style={[STYLES.rowCenterBt]}>
@@ -114,7 +128,11 @@ const CheckInScreen = ({navigation}) => {
             extraStyle={{btnContainer: {width: '40%'}}}
             onPress={displayDirectionHandler}
           />
-          <GradientButton title={LABELS.letsPark} textColor={'white'} />
+          <GradientButton
+            title={LABELS.letsPark}
+            textColor={'white'}
+            onPress={feeCaluclationHandler}
+          />
         </View>
       </View>
     </ScrollView>
