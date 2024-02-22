@@ -58,6 +58,7 @@ const HomeScreen = ({navigation}) => {
           const allAreas = firestoreData.filter(
             item => !popularAreas.includes(item),
           );
+
           setFirestoreData(firestoreData);
           setAreasList(allAreas);
         },
@@ -146,7 +147,7 @@ const HomeScreen = ({navigation}) => {
             onPress={searchAreaHandler}
           />
         </View>
-        <Space mT = {10}/>
+        <Space mT={10} />
         {searchQuery ? (
           filteredBookings.map((item, index) => {
             return (
@@ -430,14 +431,14 @@ const HomeScreen = ({navigation}) => {
                             STYLES.height('30%'),
                             STYLES.width100,
                           ]}>
-                          {item.ratings ? (
+                          {item.feedback && item.feedback.noOfRatings ? (
                             <View style={[STYLES.row]}>
                               <Icon
                                 SVGIcon={<SVG.starFilled fill={'orange'} />}
                               />
                               <Space mL={5} />
                               <AppText
-                                title={'4.5'}
+                                title={item.feedback.averageRating.toFixed(1)}
                                 theme={theme}
                                 fontFamily={Fonts.merriWeatherSansRegular}
                               />

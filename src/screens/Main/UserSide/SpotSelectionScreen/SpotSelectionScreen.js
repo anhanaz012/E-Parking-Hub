@@ -30,6 +30,7 @@ const SpotSelectionScreen = ({navigation}) => {
   const [messagingToken, setMessagingToken] = useState(null);
   const areaImage = useSelector(state => state.area.areaImage);
   const [selectedSpot, setSelectedSpot] = useState(null);
+  const [bookingDateTime, setBookingDateTime] = useState();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -39,7 +40,6 @@ const SpotSelectionScreen = ({navigation}) => {
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
   const [dateTimeMode, setDateTimeMode] = useState('date');
   const style = styles(spaceDetails);
-
   const showDateTimePicker = mode => {
     setDateTimeMode(mode);
     setDateTimePickerVisible(true);
@@ -49,12 +49,10 @@ const SpotSelectionScreen = ({navigation}) => {
   };
   const handlePickedValue = value => {
     if (dateTimeMode === 'date') {
-      const formattedDate = value.toLocaleDateString();
-      setSelectedDate(formattedDate);
+      setSelectedDate(value);
     }
     if (dateTimeMode === 'time') {
-      const formattedTime = value.toLocaleTimeString();
-      setSelectedTime(formattedTime);
+      setSelectedTime(value);
     }
     hideDateTimePicker();
   };
@@ -64,7 +62,6 @@ const SpotSelectionScreen = ({navigation}) => {
         const user = await firestore().collection('Users').doc(userToken).get();
         const name = user.data().fullName;
         const token = await messaging().getToken();
-        
         setUserName(name);
         setMessagingToken(token);
       };
@@ -72,12 +69,16 @@ const SpotSelectionScreen = ({navigation}) => {
     }, 1000);
   }, []);
   const bookingConfirmationHandler = async () => {
+    const selectedDateTime = new Date(selectedDate);
+    selectedDateTime.setHours(selectedTime.getHours());
+    selectedDateTime.setMinutes(selectedTime.getMinutes());
     const randomId = uuid.v4();
     const bookingDetails = {
       areaName: spaceDetails.spaceName,
       price: spaceDetails.price,
-      date: selectedDate,
-      time: selectedTime,
+      date: selectedDate.toLocaleDateString(),
+      time: selectedTime.toLocaleTimeString(),
+      bookingDateTime: selectedDateTime,
       duration: selectedDuration,
       isPaid: false,
       amount: Number(spaceDetails.price) * duration,

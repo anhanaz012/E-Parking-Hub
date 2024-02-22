@@ -24,7 +24,7 @@ const AppButton = props => {
   const style = styles(variant, theme);
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress = {onPress}
       style={[style.btnContainer, extraStyle.btnContainer]}
       {...props}>
       {iconLeft && (
@@ -50,5 +50,4 @@ const AppButton = props => {
     </TouchableOpacity>
   );
 };
-
 export default AppButton;

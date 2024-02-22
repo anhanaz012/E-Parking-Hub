@@ -2,7 +2,6 @@ import {Dimensions, StyleSheet} from 'react-native';
 
 export const {width: WIDTH, height: HEIGHT} = Dimensions.get('screen');
 export const HORIZON_MARGIN = 15;
-
 export const LIGHT = 'light';
 export const DARK = 'dark';
 export const Theme = LIGHT | DARK;

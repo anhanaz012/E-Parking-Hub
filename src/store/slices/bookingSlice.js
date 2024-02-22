@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
   selectedArea: null,
+  parkingTimer:0
 };
 const bookingSlice = createSlice({
   name: 'booking',
@@ -9,7 +10,10 @@ const bookingSlice = createSlice({
     setSelectedArea: (state, action) => {
       state.selectedArea = action.payload;
     },
+    setParkingTimer:(state,action)=>{
+      state.parkingTimer=action.payload
+    }
   },
 });
 export default bookingSlice.reducer;
-export const {setSelectedArea} = bookingSlice.actions;
+export const {setSelectedArea,setParkingTimer} = bookingSlice.actions;

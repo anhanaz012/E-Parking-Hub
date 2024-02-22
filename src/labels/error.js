@@ -46,4 +46,6 @@ export const ERRORS = {
   selectTime:'Please select a time',
   tokenNotGenerated:'Token not generated',
   messagingToken:'Messaging token not generated',
+  timeNotStarted:'Your parking time is not started yet',
+  parkingTimeOver:'Your parking time is over',
 };

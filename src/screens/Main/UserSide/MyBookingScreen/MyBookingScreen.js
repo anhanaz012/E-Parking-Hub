@@ -75,7 +75,9 @@ const MyBookingScreen = ({navigation}) => {
     getRealTimeChanges();
   }, [bookingsType]);
   const selectBookingHandler = item => {
-    dispatch(setSelectedArea(item));
+    const date = item.bookingDateTime.toDate();
+    const newItem = {...item, bookingDateTime: date};
+    dispatch(setSelectedArea(newItem));
     navigation.navigate('HomeStack', {
       screen: 'CheckInScreen',
     });

@@ -1,6 +1,6 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import React, {useEffect, useState} from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
 import ForgotPassScreen from '../screens/Auth/UserSide/ForgotPassword/ForgotPassScreen';
 import IntroScreen from '../screens/Auth/UserSide/IntroScreen/IntroScreen';
 import SignUpScreen from '../screens/Auth/UserSide/SignUp/SignUpScreen';
@@ -14,17 +14,16 @@ import VendorSignUp from '../screens/Auth/VendorSide/VendorSignUp/VendorSignUp';
 import VendorSignIn from '../screens/Auth/VendorSide/VendorSignin/VendorSignin';
 import AddFeedbackScreen from '../screens/Main/UserSide/AddFeedbackScreen/AddFeedbackScreen';
 import AreasListScreens from '../screens/Main/UserSide/AreasListScreen/AreasListScreens';
+import CheckInScreen from '../screens/Main/UserSide/CheckInScreen/CheckInScreen';
+import DisplayDirectionsScreen from '../screens/Main/UserSide/DisplayDirectionScreen/DisplayDirectionScreen';
 import FeeCalculationScreen from '../screens/Main/UserSide/FeeCalculationScreen/FeeCalculationScreen';
 import HomeScreen from '../screens/Main/UserSide/HomeScreen/HomeScreen';
 import MyBookingScreen from '../screens/Main/UserSide/MyBookingScreen/MyBookingScreen';
 import NotificationScreen from '../screens/Main/UserSide/NotificationScreen/NotificationScreen';
-import PaymentScreen from '../screens/Main/UserSide/PaymentScreen/PaymentScreen';
 import SpotSelectionScreen from '../screens/Main/UserSide/SpotSelectionScreen/SpotSelectionScreen';
 import UserProfileScreen from '../screens/Main/UserSide/UserProfileScreen/UserProfileScreen';
 import BottomNavigation from './BottomNavigation/UserSide';
 import VendorBottomNavigation from './BottomNavigation/VendorSide';
-import DisplayDirectionsScreen from '../screens/Main/UserSide/DisplayDirectionScreen/DisplayDirectionScreen';
-import CheckInScreen from '../screens/Main/UserSide/CheckInScreen/CheckInScreen';
 const Stack = createStackNavigator();
 const options = {
   headerShown: false,
@@ -49,7 +48,6 @@ const HomeStack = () => {
       <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
       <Stack.Screen name="MyBookingScreen" component={MyBookingScreen} />
       <Stack.Screen name="AreasListScreen" component={AreasListScreens} />
-      <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
       <Stack.Screen
         name="FeeCalculationScreen"
         component={FeeCalculationScreen}
@@ -63,10 +61,7 @@ const HomeStack = () => {
         name="DisplayDirectionsScreen"
         component={DisplayDirectionsScreen}
       />
-       <Stack.Screen
-        name="CheckInScreen"
-        component={CheckInScreen}
-      />
+      <Stack.Screen name="CheckInScreen" component={CheckInScreen} />
     </Stack.Navigator>
   );
 };

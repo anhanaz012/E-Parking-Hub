@@ -1,28 +1,26 @@
+import firestore from '@react-native-firebase/firestore';
 import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
+import {Alert, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {SVG} from '../../../../assets/svg';
 import {Fonts, HORIZON_MARGIN, STYLES} from '../../../../assets/theme';
 import AppHeader from '../../../../components/AppHeader/AppHeader';
 import AppText from '../../../../components/AppText/AppText';
+import CountdownTimer from '../../../../components/CountdownTimer/CountdownTimer';
 import GradientButton from '../../../../components/GradientButton/GradientButton';
 import Space from '../../../../components/Space/Space';
-import BackgroundTimer from 'react-native-background-timer';
-import firestore from '@react-native-firebase/firestore';
 import {LABELS} from '../../../../labels';
 import {styles} from './styles';
-
+import {Toast} from '../../../../utils/native';
+import ModalBox from '../../../../components/ModalBox/ModalBox';
 const FeeCalculationScreen = ({navigation}) => {
   const theme = 'light';
   const [address, setAddress] = useState('');
+  const timeDifferInSeconds = useSelector(state => state.booking.parkingTimer);
+  const [seconds, setSeconds] = useState(timeDifferInSeconds);
   const timerData = useSelector(state => state.booking.selectedArea);
-  const duration = timerData.duration;
-  const [timeLeft, setTimeLeft] = useState(duration);
-  const [time, setTime] = useState(0);
-  const [timer, setTimer] = useState(0);
-  const [hours, setHours] = useState(parseInt(duration));
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const {userToken, vendorToken, bookingId} = timerData;
   useEffect(() => {
     const getSpaceDetails = async () => {
       if (timerData) {
@@ -37,8 +35,53 @@ const FeeCalculationScreen = ({navigation}) => {
     };
     getSpaceDetails();
   }, []);
-
-  const style = styles;
+  const parkingCompletionHandler = async () => {
+    try {
+      setIsLoading(true);
+      const spotsData = await firestore()
+        .collection('ParkingAreas')
+        .doc(vendorToken)
+        .get();
+      const spots = spotsData.data().spots;
+      const selectedSpot = spots.find(
+        spot => spot.slotId === timerData.slotDetails.slotId,
+      );
+      selectedSpot.status = 'available';
+      const updatedSpots = spots.map(spot => {
+        if (spot.slotId === selectedSpot.slotId) {
+          return selectedSpot;
+        }
+        return spot;
+      });
+      firestore().collection(`user${userToken}Bookings`).doc(bookingId).update({
+        isCompleted: true,
+      });
+      firestore()
+        .collection(`vendor${vendorToken}Bookings`)
+        .doc(bookingId)
+        .update({
+          isCompleted: true,
+        })
+        .then(async () => {
+          await firestore().collection('ParkingAreas').doc(vendorToken).update({
+            spots: updatedSpots,
+          });
+          await firestore().collection('Vendors').doc(vendorToken).update({
+            spots: updatedSpots,
+          });
+          setIsLoading(false);
+          setSeconds(0);
+          navigation.navigate('HomeStack', {screen: 'AddFeedbackScreen'});
+        })
+        .catch(err => {
+          setIsLoading(false);
+          Toast('error',err.message);
+        });
+    } catch (err) {
+      setIsLoading(false);
+      Toast('Something wrong');
+    }
+  };
   return (
     <>
       <AppHeader
@@ -50,45 +93,12 @@ const FeeCalculationScreen = ({navigation}) => {
           navigation.goBack();
         }}
       />
+      {isLoading ? <ModalBox isVisible={isLoading} /> : <></>}
       <Space mT={80} />
-      <View style={[STYLES.row, STYLES.JCEvenly, STYLES.pH(HORIZON_MARGIN)]}>
-        <View>
-          <View style={[STYLES.row]}>
-            <AppText title={'01'} variant={'h1'} />
-            <Space mL={20} />
-            <AppText title={':'} variant={'h1'} />
-          </View>
-          <AppText
-            title={'Hours'}
-            variant={'body1'}
-            color={'grey'}
-            fontFamily={Fonts.latoRegular}
-          />
-        </View>
-        <View>
-          <View style={[STYLES.row]}>
-            <AppText title={'26'} variant={'h1'} />
-            <Space mL={20} />
-            <AppText title={':'} variant={'h1'} />
-          </View>
-          <AppText
-            title={'Minutes'}
-            variant={'body1'}
-            color={'grey'}
-            fontFamily={Fonts.latoRegular}
-          />
-        </View>
-        <View>
-          <AppText title={'02 '} variant={'h1'} />
-          <AppText
-            title={'Seconds'}
-            variant={'body1'}
-            color={'grey'}
-            fontFamily={Fonts.latoRegular}
-          />
-        </View>
-      </View>
-
+      <CountdownTimer
+        durationInSeconds={seconds}
+        onTimerEnd={parkingCompletionHandler}
+      />
       <Space mT={80} />
       <View style={[STYLES.pH(HORIZON_MARGIN)]}>
         <View style={styles.container}>
@@ -224,9 +234,7 @@ const FeeCalculationScreen = ({navigation}) => {
             title={LABELS.endParking}
             textColor={'white'}
             textVariant={'h5'}
-            onPress={() => {
-              navigation.navigate('HomeStack', {screen: 'AddFeedbackScreen'});
-            }}
+            onPress={parkingCompletionHandler}
           />
         </View>
         <Space mT={80} />
